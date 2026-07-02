@@ -14,7 +14,16 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as TrackCodeRouteImport } from './routes/track.$code'
+import { Route as AuthenticatedShipmentsRouteImport } from './routes/_authenticated/shipments'
+import { Route as AuthenticatedReportsRouteImport } from './routes/_authenticated/reports'
+import { Route as AuthenticatedPackagesRouteImport } from './routes/_authenticated/packages'
+import { Route as AuthenticatedInvoicesRouteImport } from './routes/_authenticated/invoices'
+import { Route as AuthenticatedDeliveriesRouteImport } from './routes/_authenticated/deliveries'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedTreasuryAccountsRouteImport } from './routes/_authenticated/treasury.accounts'
+import { Route as AuthenticatedSourcingPosRouteImport } from './routes/_authenticated/sourcing.pos'
+import { Route as AuthenticatedCrmContactsRouteImport } from './routes/_authenticated/crm.contacts'
+import { Route as AuthenticatedAdminUsersRouteImport } from './routes/_authenticated/admin.users'
 
 const PortalRoute = PortalRouteImport.update({
   id: '/portal',
@@ -40,9 +49,57 @@ const TrackCodeRoute = TrackCodeRouteImport.update({
   path: '/track/$code',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedShipmentsRoute = AuthenticatedShipmentsRouteImport.update({
+  id: '/shipments',
+  path: '/shipments',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedReportsRoute = AuthenticatedReportsRouteImport.update({
+  id: '/reports',
+  path: '/reports',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedPackagesRoute = AuthenticatedPackagesRouteImport.update({
+  id: '/packages',
+  path: '/packages',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedInvoicesRoute = AuthenticatedInvoicesRouteImport.update({
+  id: '/invoices',
+  path: '/invoices',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedDeliveriesRoute = AuthenticatedDeliveriesRouteImport.update({
+  id: '/deliveries',
+  path: '/deliveries',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
 const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedTreasuryAccountsRoute =
+  AuthenticatedTreasuryAccountsRouteImport.update({
+    id: '/treasury/accounts',
+    path: '/treasury/accounts',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedSourcingPosRoute =
+  AuthenticatedSourcingPosRouteImport.update({
+    id: '/sourcing/pos',
+    path: '/sourcing/pos',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedCrmContactsRoute =
+  AuthenticatedCrmContactsRouteImport.update({
+    id: '/crm/contacts',
+    path: '/crm/contacts',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedAdminUsersRoute = AuthenticatedAdminUsersRouteImport.update({
+  id: '/admin/users',
+  path: '/admin/users',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
 
@@ -51,14 +108,32 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/portal': typeof PortalRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/deliveries': typeof AuthenticatedDeliveriesRoute
+  '/invoices': typeof AuthenticatedInvoicesRoute
+  '/packages': typeof AuthenticatedPackagesRoute
+  '/reports': typeof AuthenticatedReportsRoute
+  '/shipments': typeof AuthenticatedShipmentsRoute
   '/track/$code': typeof TrackCodeRoute
+  '/admin/users': typeof AuthenticatedAdminUsersRoute
+  '/crm/contacts': typeof AuthenticatedCrmContactsRoute
+  '/sourcing/pos': typeof AuthenticatedSourcingPosRoute
+  '/treasury/accounts': typeof AuthenticatedTreasuryAccountsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/portal': typeof PortalRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/deliveries': typeof AuthenticatedDeliveriesRoute
+  '/invoices': typeof AuthenticatedInvoicesRoute
+  '/packages': typeof AuthenticatedPackagesRoute
+  '/reports': typeof AuthenticatedReportsRoute
+  '/shipments': typeof AuthenticatedShipmentsRoute
   '/track/$code': typeof TrackCodeRoute
+  '/admin/users': typeof AuthenticatedAdminUsersRoute
+  '/crm/contacts': typeof AuthenticatedCrmContactsRoute
+  '/sourcing/pos': typeof AuthenticatedSourcingPosRoute
+  '/treasury/accounts': typeof AuthenticatedTreasuryAccountsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -67,13 +142,50 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/portal': typeof PortalRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/deliveries': typeof AuthenticatedDeliveriesRoute
+  '/_authenticated/invoices': typeof AuthenticatedInvoicesRoute
+  '/_authenticated/packages': typeof AuthenticatedPackagesRoute
+  '/_authenticated/reports': typeof AuthenticatedReportsRoute
+  '/_authenticated/shipments': typeof AuthenticatedShipmentsRoute
   '/track/$code': typeof TrackCodeRoute
+  '/_authenticated/admin/users': typeof AuthenticatedAdminUsersRoute
+  '/_authenticated/crm/contacts': typeof AuthenticatedCrmContactsRoute
+  '/_authenticated/sourcing/pos': typeof AuthenticatedSourcingPosRoute
+  '/_authenticated/treasury/accounts': typeof AuthenticatedTreasuryAccountsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/portal' | '/dashboard' | '/track/$code'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/portal'
+    | '/dashboard'
+    | '/deliveries'
+    | '/invoices'
+    | '/packages'
+    | '/reports'
+    | '/shipments'
+    | '/track/$code'
+    | '/admin/users'
+    | '/crm/contacts'
+    | '/sourcing/pos'
+    | '/treasury/accounts'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/portal' | '/dashboard' | '/track/$code'
+  to:
+    | '/'
+    | '/auth'
+    | '/portal'
+    | '/dashboard'
+    | '/deliveries'
+    | '/invoices'
+    | '/packages'
+    | '/reports'
+    | '/shipments'
+    | '/track/$code'
+    | '/admin/users'
+    | '/crm/contacts'
+    | '/sourcing/pos'
+    | '/treasury/accounts'
   id:
     | '__root__'
     | '/'
@@ -81,7 +193,16 @@ export interface FileRouteTypes {
     | '/auth'
     | '/portal'
     | '/_authenticated/dashboard'
+    | '/_authenticated/deliveries'
+    | '/_authenticated/invoices'
+    | '/_authenticated/packages'
+    | '/_authenticated/reports'
+    | '/_authenticated/shipments'
     | '/track/$code'
+    | '/_authenticated/admin/users'
+    | '/_authenticated/crm/contacts'
+    | '/_authenticated/sourcing/pos'
+    | '/_authenticated/treasury/accounts'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -129,6 +250,41 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TrackCodeRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/shipments': {
+      id: '/_authenticated/shipments'
+      path: '/shipments'
+      fullPath: '/shipments'
+      preLoaderRoute: typeof AuthenticatedShipmentsRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/reports': {
+      id: '/_authenticated/reports'
+      path: '/reports'
+      fullPath: '/reports'
+      preLoaderRoute: typeof AuthenticatedReportsRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/packages': {
+      id: '/_authenticated/packages'
+      path: '/packages'
+      fullPath: '/packages'
+      preLoaderRoute: typeof AuthenticatedPackagesRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/invoices': {
+      id: '/_authenticated/invoices'
+      path: '/invoices'
+      fullPath: '/invoices'
+      preLoaderRoute: typeof AuthenticatedInvoicesRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/deliveries': {
+      id: '/_authenticated/deliveries'
+      path: '/deliveries'
+      fullPath: '/deliveries'
+      preLoaderRoute: typeof AuthenticatedDeliveriesRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/dashboard': {
       id: '/_authenticated/dashboard'
       path: '/dashboard'
@@ -136,15 +292,61 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/treasury/accounts': {
+      id: '/_authenticated/treasury/accounts'
+      path: '/treasury/accounts'
+      fullPath: '/treasury/accounts'
+      preLoaderRoute: typeof AuthenticatedTreasuryAccountsRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/sourcing/pos': {
+      id: '/_authenticated/sourcing/pos'
+      path: '/sourcing/pos'
+      fullPath: '/sourcing/pos'
+      preLoaderRoute: typeof AuthenticatedSourcingPosRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/crm/contacts': {
+      id: '/_authenticated/crm/contacts'
+      path: '/crm/contacts'
+      fullPath: '/crm/contacts'
+      preLoaderRoute: typeof AuthenticatedCrmContactsRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/admin/users': {
+      id: '/_authenticated/admin/users'
+      path: '/admin/users'
+      fullPath: '/admin/users'
+      preLoaderRoute: typeof AuthenticatedAdminUsersRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
   }
 }
 
 interface AuthenticatedRouteChildren {
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedDeliveriesRoute: typeof AuthenticatedDeliveriesRoute
+  AuthenticatedInvoicesRoute: typeof AuthenticatedInvoicesRoute
+  AuthenticatedPackagesRoute: typeof AuthenticatedPackagesRoute
+  AuthenticatedReportsRoute: typeof AuthenticatedReportsRoute
+  AuthenticatedShipmentsRoute: typeof AuthenticatedShipmentsRoute
+  AuthenticatedAdminUsersRoute: typeof AuthenticatedAdminUsersRoute
+  AuthenticatedCrmContactsRoute: typeof AuthenticatedCrmContactsRoute
+  AuthenticatedSourcingPosRoute: typeof AuthenticatedSourcingPosRoute
+  AuthenticatedTreasuryAccountsRoute: typeof AuthenticatedTreasuryAccountsRoute
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedDeliveriesRoute: AuthenticatedDeliveriesRoute,
+  AuthenticatedInvoicesRoute: AuthenticatedInvoicesRoute,
+  AuthenticatedPackagesRoute: AuthenticatedPackagesRoute,
+  AuthenticatedReportsRoute: AuthenticatedReportsRoute,
+  AuthenticatedShipmentsRoute: AuthenticatedShipmentsRoute,
+  AuthenticatedAdminUsersRoute: AuthenticatedAdminUsersRoute,
+  AuthenticatedCrmContactsRoute: AuthenticatedCrmContactsRoute,
+  AuthenticatedSourcingPosRoute: AuthenticatedSourcingPosRoute,
+  AuthenticatedTreasuryAccountsRoute: AuthenticatedTreasuryAccountsRoute,
 }
 
 const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
