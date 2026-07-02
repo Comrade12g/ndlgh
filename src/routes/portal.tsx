@@ -1,5 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { redirect } from "@tanstack/react-router";
+import { lovable } from "@/integrations/lovable";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
 import { LogoLockup } from "@/components/brand/Logo";
@@ -39,8 +40,7 @@ function PortalPage() {
     queryFn: async () => {
       const { data } = await supabase
         .from("warehouses")
-        .select("code, name, country, address_line1, address_line2, city, is_active")
-        .eq("is_active", true)
+        .select("code, name, country, address")
         .order("code");
       return data ?? [];
     },
@@ -116,9 +116,7 @@ function PortalPage() {
                 </div>
                 <div className="text-sm text-muted-foreground">
                   <div>Recipient: <span className="font-semibold text-foreground">NDL {w.code} — {profile?.shipping_mark ?? ""}</span></div>
-                  {w.address_line1 && <div>{w.address_line1}</div>}
-                  {w.address_line2 && <div>{w.address_line2}</div>}
-                  {w.city && <div>{w.city}</div>}
+                  {w.address && <div className="whitespace-pre-line">{w.address}</div>}
                 </div>
               </Card>
             ))}
