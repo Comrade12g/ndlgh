@@ -108,7 +108,9 @@ function Landing() {
           </div>
         </div>
 
+        <div className="relative mx-auto grid max-w-7xl gap-12 px-4 py-20 md:grid-cols-2 md:py-28">
           <div className="text-white">
+
             <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-wider">
               <span className="h-2 w-2 rounded-full bg-brand-orange" />
               China · UK · Dubai → Ghana
