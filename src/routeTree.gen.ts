@@ -14,6 +14,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as TrackCodeRouteImport } from './routes/track.$code'
+import { Route as AuthenticatedSupportRouteImport } from './routes/_authenticated/support'
 import { Route as AuthenticatedShipmentsRouteImport } from './routes/_authenticated/shipments'
 import { Route as AuthenticatedReportsRouteImport } from './routes/_authenticated/reports'
 import { Route as AuthenticatedPackagesRouteImport } from './routes/_authenticated/packages'
@@ -48,6 +49,11 @@ const TrackCodeRoute = TrackCodeRouteImport.update({
   id: '/track/$code',
   path: '/track/$code',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedSupportRoute = AuthenticatedSupportRouteImport.update({
+  id: '/support',
+  path: '/support',
+  getParentRoute: () => AuthenticatedRoute,
 } as any)
 const AuthenticatedShipmentsRoute = AuthenticatedShipmentsRouteImport.update({
   id: '/shipments',
@@ -113,6 +119,7 @@ export interface FileRoutesByFullPath {
   '/packages': typeof AuthenticatedPackagesRoute
   '/reports': typeof AuthenticatedReportsRoute
   '/shipments': typeof AuthenticatedShipmentsRoute
+  '/support': typeof AuthenticatedSupportRoute
   '/track/$code': typeof TrackCodeRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
   '/crm/contacts': typeof AuthenticatedCrmContactsRoute
@@ -129,6 +136,7 @@ export interface FileRoutesByTo {
   '/packages': typeof AuthenticatedPackagesRoute
   '/reports': typeof AuthenticatedReportsRoute
   '/shipments': typeof AuthenticatedShipmentsRoute
+  '/support': typeof AuthenticatedSupportRoute
   '/track/$code': typeof TrackCodeRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
   '/crm/contacts': typeof AuthenticatedCrmContactsRoute
@@ -147,6 +155,7 @@ export interface FileRoutesById {
   '/_authenticated/packages': typeof AuthenticatedPackagesRoute
   '/_authenticated/reports': typeof AuthenticatedReportsRoute
   '/_authenticated/shipments': typeof AuthenticatedShipmentsRoute
+  '/_authenticated/support': typeof AuthenticatedSupportRoute
   '/track/$code': typeof TrackCodeRoute
   '/_authenticated/admin/users': typeof AuthenticatedAdminUsersRoute
   '/_authenticated/crm/contacts': typeof AuthenticatedCrmContactsRoute
@@ -165,6 +174,7 @@ export interface FileRouteTypes {
     | '/packages'
     | '/reports'
     | '/shipments'
+    | '/support'
     | '/track/$code'
     | '/admin/users'
     | '/crm/contacts'
@@ -181,6 +191,7 @@ export interface FileRouteTypes {
     | '/packages'
     | '/reports'
     | '/shipments'
+    | '/support'
     | '/track/$code'
     | '/admin/users'
     | '/crm/contacts'
@@ -198,6 +209,7 @@ export interface FileRouteTypes {
     | '/_authenticated/packages'
     | '/_authenticated/reports'
     | '/_authenticated/shipments'
+    | '/_authenticated/support'
     | '/track/$code'
     | '/_authenticated/admin/users'
     | '/_authenticated/crm/contacts'
@@ -249,6 +261,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/track/$code'
       preLoaderRoute: typeof TrackCodeRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/support': {
+      id: '/_authenticated/support'
+      path: '/support'
+      fullPath: '/support'
+      preLoaderRoute: typeof AuthenticatedSupportRouteImport
+      parentRoute: typeof AuthenticatedRoute
     }
     '/_authenticated/shipments': {
       id: '/_authenticated/shipments'
@@ -330,6 +349,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedPackagesRoute: typeof AuthenticatedPackagesRoute
   AuthenticatedReportsRoute: typeof AuthenticatedReportsRoute
   AuthenticatedShipmentsRoute: typeof AuthenticatedShipmentsRoute
+  AuthenticatedSupportRoute: typeof AuthenticatedSupportRoute
   AuthenticatedAdminUsersRoute: typeof AuthenticatedAdminUsersRoute
   AuthenticatedCrmContactsRoute: typeof AuthenticatedCrmContactsRoute
   AuthenticatedSourcingPosRoute: typeof AuthenticatedSourcingPosRoute
@@ -343,6 +363,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedPackagesRoute: AuthenticatedPackagesRoute,
   AuthenticatedReportsRoute: AuthenticatedReportsRoute,
   AuthenticatedShipmentsRoute: AuthenticatedShipmentsRoute,
+  AuthenticatedSupportRoute: AuthenticatedSupportRoute,
   AuthenticatedAdminUsersRoute: AuthenticatedAdminUsersRoute,
   AuthenticatedCrmContactsRoute: AuthenticatedCrmContactsRoute,
   AuthenticatedSourcingPosRoute: AuthenticatedSourcingPosRoute,
