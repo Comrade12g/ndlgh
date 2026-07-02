@@ -1138,6 +1138,9 @@ export type Database = {
         | "sourcing_agent"
         | "driver"
         | "customer"
+        | "sales"
+        | "accountant"
+        | "customer_service"
       contact_status: "new" | "active" | "vip" | "dormant" | "blocked"
       contact_type: "lead" | "customer" | "supplier_contact"
       delivery_status:
@@ -1336,6 +1339,9 @@ export const Constants = {
         "sourcing_agent",
         "driver",
         "customer",
+        "sales",
+        "accountant",
+        "customer_service",
       ],
       contact_status: ["new", "active", "vip", "dormant", "blocked"],
       contact_type: ["lead", "customer", "supplier_contact"],
