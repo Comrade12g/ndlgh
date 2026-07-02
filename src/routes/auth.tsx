@@ -10,6 +10,7 @@ import { toast } from "sonner";
 import { ArrowLeft } from "lucide-react";
 
 export const Route = createFileRoute("/auth")({
+  ssr: false,
   validateSearch: (s: Record<string, unknown>) => ({
     mode: s.mode === "signup" ? "signup" : "signin",
   }),
