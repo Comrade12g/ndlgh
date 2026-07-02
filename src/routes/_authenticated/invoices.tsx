@@ -50,13 +50,13 @@ function InvoicesPage() {
               </thead>
               <tbody>
                 {data.map((inv) => {
-                  const p = Array.isArray(inv.profiles) ? inv.profiles[0] : (inv.profiles as { full_name: string | null; shipping_mark: string | null } | null);
+                  const c = inv.contacts;
                   return (
                     <tr key={inv.id} className="border-t hover:bg-muted/30">
                       <td className="px-4 py-3 font-mono text-xs font-bold text-brand-navy">{inv.number}</td>
                       <td className="px-4 py-3">
-                        <div className="font-semibold text-brand-navy">{p?.full_name ?? "—"}</div>
-                        <div className="font-mono text-xs text-brand-orange">{p?.shipping_mark ?? ""}</div>
+                        <div className="font-semibold text-brand-navy">{c?.full_name ?? "—"}</div>
+                        <div className="text-xs text-muted-foreground">{c?.company ?? ""}</div>
                       </td>
                       <td className="px-4 py-3 text-muted-foreground">{inv.issue_date}</td>
                       <td className="px-4 py-3 text-muted-foreground">{inv.due_date ?? "—"}</td>
