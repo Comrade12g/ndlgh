@@ -14,7 +14,7 @@ function InvoicesPage() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("invoices")
-        .select("id, number, currency, subtotal, total, amount_paid, status, issue_date, due_date, customer_id, profiles:customer_id(full_name, shipping_mark)")
+        .select("id, number, currency, subtotal, total, amount_paid, status, issue_date, due_date, customer_id, contacts:customer_id(full_name, shipping_mark)")
         .order("issue_date", { ascending: false })
         .limit(200);
       if (error) throw error;
