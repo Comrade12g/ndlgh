@@ -244,3 +244,63 @@ function Landing() {
     </div>
   );
 }
+
+const HeroBackdrop = memo(function HeroBackdrop() {
+  return (
+    <>
+      {/* Animated route map + arrows */}
+      <svg
+        aria-hidden
+        className="pointer-events-none absolute inset-0 -z-10 h-full w-full opacity-[0.35]"
+        viewBox="0 0 1200 600"
+        preserveAspectRatio="none"
+      >
+        <defs>
+          <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M0,0 L10,5 L0,10 z" fill="#F58220" />
+          </marker>
+          <radialGradient id="hub" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="#F58220" stopOpacity="0.9" />
+            <stop offset="100%" stopColor="#F58220" stopOpacity="0" />
+          </radialGradient>
+        </defs>
+        <path d="M120,140 Q450,60 780,360" fill="none" stroke="#F58220" strokeWidth="2" className="animate-dash" markerEnd="url(#arrow)" />
+        <path d="M300,90 Q560,180 780,360" fill="none" stroke="#F58220" strokeWidth="2" className="animate-dash" markerEnd="url(#arrow)" style={{ animationDelay: "-2s" }} />
+        <path d="M980,140 Q900,260 780,360" fill="none" stroke="#F58220" strokeWidth="2" className="animate-dash" markerEnd="url(#arrow)" style={{ animationDelay: "-4s" }} />
+        {[
+          { x: 120, y: 140, label: "UK" },
+          { x: 300, y: 90, label: "CN" },
+          { x: 980, y: 140, label: "AE" },
+          { x: 780, y: 360, label: "GH" },
+        ].map((h) => (
+          <g key={h.label}>
+            <circle cx={h.x} cy={h.y} r="26" fill="url(#hub)" />
+            <circle cx={h.x} cy={h.y} r="5" fill="#F58220" />
+            <text x={h.x + 10} y={h.y - 10} fontSize="14" fontWeight="700" fill="#ffffff" opacity="0.9">{h.label}</text>
+          </g>
+        ))}
+      </svg>
+
+      <svg aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 -z-10 h-24 w-[200%] animate-waves opacity-30" viewBox="0 0 1200 80" preserveAspectRatio="none">
+        <path d="M0,40 C150,10 300,70 600,40 C900,10 1050,70 1200,40 L1200,80 L0,80 Z" fill="#1E7FD1" />
+        <path d="M0,50 C150,20 300,80 600,50 C900,20 1050,80 1200,50 L1200,80 L0,80 Z" fill="#0A2E5C" opacity="0.6" />
+      </svg>
+
+      <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 overflow-hidden [contain:strict]">
+        <div className="absolute top-[62%] left-0 w-full animate-sail-right">
+          <Ship className="h-8 w-8 text-white/80 animate-bob" strokeWidth={1.5} />
+        </div>
+        <div className="absolute top-[78%] left-0 w-full animate-sail-left" style={{ animationDelay: "-15s" }}>
+          <Container className="h-7 w-7 text-brand-orange animate-bob" strokeWidth={1.5} />
+        </div>
+        <div className="absolute top-[18%] left-0 w-full animate-fly">
+          <Plane className="h-6 w-6 text-white/70" strokeWidth={1.5} />
+        </div>
+        <div className="absolute top-[34%] left-0 w-full animate-fly" style={{ animationDelay: "-11s" }}>
+          <Plane className="h-5 w-5 text-brand-orange/90" strokeWidth={1.5} />
+        </div>
+      </div>
+    </>
+  );
+});
+
