@@ -1,4 +1,11 @@
-import { createFileRoute, Outlet, redirect, Link, useRouterState, useNavigate } from "@tanstack/react-router";
+import {
+  createFileRoute,
+  Outlet,
+  redirect,
+  Link,
+  useRouterState,
+  useNavigate,
+} from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
 import logoAsset from "@/assets/ndl-logo.png.asset.json";
 import {
@@ -33,7 +40,7 @@ export const Route = createFileRoute("/_authenticated")({
   ssr: false,
   beforeLoad: async () => {
     const { data, error } = await supabase.auth.getUser();
-    if (error || !data.user) throw redirect({ to: "/auth" });
+    if (error || !data.user) throw redirect({ to: "/auth", search: { mode: "signin" } });
     const { data: roles } = await supabase
       .from("user_roles")
       .select("role")
@@ -46,21 +53,66 @@ export const Route = createFileRoute("/_authenticated")({
   component: StaffLayout,
 });
 
-type NavItem = { to: string; label: string; icon: typeof LayoutDashboard; roles: readonly string[] };
+type NavItem = {
+  to: string;
+  label: string;
+  icon: typeof LayoutDashboard;
+  roles: readonly string[];
+};
 
 const ALL: readonly string[] = STAFF_ROLES;
 
 const NAV: NavItem[] = [
   { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard, roles: ALL },
-  { to: "/crm/contacts", label: "CRM", icon: Users, roles: ["admin", "sales", "sales_accountant", "customer_service", "sourcing_agent"] },
-  { to: "/support", label: "Customer Service", icon: Headphones, roles: ["admin", "customer_service"] },
+  {
+    to: "/crm/contacts",
+    label: "CRM",
+    icon: Users,
+    roles: ["admin", "sales", "sales_accountant", "customer_service", "sourcing_agent"],
+  },
+  {
+    to: "/support",
+    label: "Customer Service",
+    icon: Headphones,
+    roles: ["admin", "customer_service"],
+  },
   { to: "/sourcing/pos", label: "Sourcing", icon: ShoppingBag, roles: ["admin", "sourcing_agent"] },
-  { to: "/treasury/accounts", label: "Treasury", icon: Wallet, roles: ["admin", "accountant", "sales_accountant"] },
-  { to: "/packages", label: "Packages", icon: Package, roles: ["admin", "ops_warehouse", "customer_service"] },
-  { to: "/shipments", label: "Shipments", icon: Ship, roles: ["admin", "ops_warehouse", "sales", "sales_accountant", "customer_service"] },
-  { to: "/deliveries", label: "Deliveries", icon: Truck, roles: ["admin", "ops_warehouse", "driver", "customer_service"] },
-  { to: "/invoices", label: "Invoices", icon: Receipt, roles: ["admin", "accountant", "sales", "sales_accountant"] },
-  { to: "/reports", label: "Reports", icon: BarChart3, roles: ["admin", "accountant", "sales_accountant"] },
+  {
+    to: "/treasury/accounts",
+    label: "Treasury",
+    icon: Wallet,
+    roles: ["admin", "accountant", "sales_accountant"],
+  },
+  {
+    to: "/packages",
+    label: "Packages",
+    icon: Package,
+    roles: ["admin", "ops_warehouse", "customer_service"],
+  },
+  {
+    to: "/shipments",
+    label: "Shipments",
+    icon: Ship,
+    roles: ["admin", "ops_warehouse", "sales", "sales_accountant", "customer_service"],
+  },
+  {
+    to: "/deliveries",
+    label: "Deliveries",
+    icon: Truck,
+    roles: ["admin", "ops_warehouse", "driver", "customer_service"],
+  },
+  {
+    to: "/invoices",
+    label: "Invoices",
+    icon: Receipt,
+    roles: ["admin", "accountant", "sales", "sales_accountant"],
+  },
+  {
+    to: "/reports",
+    label: "Reports",
+    icon: BarChart3,
+    roles: ["admin", "accountant", "sales_accountant"],
+  },
   { to: "/admin/users", label: "Admin", icon: Settings, roles: ["admin"] },
 ];
 
@@ -75,25 +127,35 @@ function StaffLayout() {
     queryFn: async () => {
       const { data: u } = await supabase.auth.getUser();
       if (!u.user) return null;
-      const { data } = await supabase.from("profiles").select("full_name, shipping_mark").eq("id", u.user.id).maybeSingle();
+      const { data } = await supabase
+        .from("profiles")
+        .select("full_name, shipping_mark")
+        .eq("id", u.user.id)
+        .maybeSingle();
       return { email: u.user.email, ...data };
     },
   });
 
-  const visible = NAV.filter((n) => n.roles.some((r) => roles.includes(r)));
+  const visible = NAV.filter((n) => n.roles.some((r) => (roles as readonly string[]).includes(r)));
   const primaryRole = roles.includes("admin")
     ? "Admin"
-    : roles.includes("accountant") ? "Accountant"
-    : roles.includes("sales") || roles.includes("sales_accountant") ? "Sales"
-    : roles.includes("customer_service") ? "Customer Service"
-    : roles.includes("sourcing_agent") ? "Sourcing Agent"
-    : roles.includes("ops_warehouse") ? "Warehouse"
-    : roles.includes("driver") ? "Driver"
-    : "Staff";
+    : roles.includes("accountant")
+      ? "Accountant"
+      : roles.includes("sales") || roles.includes("sales_accountant")
+        ? "Sales"
+        : roles.includes("customer_service")
+          ? "Customer Service"
+          : roles.includes("sourcing_agent")
+            ? "Sourcing Agent"
+            : roles.includes("ops_warehouse")
+              ? "Warehouse"
+              : roles.includes("driver")
+                ? "Driver"
+                : "Staff";
 
   async function signOut() {
     await supabase.auth.signOut();
-    navigate({ to: "/auth", replace: true });
+    navigate({ to: "/auth", search: { mode: "signin" }, replace: true });
   }
 
   return (
@@ -133,10 +195,17 @@ function StaffLayout() {
         </nav>
         <div className="border-t border-sidebar-border p-4">
           <div className="mb-3 text-xs">
-            <div className="font-semibold text-white">{profile?.full_name ?? profile?.email ?? "Staff"}</div>
+            <div className="font-semibold text-white">
+              {profile?.full_name ?? profile?.email ?? "Staff"}
+            </div>
             <div className="text-white/60">{primaryRole}</div>
           </div>
-          <Button size="sm" variant="outline" className="w-full border-white/20 bg-transparent text-white hover:bg-white/10" onClick={signOut}>
+          <Button
+            size="sm"
+            variant="outline"
+            className="w-full border-white/20 bg-transparent text-white hover:bg-white/10"
+            onClick={signOut}
+          >
             <LogOut className="mr-2 h-4 w-4" /> Sign out
           </Button>
         </div>

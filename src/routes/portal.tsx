@@ -6,14 +6,15 @@ import { useQuery } from "@tanstack/react-query";
 import { LogoLockup } from "@/components/brand/Logo";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { LogOut, Package, PackageSearch, MapPin, Copy } from "lucide-react";
+import { StatusBadge, statusTone } from "@/components/ops/PageHeader";
+import { LogOut, Package, PackageSearch, MapPin, Copy, Receipt } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/portal")({
   ssr: false,
   beforeLoad: async () => {
     const { data } = await supabase.auth.getUser();
-    if (!data.user) throw redirect({ to: "/auth" });
+    if (!data.user) throw redirect({ to: "/auth", search: { mode: "signin" } });
     return { user: data.user };
   },
   component: PortalPage,
@@ -46,6 +47,56 @@ function PortalPage() {
     },
   });
 
+  // RLS scopes each of these to the signed-in customer automatically —
+  // no client-side filtering needed.
+  const { data: myPackages } = useQuery({
+    queryKey: ["portal-packages"],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("packages")
+        .select("id, tracking_code, description, status, pieces, weight_kg, received_at")
+        .order("received_at", { ascending: false })
+        .limit(10);
+      return data ?? [];
+    },
+  });
+
+  const { data: myShipments } = useQuery({
+    queryKey: ["portal-shipments"],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("shipments")
+        .select("id, code, mode, status, eta, origin_warehouse")
+        .order("created_at", { ascending: false })
+        .limit(10);
+      return data ?? [];
+    },
+  });
+
+  const { data: myDeliveries } = useQuery({
+    queryKey: ["portal-deliveries"],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("deliveries")
+        .select("id, code, city, status, scheduled_for, delivered_at")
+        .order("created_at", { ascending: false })
+        .limit(10);
+      return data ?? [];
+    },
+  });
+
+  const { data: myInvoices } = useQuery({
+    queryKey: ["portal-invoices"],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("invoices")
+        .select("id, number, currency, total, amount_paid, status, due_date")
+        .order("issue_date", { ascending: false })
+        .limit(10);
+      return data ?? [];
+    },
+  });
+
   async function signOut() {
     await supabase.auth.signOut();
     navigate({ to: "/", replace: true });
@@ -60,10 +111,14 @@ function PortalPage() {
     <div className="min-h-screen bg-background">
       <header className="border-b bg-card">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
-          <Link to="/"><LogoLockup compact /></Link>
+          <Link to="/">
+            <LogoLockup compact />
+          </Link>
           <div className="flex items-center gap-3">
             <div className="hidden text-right sm:block">
-              <div className="text-sm font-semibold text-brand-navy">{profile?.full_name ?? profile?.email}</div>
+              <div className="text-sm font-semibold text-brand-navy">
+                {profile?.full_name ?? profile?.email}
+              </div>
               {profile?.shipping_mark && (
                 <div className="font-mono text-xs text-brand-orange">{profile.shipping_mark}</div>
               )}
@@ -80,12 +135,15 @@ function PortalPage() {
         <Card className="overflow-hidden border-0 bg-gradient-to-br from-brand-navy to-brand-sky p-6 text-white md:p-8">
           <div className="flex flex-wrap items-center justify-between gap-6">
             <div>
-              <div className="text-xs uppercase tracking-widest text-white/70">Your NDL Shipping Mark</div>
+              <div className="text-xs uppercase tracking-widest text-white/70">
+                Your NDL Shipping Mark
+              </div>
               <div className="mt-2 font-mono text-3xl font-extrabold md:text-4xl">
                 {profile?.shipping_mark ?? "…"}
               </div>
               <p className="mt-3 max-w-md text-sm text-white/85">
-                Write this mark on every package sent to our warehouses so we can identify it as yours.
+                Write this mark on every package sent to our warehouses so we can identify it as
+                yours.
               </p>
             </div>
             {profile?.shipping_mark && (
@@ -103,42 +161,166 @@ function PortalPage() {
         <section className="mt-10">
           <div className="mb-4 flex items-center gap-2">
             <MapPin className="h-5 w-5 text-brand-orange" />
-            <h2 className="font-display text-xl font-bold text-brand-navy">Ship your goods to our warehouses</h2>
+            <h2 className="font-display text-xl font-bold text-brand-navy">
+              Ship your goods to our warehouses
+            </h2>
           </div>
           <div className="grid gap-4 md:grid-cols-2">
-            {warehouses?.filter((w) => w.code !== "GH").map((w) => (
-              <Card key={w.code} className="p-5">
-                <div className="mb-2 flex items-center justify-between">
-                  <div className="font-display text-lg font-bold text-brand-navy">{w.name}</div>
-                  <span className="rounded-md bg-brand-orange/10 px-2 py-0.5 text-xs font-semibold uppercase text-brand-orange">
-                    {w.country}
-                  </span>
-                </div>
-                <div className="text-sm text-muted-foreground">
-                  <div>Recipient: <span className="font-semibold text-foreground">NDL {w.code} — {profile?.shipping_mark ?? ""}</span></div>
-                  {w.address && <div className="whitespace-pre-line">{w.address}</div>}
-                </div>
-              </Card>
-            ))}
+            {warehouses
+              ?.filter((w) => w.code !== "GH")
+              .map((w) => (
+                <Card key={w.code} className="p-5">
+                  <div className="mb-2 flex items-center justify-between">
+                    <div className="font-display text-lg font-bold text-brand-navy">{w.name}</div>
+                    <span className="rounded-md bg-brand-orange/10 px-2 py-0.5 text-xs font-semibold uppercase text-brand-orange">
+                      {w.country}
+                    </span>
+                  </div>
+                  <div className="text-sm text-muted-foreground">
+                    <div>
+                      Recipient:{" "}
+                      <span className="font-semibold text-foreground">
+                        NDL {w.code} — {profile?.shipping_mark ?? ""}
+                      </span>
+                    </div>
+                    {w.address && <div className="whitespace-pre-line">{w.address}</div>}
+                  </div>
+                </Card>
+              ))}
           </div>
         </section>
 
-        {/* Placeholder tiles */}
-        <section className="mt-10 grid gap-4 md:grid-cols-3">
-          {[
-            { icon: Package, t: "My packages", d: "Track packages received at our origin warehouses." },
-            { icon: PackageSearch, t: "Shipments", d: "See consolidations and ETAs to Ghana." },
-            { icon: MapPin, t: "Deliveries", d: "Book last-mile delivery and view POD." },
-          ].map((s) => (
-            <Card key={s.t} className="p-5">
-              <div className="mb-3 inline-flex rounded-lg bg-brand-navy/5 p-2 text-brand-navy">
-                <s.icon className="h-5 w-5" />
+        {/* My packages / shipments / deliveries / invoices */}
+        <section className="mt-10 grid gap-4 md:grid-cols-2">
+          <Card className="p-5">
+            <div className="mb-3 flex items-center gap-2">
+              <Package className="h-5 w-5 text-brand-navy" />
+              <h2 className="font-display text-lg font-bold text-brand-navy">My packages</h2>
+            </div>
+            {!myPackages?.length ? (
+              <p className="text-sm text-muted-foreground">
+                No packages received yet. Ship to one of our warehouses using your mark above.
+              </p>
+            ) : (
+              <div className="grid gap-2">
+                {myPackages.map((p) => (
+                  <div
+                    key={p.id}
+                    className="flex items-center justify-between border-b py-2 text-sm last:border-b-0"
+                  >
+                    <div>
+                      <div className="font-mono text-xs font-semibold text-brand-navy">
+                        {p.tracking_code}
+                      </div>
+                      <div className="text-xs text-muted-foreground">
+                        {p.description ?? `${p.pieces} pcs, ${Number(p.weight_kg).toFixed(1)}kg`}
+                      </div>
+                    </div>
+                    <StatusBadge tone={statusTone(p.status)}>
+                      {p.status.replace("_", " ")}
+                    </StatusBadge>
+                  </div>
+                ))}
               </div>
-              <div className="font-display text-lg font-bold text-brand-navy">{s.t}</div>
-              <p className="mt-1 text-sm text-muted-foreground">{s.d}</p>
-              <div className="mt-3 text-xs text-muted-foreground">Coming soon</div>
-            </Card>
-          ))}
+            )}
+          </Card>
+
+          <Card className="p-5">
+            <div className="mb-3 flex items-center gap-2">
+              <PackageSearch className="h-5 w-5 text-brand-navy" />
+              <h2 className="font-display text-lg font-bold text-brand-navy">My shipments</h2>
+            </div>
+            {!myShipments?.length ? (
+              <p className="text-sm text-muted-foreground">
+                Shipments appear here once your packages are consolidated and loaded.
+              </p>
+            ) : (
+              <div className="grid gap-2">
+                {myShipments.map((s) => (
+                  <div
+                    key={s.id}
+                    className="flex items-center justify-between border-b py-2 text-sm last:border-b-0"
+                  >
+                    <div>
+                      <div className="font-mono text-xs font-semibold text-brand-navy">
+                        {s.code}
+                      </div>
+                      <div className="text-xs text-muted-foreground">
+                        {s.mode.replace("_", " ")} {s.eta ? `· ETA ${s.eta}` : ""}
+                      </div>
+                    </div>
+                    <StatusBadge tone={statusTone(s.status)}>{s.status}</StatusBadge>
+                  </div>
+                ))}
+              </div>
+            )}
+          </Card>
+
+          <Card className="p-5">
+            <div className="mb-3 flex items-center gap-2">
+              <MapPin className="h-5 w-5 text-brand-navy" />
+              <h2 className="font-display text-lg font-bold text-brand-navy">My deliveries</h2>
+            </div>
+            {!myDeliveries?.length ? (
+              <p className="text-sm text-muted-foreground">
+                Book last-mile delivery once your goods arrive in Ghana — talk to our team on
+                WhatsApp.
+              </p>
+            ) : (
+              <div className="grid gap-2">
+                {myDeliveries.map((d) => (
+                  <div
+                    key={d.id}
+                    className="flex items-center justify-between border-b py-2 text-sm last:border-b-0"
+                  >
+                    <div>
+                      <div className="font-mono text-xs font-semibold text-brand-navy">
+                        {d.code}
+                      </div>
+                      <div className="text-xs text-muted-foreground">
+                        {d.city} {d.scheduled_for ? `· ${d.scheduled_for}` : ""}
+                      </div>
+                    </div>
+                    <StatusBadge tone={statusTone(d.status)}>
+                      {d.status.replace("_", " ")}
+                    </StatusBadge>
+                  </div>
+                ))}
+              </div>
+            )}
+          </Card>
+
+          <Card className="p-5">
+            <div className="mb-3 flex items-center gap-2">
+              <Receipt className="h-5 w-5 text-brand-navy" />
+              <h2 className="font-display text-lg font-bold text-brand-navy">My invoices</h2>
+            </div>
+            {!myInvoices?.length ? (
+              <p className="text-sm text-muted-foreground">
+                Invoices will show here once billed by our team.
+              </p>
+            ) : (
+              <div className="grid gap-2">
+                {myInvoices.map((inv) => (
+                  <div
+                    key={inv.id}
+                    className="flex items-center justify-between border-b py-2 text-sm last:border-b-0"
+                  >
+                    <div>
+                      <div className="font-mono text-xs font-semibold text-brand-navy">
+                        {inv.number}
+                      </div>
+                      <div className="text-xs text-muted-foreground">
+                        {inv.currency} {Number(inv.total).toFixed(2)}{" "}
+                        {inv.due_date ? `· due ${inv.due_date}` : ""}
+                      </div>
+                    </div>
+                    <StatusBadge tone={statusTone(inv.status)}>{inv.status}</StatusBadge>
+                  </div>
+                ))}
+              </div>
+            )}
+          </Card>
         </section>
       </main>
     </div>

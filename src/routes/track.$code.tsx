@@ -48,15 +48,19 @@ function TrackPage() {
 
         <div className="rounded-2xl border bg-card p-8 text-center">
           <Clock className="mx-auto h-10 w-10 text-brand-sky" />
-          <h1 className="mt-4 font-display text-xl font-bold text-brand-navy">Tracking not available yet</h1>
+          <h1 className="mt-4 font-display text-xl font-bold text-brand-navy">
+            Tracking not available yet
+          </h1>
           <p className="mx-auto mt-2 max-w-md text-sm text-muted-foreground">
             We couldn't find this shipment. It may not be in our system yet, the number could be
             mistyped, or the shipment hasn't been dispatched. Sign in to your portal to see all your
             packages and their live status.
           </p>
           <div className="mt-6 flex flex-wrap justify-center gap-3">
-            <Link to="/auth">
-              <Button className="bg-brand-orange hover:bg-brand-orange/90">Sign in to portal</Button>
+            <Link to="/auth" search={{ mode: "signin" } as never}>
+              <Button className="bg-brand-orange hover:bg-brand-orange/90">
+                Sign in to portal
+              </Button>
             </Link>
             <Link to="/">
               <Button variant="outline">Try another code</Button>
