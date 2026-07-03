@@ -154,37 +154,43 @@
 
 @utility font-display { font-family: var(--font-display); }
 
-/* Hero motion: ships, planes, route dashes */
+/* Hero motion: GPU-friendly transforms + opacity only */
 @keyframes sail-right {
-  0%   { transform: translateX(-15vw) translateY(0); }
-  50%  { transform: translateX(50vw) translateY(-6px); }
-  100% { transform: translateX(115vw) translateY(0); }
+  0%   { transform: translate3d(-15vw, 0, 0); }
+  50%  { transform: translate3d(50vw, -6px, 0); }
+  100% { transform: translate3d(115vw, 0, 0); }
 }
 @keyframes sail-left {
-  0%   { transform: translateX(115vw) translateY(0) scaleX(-1); }
-  50%  { transform: translateX(50vw) translateY(4px) scaleX(-1); }
-  100% { transform: translateX(-15vw) translateY(0) scaleX(-1); }
+  0%   { transform: translate3d(115vw, 0, 0) scaleX(-1); }
+  50%  { transform: translate3d(50vw, 4px, 0) scaleX(-1); }
+  100% { transform: translate3d(-15vw, 0, 0) scaleX(-1); }
 }
 @keyframes fly-across {
-  0%   { transform: translateX(-10vw) translateY(0) rotate(-6deg); opacity: 0; }
+  0%   { transform: translate3d(-10vw, 0, 0) rotate(-6deg); opacity: 0; }
   10%  { opacity: 1; }
   90%  { opacity: 1; }
-  100% { transform: translateX(115vw) translateY(-30px) rotate(-6deg); opacity: 0; }
+  100% { transform: translate3d(115vw, -30px, 0) rotate(-6deg); opacity: 0; }
 }
 @keyframes dash-flow {
   to { stroke-dashoffset: -240; }
 }
 @keyframes bob {
-  0%, 100% { transform: translateY(0); }
-  50%      { transform: translateY(-4px); }
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50%      { transform: translate3d(0, -4px, 0); }
 }
 @keyframes wave-shift {
-  0%   { transform: translateX(0); }
-  100% { transform: translateX(-120px); }
+  0%   { transform: translate3d(0, 0, 0); }
+  100% { transform: translate3d(-120px, 0, 0); }
 }
-.animate-sail-right { animation: sail-right 32s linear infinite; }
-.animate-sail-left  { animation: sail-left 40s linear infinite; }
-.animate-fly        { animation: fly-across 22s linear infinite; }
+.animate-sail-right { animation: sail-right 32s linear infinite; will-change: transform; backface-visibility: hidden; }
+.animate-sail-left  { animation: sail-left 40s linear infinite; will-change: transform; backface-visibility: hidden; }
+.animate-fly        { animation: fly-across 22s linear infinite; will-change: transform, opacity; backface-visibility: hidden; }
 .animate-dash       { stroke-dasharray: 8 10; animation: dash-flow 6s linear infinite; }
-.animate-bob        { animation: bob 3.5s ease-in-out infinite; }
-.animate-waves      { animation: wave-shift 12s linear infinite; }
+.animate-bob        { animation: bob 3.5s ease-in-out infinite; will-change: transform; }
+.animate-waves      { animation: wave-shift 12s linear infinite; will-change: transform; backface-visibility: hidden; }
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-sail-right, .animate-sail-left, .animate-fly,
+  .animate-dash, .animate-bob, .animate-waves { animation: none; }
+}
+
