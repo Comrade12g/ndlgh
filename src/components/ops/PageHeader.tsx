@@ -80,9 +80,23 @@ export function StatusBadge({
 export function statusTone(status: string): keyof typeof TONE {
   const s = status.toLowerCase();
   if (["delivered", "cleared", "closed", "paid", "received", "active"].includes(s)) return "green";
-  if (["in_transit", "loading", "departed", "sent", "partial", "out_for_delivery", "ordered", "shipped"].includes(s)) return "sky";
-  if (["planning", "expected", "draft", "requested", "quoted", "scheduled", "new"].includes(s)) return "amber";
-  if (["cancelled", "failed", "returned", "lost", "void", "overdue", "blocked"].includes(s)) return "red";
+  if (
+    [
+      "in_transit",
+      "loading",
+      "departed",
+      "sent",
+      "partial",
+      "out_for_delivery",
+      "ordered",
+      "shipped",
+    ].includes(s)
+  )
+    return "sky";
+  if (["planning", "expected", "draft", "requested", "quoted", "scheduled", "new"].includes(s))
+    return "amber";
+  if (["cancelled", "failed", "returned", "lost", "void", "overdue", "blocked"].includes(s))
+    return "red";
   if (["vip", "arrived", "arrived_gh", "ready_delivery"].includes(s)) return "orange";
   return "neutral";
 }

@@ -34,8 +34,12 @@ function SupportPage() {
     queryFn: async () => {
       const { data } = await supabase
         .from("packages")
-        .select("id, tracking_code, description, status, warehouse_code, cbm, weight_kg, created_at, shipping_mark")
-        .or(`tracking_code.ilike.%${term}%,shipping_mark.ilike.%${term}%,description.ilike.%${term}%`)
+        .select(
+          "id, tracking_code, description, status, warehouse_code, cbm, weight_kg, created_at, shipping_mark",
+        )
+        .or(
+          `tracking_code.ilike.%${term}%,shipping_mark.ilike.%${term}%,description.ilike.%${term}%`,
+        )
         .order("created_at", { ascending: false })
         .limit(30);
       return data ?? [];
@@ -63,7 +67,10 @@ function SupportPage() {
       </Card>
 
       {term.length < 2 ? (
-        <EmptyState title="Start typing to search" description="Enter at least 2 characters to look up customers or packages." />
+        <EmptyState
+          title="Start typing to search"
+          description="Enter at least 2 characters to look up customers or packages."
+        />
       ) : (
         <div className="grid gap-6 lg:grid-cols-2">
           <Card className="overflow-hidden">
@@ -71,16 +78,23 @@ function SupportPage() {
               Customers {customers?.length ? `(${customers.length})` : ""}
             </div>
             {!customers?.length ? (
-              <div className="p-6 text-center text-sm text-muted-foreground">No customers matched.</div>
+              <div className="p-6 text-center text-sm text-muted-foreground">
+                No customers matched.
+              </div>
             ) : (
               <ul className="divide-y">
                 {customers.map((c) => (
-                  <li key={c.id} className="flex items-center justify-between px-4 py-3 hover:bg-muted/30">
+                  <li
+                    key={c.id}
+                    className="flex items-center justify-between px-4 py-3 hover:bg-muted/30"
+                  >
                     <div>
                       <div className="font-semibold text-brand-navy">{c.full_name ?? "—"}</div>
                       <div className="text-xs text-muted-foreground">{c.phone ?? "no phone"}</div>
                     </div>
-                    <div className="font-mono text-xs font-bold text-brand-orange">{c.shipping_mark}</div>
+                    <div className="font-mono text-xs font-bold text-brand-orange">
+                      {c.shipping_mark}
+                    </div>
                   </li>
                 ))}
               </ul>
@@ -92,18 +106,24 @@ function SupportPage() {
               Packages {packages?.length ? `(${packages.length})` : ""}
             </div>
             {!packages?.length ? (
-              <div className="p-6 text-center text-sm text-muted-foreground">No packages matched.</div>
+              <div className="p-6 text-center text-sm text-muted-foreground">
+                No packages matched.
+              </div>
             ) : (
               <ul className="divide-y">
                 {packages.map((p) => (
                   <li key={p.id} className="px-4 py-3 hover:bg-muted/30">
                     <div className="flex items-center justify-between">
-                      <div className="font-mono text-xs font-bold text-brand-navy">{p.tracking_code}</div>
+                      <div className="font-mono text-xs font-bold text-brand-navy">
+                        {p.tracking_code}
+                      </div>
                       <StatusBadge tone={statusTone(p.status)}>{p.status}</StatusBadge>
                     </div>
                     <div className="mt-1 text-sm text-brand-navy">{p.description ?? "—"}</div>
                     <div className="mt-1 flex flex-wrap gap-3 text-xs text-muted-foreground">
-                      <span>Mark: <span className="font-mono text-brand-orange">{p.shipping_mark}</span></span>
+                      <span>
+                        Mark: <span className="font-mono text-brand-orange">{p.shipping_mark}</span>
+                      </span>
                       <span>Origin: {p.warehouse_code}</span>
                       {p.cbm ? <span>{Number(p.cbm).toFixed(3)} CBM</span> : null}
                       {p.weight_kg ? <span>{Number(p.weight_kg).toFixed(1)} kg</span> : null}

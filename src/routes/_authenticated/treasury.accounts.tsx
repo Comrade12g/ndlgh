@@ -6,7 +6,14 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { PageHeader, EmptyState } from "@/components/ops/PageHeader";
 import { Plus, TrendingUp } from "lucide-react";
 import { toast } from "sonner";
@@ -37,7 +44,9 @@ function TreasuryPage() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("transactions")
-        .select("id, txn_type, direction, amount, currency, fx_rate_to_ghs, occurred_at, reference, notes, agent_id")
+        .select(
+          "id, txn_type, direction, amount, currency, fx_rate_to_ghs, occurred_at, reference, notes, agent_id",
+        )
         .order("occurred_at", { ascending: false })
         .limit(200);
       if (error) throw error;
@@ -58,7 +67,12 @@ function TreasuryPage() {
                 <Plus className="mr-2 h-4 w-4" /> Set FX rate
               </Button>
             </DialogTrigger>
-            <FxDialog onDone={() => { setOpen(false); qc.invalidateQueries({ queryKey: ["fx-rates"] }); }} />
+            <FxDialog
+              onDone={() => {
+                setOpen(false);
+                qc.invalidateQueries({ queryKey: ["fx-rates"] });
+              }}
+            />
           </Dialog>
         }
       />
@@ -71,13 +85,17 @@ function TreasuryPage() {
         </div>
         {!rates?.length ? (
           <Card className="p-6">
-            <div className="text-sm text-muted-foreground">No FX rates set. Rates are used to reconcile multi-currency transactions to GHS.</div>
+            <div className="text-sm text-muted-foreground">
+              No FX rates set. Rates are used to reconcile multi-currency transactions to GHS.
+            </div>
           </Card>
         ) : (
           <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-4">
             {rates.slice(0, 8).map((r) => (
               <Card key={r.id} className="p-4">
-                <div className="text-xs uppercase tracking-wider text-muted-foreground">{r.currency}</div>
+                <div className="text-xs uppercase tracking-wider text-muted-foreground">
+                  {r.currency}
+                </div>
                 <div className="mt-1 font-display text-2xl font-extrabold text-brand-navy">
                   {Number(r.rate_to_ghs).toFixed(4)}
                 </div>
@@ -115,15 +133,23 @@ function TreasuryPage() {
               <tbody>
                 {txns.map((t) => (
                   <tr key={t.id} className="border-t hover:bg-muted/30">
-                    <td className="px-4 py-3 text-muted-foreground">{new Date(t.occurred_at).toLocaleDateString()}</td>
+                    <td className="px-4 py-3 text-muted-foreground">
+                      {new Date(t.occurred_at).toLocaleDateString()}
+                    </td>
                     <td className="px-4 py-3 text-brand-navy">{t.txn_type.replace(/_/g, " ")}</td>
                     <td className="px-4 py-3">
-                      <span className={`rounded px-2 py-0.5 text-xs font-semibold uppercase ${t.direction === "credit" ? "bg-emerald-500/10 text-emerald-700" : "bg-red-500/10 text-red-700"}`}>
+                      <span
+                        className={`rounded px-2 py-0.5 text-xs font-semibold uppercase ${t.direction === "credit" ? "bg-emerald-500/10 text-emerald-700" : "bg-red-500/10 text-red-700"}`}
+                      >
                         {t.direction}
                       </span>
                     </td>
-                    <td className="px-4 py-3 text-right font-semibold">{t.currency} {Number(t.amount).toFixed(2)}</td>
-                    <td className="px-4 py-3 text-muted-foreground">{t.reference ?? t.notes ?? "—"}</td>
+                    <td className="px-4 py-3 text-right font-semibold">
+                      {t.currency} {Number(t.amount).toFixed(2)}
+                    </td>
+                    <td className="px-4 py-3 text-muted-foreground">
+                      {t.reference ?? t.notes ?? "—"}
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -151,18 +177,34 @@ function FxDialog({ onDone }: { onDone: () => void }) {
       });
       if (error) throw error;
     },
-    onSuccess: () => { toast.success("FX rate saved"); onDone(); },
+    onSuccess: () => {
+      toast.success("FX rate saved");
+      onDone();
+    },
     onError: (e) => toast.error(e instanceof Error ? e.message : "Failed"),
   });
 
   return (
     <DialogContent className="max-w-md">
-      <DialogHeader><DialogTitle>Set daily FX rate</DialogTitle></DialogHeader>
-      <form onSubmit={(e) => { e.preventDefault(); mut.mutate(); }} className="grid gap-3">
+      <DialogHeader>
+        <DialogTitle>Set daily FX rate</DialogTitle>
+      </DialogHeader>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          mut.mutate();
+        }}
+        className="grid gap-3"
+      >
         <div className="grid grid-cols-2 gap-3">
           <div className="grid gap-2">
             <Label>Currency</Label>
-            <Input value={currency} onChange={(e) => setCurrency(e.target.value)} maxLength={3} required />
+            <Input
+              value={currency}
+              onChange={(e) => setCurrency(e.target.value)}
+              maxLength={3}
+              required
+            />
           </div>
           <div className="grid gap-2">
             <Label>Effective date</Label>
@@ -171,10 +213,20 @@ function FxDialog({ onDone }: { onDone: () => void }) {
         </div>
         <div className="grid gap-2">
           <Label>Rate → GHS (1 {currency.toUpperCase()} = ? GHS)</Label>
-          <Input type="number" step="0.0001" value={rate} onChange={(e) => setRate(e.target.value)} required />
+          <Input
+            type="number"
+            step="0.0001"
+            value={rate}
+            onChange={(e) => setRate(e.target.value)}
+            required
+          />
         </div>
         <DialogFooter>
-          <Button type="submit" disabled={mut.isPending} className="bg-brand-orange hover:bg-brand-orange/90">
+          <Button
+            type="submit"
+            disabled={mut.isPending}
+            className="bg-brand-orange hover:bg-brand-orange/90"
+          >
             {mut.isPending ? "Saving…" : "Save rate"}
           </Button>
         </DialogFooter>

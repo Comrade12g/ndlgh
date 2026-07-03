@@ -23,7 +23,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { PageHeader, EmptyState, StatusBadge, statusTone } from "@/components/ops/PageHeader";
-import { Plus, Trash2, Search, Receipt } from "lucide-react";
+import { openWhatsApp, waTemplates } from "@/lib/whatsapp";
+import { Plus, Trash2, Search, Receipt, MessageCircle } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/invoices")({
@@ -630,6 +631,25 @@ function InvoiceDetailDialog({ id, onChanged }: { id: string; onChanged: () => v
                 Void
               </Button>
             )}
+            <Button
+              size="sm"
+              variant="outline"
+              className="border-emerald-600 text-emerald-700 hover:bg-emerald-50"
+              onClick={() => {
+                const name = invoice.customer?.full_name ?? "there";
+                const msg = waTemplates.invoiceIssued(
+                  name,
+                  invoice.number,
+                  invoice.currency,
+                  Number(invoice.total),
+                  invoice.due_date,
+                );
+                if (!openWhatsApp(invoice.customer?.phone, msg))
+                  toast.error("No valid phone number on file");
+              }}
+            >
+              <MessageCircle className="mr-2 h-4 w-4" /> Notify on WhatsApp
+            </Button>
           </div>
           {outstanding > 0 && invoice.status !== "void" && (
             <Dialog open={payOpen} onOpenChange={setPayOpen}>
@@ -640,7 +660,10 @@ function InvoiceDetailDialog({ id, onChanged }: { id: string; onChanged: () => v
               </DialogTrigger>
               <RecordPaymentDialog
                 invoiceId={id}
+                invoiceNumber={invoice.number}
                 customerId={invoice.customer_id}
+                customerName={invoice.customer?.full_name ?? "there"}
+                customerPhone={invoice.customer?.phone}
                 currency={invoice.currency}
                 maxAmount={outstanding}
                 onDone={() => {
@@ -660,13 +683,19 @@ function InvoiceDetailDialog({ id, onChanged }: { id: string; onChanged: () => v
 
 function RecordPaymentDialog({
   invoiceId,
+  invoiceNumber,
   customerId,
+  customerName,
+  customerPhone,
   currency,
   maxAmount,
   onDone,
 }: {
   invoiceId: string;
+  invoiceNumber: string;
   customerId: string;
+  customerName: string;
+  customerPhone: string | null | undefined;
   currency: string;
   maxAmount: number;
   onDone: () => void;
@@ -730,9 +759,19 @@ function RecordPaymentDialog({
         notes: notes || null,
         created_by: u.user?.id,
       });
+
+      return { amt, outstanding: Math.max(0, Number(inv.total) - totalPaid) };
     },
-    onSuccess: () => {
+    onSuccess: (res) => {
       toast.success("Payment recorded");
+      const msg = waTemplates.paymentReceived(
+        customerName,
+        invoiceNumber,
+        currency,
+        res.amt,
+        res.outstanding,
+      );
+      openWhatsApp(customerPhone, msg);
       onDone();
     },
     onError: (e) => toast.error(e instanceof Error ? e.message : "Failed"),

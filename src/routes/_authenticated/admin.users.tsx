@@ -4,7 +4,13 @@ import { supabase } from "@/integrations/supabase/client";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { PageHeader, EmptyState, StatusBadge } from "@/components/ops/PageHeader";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { X } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -61,10 +67,15 @@ function AdminUsersPage() {
 
   const addRole = useMutation({
     mutationFn: async ({ userId, role }: { userId: string; role: string }) => {
-      const { error } = await supabase.from("user_roles").insert({ user_id: userId, role: role as never });
+      const { error } = await supabase
+        .from("user_roles")
+        .insert({ user_id: userId, role: role as never });
       if (error) throw error;
     },
-    onSuccess: () => { toast.success("Role added"); qc.invalidateQueries({ queryKey: ["users-with-roles"] }); },
+    onSuccess: () => {
+      toast.success("Role added");
+      qc.invalidateQueries({ queryKey: ["users-with-roles"] });
+    },
     onError: (e: Error) => toast.error(e.message),
   });
 
@@ -73,7 +84,10 @@ function AdminUsersPage() {
       const { error } = await supabase.from("user_roles").delete().eq("id", id);
       if (error) throw error;
     },
-    onSuccess: () => { toast.success("Role removed"); qc.invalidateQueries({ queryKey: ["users-with-roles"] }); },
+    onSuccess: () => {
+      toast.success("Role removed");
+      qc.invalidateQueries({ queryKey: ["users-with-roles"] });
+    },
     onError: (e: Error) => toast.error(e.message),
   });
 
@@ -109,35 +123,50 @@ function AdminUsersPage() {
                     <tr key={u.id} className="border-t hover:bg-muted/30">
                       <td className="px-4 py-3">
                         <div className="font-semibold text-brand-navy">{u.full_name ?? "—"}</div>
-                        <div className="text-xs text-muted-foreground">{new Date(u.created_at).toLocaleDateString()}</div>
+                        <div className="text-xs text-muted-foreground">
+                          {new Date(u.created_at).toLocaleDateString()}
+                        </div>
                       </td>
-                      <td className="px-4 py-3 font-mono text-xs text-brand-orange">{u.shipping_mark}</td>
+                      <td className="px-4 py-3 font-mono text-xs text-brand-orange">
+                        {u.shipping_mark}
+                      </td>
                       <td className="px-4 py-3 text-muted-foreground">{u.phone ?? "—"}</td>
                       <td className="px-4 py-3">
                         <div className="flex flex-wrap gap-1">
-                          {u.roles.length ? u.roles.map((r) => (
-                            <span key={r.id} className="inline-flex items-center gap-1">
-                              <StatusBadge tone={ROLE_TONE[r.role] ?? "neutral"}>{r.role.replace(/_/g, " ")}</StatusBadge>
-                              <button
-                                onClick={() => removeRole.mutate(r.id)}
-                                className="text-muted-foreground hover:text-red-600"
-                                title="Remove role"
-                              >
-                                <X className="h-3 w-3" />
-                              </button>
-                            </span>
-                          )) : <span className="text-xs text-muted-foreground">no role</span>}
+                          {u.roles.length ? (
+                            u.roles.map((r) => (
+                              <span key={r.id} className="inline-flex items-center gap-1">
+                                <StatusBadge tone={ROLE_TONE[r.role] ?? "neutral"}>
+                                  {r.role.replace(/_/g, " ")}
+                                </StatusBadge>
+                                <button
+                                  onClick={() => removeRole.mutate(r.id)}
+                                  className="text-muted-foreground hover:text-red-600"
+                                  title="Remove role"
+                                >
+                                  <X className="h-3 w-3" />
+                                </button>
+                              </span>
+                            ))
+                          ) : (
+                            <span className="text-xs text-muted-foreground">no role</span>
+                          )}
                         </div>
                       </td>
                       <td className="px-4 py-3">
                         <div className="flex items-center gap-2">
-                          <Select value={pending[u.id] ?? ""} onValueChange={(v) => setPending((s) => ({ ...s, [u.id]: v }))}>
+                          <Select
+                            value={pending[u.id] ?? ""}
+                            onValueChange={(v) => setPending((s) => ({ ...s, [u.id]: v }))}
+                          >
                             <SelectTrigger className="h-8 w-40 text-xs">
                               <SelectValue placeholder="Select role…" />
                             </SelectTrigger>
                             <SelectContent>
                               {options.map((r) => (
-                                <SelectItem key={r} value={r} className="text-xs">{r.replace(/_/g, " ")}</SelectItem>
+                                <SelectItem key={r} value={r} className="text-xs">
+                                  {r.replace(/_/g, " ")}
+                                </SelectItem>
                               ))}
                             </SelectContent>
                           </Select>
@@ -151,7 +180,9 @@ function AdminUsersPage() {
                               addRole.mutate({ userId: u.id, role });
                               setPending((s) => ({ ...s, [u.id]: "" }));
                             }}
-                          >Add</Button>
+                          >
+                            Add
+                          </Button>
                         </div>
                       </td>
                     </tr>

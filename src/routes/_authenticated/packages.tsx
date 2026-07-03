@@ -8,13 +8,23 @@ import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import {
-  Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger,
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
 } from "@/components/ui/dialog";
 import {
-  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from "@/components/ui/select";
 import { PageHeader, EmptyState, StatusBadge, statusTone } from "@/components/ops/PageHeader";
-import { Plus, Search, Package as PackageIcon } from "lucide-react";
+import { openWhatsApp, waTemplates } from "@/lib/whatsapp";
+import { Plus, Search, Package as PackageIcon, MessageCircle } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/packages")({
@@ -31,13 +41,26 @@ function PackagesPage() {
     queryFn: async () => {
       let q = supabase
         .from("packages")
-        .select("id, tracking_code, shipping_mark, warehouse_code, description, weight_kg, cbm, pieces, status, received_at")
+        .select(
+          "id, tracking_code, shipping_mark, warehouse_code, description, weight_kg, cbm, pieces, status, received_at, customer_id",
+        )
         .order("received_at", { ascending: false })
         .limit(200);
       if (search) q = q.or(`shipping_mark.ilike.%${search}%,tracking_code.ilike.%${search}%`);
       const { data, error } = await q;
       if (error) throw error;
-      return data ?? [];
+      const rows = data ?? [];
+      const customerIds = Array.from(
+        new Set(rows.map((r) => r.customer_id).filter(Boolean)),
+      ) as string[];
+      const { data: profiles } = customerIds.length
+        ? await supabase.from("profiles").select("id, full_name, phone").in("id", customerIds)
+        : { data: [] as { id: string; full_name: string | null; phone: string | null }[] };
+      const byId = new Map((profiles ?? []).map((p) => [p.id, p]));
+      return rows.map((r) => ({
+        ...r,
+        customer: r.customer_id ? byId.get(r.customer_id) : undefined,
+      }));
     },
   });
 
@@ -54,7 +77,12 @@ function PackagesPage() {
                 <Plus className="mr-2 h-4 w-4" /> Intake package
               </Button>
             </DialogTrigger>
-            <IntakePackageDialog onDone={() => { setOpen(false); qc.invalidateQueries({ queryKey: ["packages"] }); }} />
+            <IntakePackageDialog
+              onDone={() => {
+                setOpen(false);
+                qc.invalidateQueries({ queryKey: ["packages"] });
+              }}
+            />
           </Dialog>
         }
       />
@@ -62,7 +90,12 @@ function PackagesPage() {
       <div className="mb-4 flex items-center gap-2">
         <div className="relative max-w-sm flex-1">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-          <Input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Shipping mark or tracking code…" className="pl-9" />
+          <Input
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Shipping mark or tracking code…"
+            className="pl-9"
+          />
         </div>
       </div>
 
@@ -87,22 +120,52 @@ function PackagesPage() {
                   <th className="px-4 py-3 text-right">Wt (kg)</th>
                   <th className="px-4 py-3 text-right">CBM</th>
                   <th className="px-4 py-3 text-left">Status</th>
+                  <th className="px-4 py-3 text-left"></th>
                 </tr>
               </thead>
               <tbody>
                 {packages.map((p) => (
                   <tr key={p.id} className="border-t hover:bg-muted/30">
-                    <td className="px-4 py-3 font-mono text-xs text-brand-navy">{p.tracking_code}</td>
-                    <td className="px-4 py-3 font-mono text-xs text-brand-orange">{p.shipping_mark ?? "—"}</td>
+                    <td className="px-4 py-3 font-mono text-xs text-brand-navy">
+                      {p.tracking_code}
+                    </td>
+                    <td className="px-4 py-3 font-mono text-xs text-brand-orange">
+                      {p.shipping_mark ?? "—"}
+                    </td>
                     <td className="px-4 py-3">
-                      <span className="rounded bg-brand-navy/10 px-2 py-0.5 text-xs font-semibold text-brand-navy">{p.warehouse_code ?? "—"}</span>
+                      <span className="rounded bg-brand-navy/10 px-2 py-0.5 text-xs font-semibold text-brand-navy">
+                        {p.warehouse_code ?? "—"}
+                      </span>
                     </td>
                     <td className="px-4 py-3 text-muted-foreground">{p.description ?? "—"}</td>
                     <td className="px-4 py-3 text-right">{p.pieces}</td>
                     <td className="px-4 py-3 text-right">{Number(p.weight_kg).toFixed(2)}</td>
                     <td className="px-4 py-3 text-right">{Number(p.cbm).toFixed(3)}</td>
                     <td className="px-4 py-3">
-                      <StatusBadge tone={statusTone(p.status)}>{p.status.replace("_", " ")}</StatusBadge>
+                      <StatusBadge tone={statusTone(p.status)}>
+                        {p.status.replace("_", " ")}
+                      </StatusBadge>
+                    </td>
+                    <td className="px-4 py-3">
+                      {p.customer?.phone && (
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          className="h-7 w-7 text-emerald-700 hover:bg-emerald-50"
+                          title="Notify customer on WhatsApp"
+                          onClick={() => {
+                            const msg = waTemplates.packageReceived(
+                              p.customer?.full_name ?? "there",
+                              p.tracking_code,
+                              p.warehouse_code ?? "our",
+                            );
+                            if (!openWhatsApp(p.customer?.phone, msg))
+                              toast.error("No valid phone number on file");
+                          }}
+                        >
+                          <MessageCircle className="h-4 w-4" />
+                        </Button>
+                      )}
                     </td>
                   </tr>
                 ))}
@@ -173,7 +236,11 @@ function IntakePackageDialog({ onDone }: { onDone: () => void }) {
       return { matched: !!customer_id };
     },
     onSuccess: (res) => {
-      toast.success(res.matched ? "Package intaken and matched to customer" : "Package intaken (unmatched — no customer with that mark)");
+      toast.success(
+        res.matched
+          ? "Package intaken and matched to customer"
+          : "Package intaken (unmatched — no customer with that mark)",
+      );
       onDone();
     },
     onError: (e) => toast.error(e instanceof Error ? e.message : "Failed"),
@@ -188,19 +255,36 @@ function IntakePackageDialog({ onDone }: { onDone: () => void }) {
           <PackageIcon className="h-5 w-5 text-brand-orange" /> Intake package
         </DialogTitle>
       </DialogHeader>
-      <form onSubmit={(e) => { e.preventDefault(); mut.mutate(); }} className="grid gap-3">
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          mut.mutate();
+        }}
+        className="grid gap-3"
+      >
         <div className="grid grid-cols-3 gap-3">
           <div className="grid gap-2 col-span-2">
             <Label>Shipping mark</Label>
-            <Input placeholder="NDL-GH-00001" value={form.shipping_mark} onChange={(e) => setForm({ ...form, shipping_mark: e.target.value })} />
+            <Input
+              placeholder="NDL-GH-00001"
+              value={form.shipping_mark}
+              onChange={(e) => setForm({ ...form, shipping_mark: e.target.value })}
+            />
           </div>
           <div className="grid gap-2">
             <Label>Warehouse</Label>
-            <Select value={form.warehouse_code} onValueChange={(v) => setForm({ ...form, warehouse_code: v })}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
+            <Select
+              value={form.warehouse_code}
+              onValueChange={(v) => setForm({ ...form, warehouse_code: v })}
+            >
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
               <SelectContent>
                 {warehouses?.map((w) => (
-                  <SelectItem key={w.code} value={w.code}>{w.code} — {w.name}</SelectItem>
+                  <SelectItem key={w.code} value={w.code}>
+                    {w.code} — {w.name}
+                  </SelectItem>
                 ))}
               </SelectContent>
             </Select>
@@ -210,34 +294,68 @@ function IntakePackageDialog({ onDone }: { onDone: () => void }) {
         <div className="grid grid-cols-2 gap-3">
           <div className="grid gap-2">
             <Label>Supplier / sender</Label>
-            <Input value={form.supplier_name} onChange={(e) => setForm({ ...form, supplier_name: e.target.value })} />
+            <Input
+              value={form.supplier_name}
+              onChange={(e) => setForm({ ...form, supplier_name: e.target.value })}
+            />
           </div>
           <div className="grid gap-2">
             <Label>External tracking</Label>
-            <Input value={form.external_tracking} onChange={(e) => setForm({ ...form, external_tracking: e.target.value })} />
+            <Input
+              value={form.external_tracking}
+              onChange={(e) => setForm({ ...form, external_tracking: e.target.value })}
+            />
           </div>
         </div>
 
         <div className="grid gap-2">
           <Label>Description</Label>
-          <Input value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
+          <Input
+            value={form.description}
+            onChange={(e) => setForm({ ...form, description: e.target.value })}
+          />
         </div>
 
         <div className="grid grid-cols-4 gap-3">
           <div className="grid gap-2">
             <Label>Pieces</Label>
-            <Input type="number" min="1" value={form.pieces} onChange={(e) => setForm({ ...form, pieces: Number(e.target.value) })} />
+            <Input
+              type="number"
+              min="1"
+              value={form.pieces}
+              onChange={(e) => setForm({ ...form, pieces: Number(e.target.value) })}
+            />
           </div>
           <div className="grid gap-2">
             <Label>Weight (kg)</Label>
-            <Input type="number" step="0.01" value={form.weight_kg} onChange={(e) => setForm({ ...form, weight_kg: Number(e.target.value) })} />
+            <Input
+              type="number"
+              step="0.01"
+              value={form.weight_kg}
+              onChange={(e) => setForm({ ...form, weight_kg: Number(e.target.value) })}
+            />
           </div>
           <div className="grid gap-2 col-span-2">
             <Label>L × W × H (cm)</Label>
             <div className="flex gap-1">
-              <Input type="number" placeholder="L" value={form.length_cm || ""} onChange={(e) => setForm({ ...form, length_cm: Number(e.target.value) })} />
-              <Input type="number" placeholder="W" value={form.width_cm || ""} onChange={(e) => setForm({ ...form, width_cm: Number(e.target.value) })} />
-              <Input type="number" placeholder="H" value={form.height_cm || ""} onChange={(e) => setForm({ ...form, height_cm: Number(e.target.value) })} />
+              <Input
+                type="number"
+                placeholder="L"
+                value={form.length_cm || ""}
+                onChange={(e) => setForm({ ...form, length_cm: Number(e.target.value) })}
+              />
+              <Input
+                type="number"
+                placeholder="W"
+                value={form.width_cm || ""}
+                onChange={(e) => setForm({ ...form, width_cm: Number(e.target.value) })}
+              />
+              <Input
+                type="number"
+                placeholder="H"
+                value={form.height_cm || ""}
+                onChange={(e) => setForm({ ...form, height_cm: Number(e.target.value) })}
+              />
             </div>
           </div>
         </div>
@@ -248,11 +366,19 @@ function IntakePackageDialog({ onDone }: { onDone: () => void }) {
 
         <div className="grid gap-2">
           <Label>Notes</Label>
-          <Textarea rows={2} value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} />
+          <Textarea
+            rows={2}
+            value={form.notes}
+            onChange={(e) => setForm({ ...form, notes: e.target.value })}
+          />
         </div>
 
         <DialogFooter>
-          <Button type="submit" disabled={mut.isPending} className="bg-brand-orange hover:bg-brand-orange/90">
+          <Button
+            type="submit"
+            disabled={mut.isPending}
+            className="bg-brand-orange hover:bg-brand-orange/90"
+          >
             {mut.isPending ? "Saving…" : "Save intake"}
           </Button>
         </DialogFooter>

@@ -85,7 +85,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         content:
           "NDL Ghana ships parcels, e-commerce orders and full containers from China, UK, and Dubai to your doorstep in Ghana. Track shipments, manage sourcing, invoices, and deliveries in one platform.",
       },
-      { property: "og:title", content: "NDL Ghana — Global Shipping: China, UK, Dubai to your door" },
+      {
+        property: "og:title",
+        content: "NDL Ghana — Global Shipping: China, UK, Dubai to your door",
+      },
       {
         property: "og:description",
         content:
@@ -93,12 +96,35 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "NDL Ghana — Global Shipping: China, UK, Dubai to your door" },
-      { name: "description", content: "ShipFlow CRM is a SaaS platform for shipping companies to manage customer relationships and operations." },
-      { property: "og:description", content: "ShipFlow CRM is a SaaS platform for shipping companies to manage customer relationships and operations." },
-      { name: "twitter:description", content: "ShipFlow CRM is a SaaS platform for shipping companies to manage customer relationships and operations." },
-      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/9e68783f-4c5f-4348-9433-b4de9646d04d" },
-      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/9e68783f-4c5f-4348-9433-b4de9646d04d" },
+      {
+        name: "twitter:title",
+        content: "NDL Ghana — Global Shipping: China, UK, Dubai to your door",
+      },
+      {
+        name: "description",
+        content:
+          "ShipFlow CRM is a SaaS platform for shipping companies to manage customer relationships and operations.",
+      },
+      {
+        property: "og:description",
+        content:
+          "ShipFlow CRM is a SaaS platform for shipping companies to manage customer relationships and operations.",
+      },
+      {
+        name: "twitter:description",
+        content:
+          "ShipFlow CRM is a SaaS platform for shipping companies to manage customer relationships and operations.",
+      },
+      {
+        property: "og:image",
+        content:
+          "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/9e68783f-4c5f-4348-9433-b4de9646d04d",
+      },
+      {
+        name: "twitter:image",
+        content:
+          "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/9e68783f-4c5f-4348-9433-b4de9646d04d",
+      },
     ],
     links: [
       { rel: "stylesheet", href: appCss },

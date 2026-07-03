@@ -1,6 +1,17 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Card } from "@/components/ui/card";
-import { Package, Ship, Truck, Wallet, TrendingUp, Users, ShoppingBag, Receipt, Headphones, ArrowRight } from "lucide-react";
+import {
+  Package,
+  Ship,
+  Truck,
+  Wallet,
+  TrendingUp,
+  Users,
+  ShoppingBag,
+  Receipt,
+  Headphones,
+  ArrowRight,
+} from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -33,12 +44,54 @@ function useCounts() {
 }
 
 const PORTALS = [
-  { to: "/crm/contacts", icon: Users, title: "Sales", desc: "Leads, contacts, and customer pipeline", tone: "text-brand-sky", bg: "bg-brand-sky/10" },
-  { to: "/invoices", icon: Receipt, title: "Accountant", desc: "Invoices, payments and receivables", tone: "text-emerald-700", bg: "bg-emerald-500/10" },
-  { to: "/support", icon: Headphones, title: "Customer Service", desc: "Look up any customer or package", tone: "text-amber-700", bg: "bg-amber-500/10" },
-  { to: "/sourcing/pos", icon: ShoppingBag, title: "Sourcing Agent", desc: "China desk POs and supplier payments", tone: "text-brand-orange", bg: "bg-brand-orange/10" },
-  { to: "/packages", icon: Package, title: "Warehouse Ops", desc: "Intake, CBM, and shipment loading", tone: "text-brand-navy", bg: "bg-brand-navy/10" },
-  { to: "/treasury/accounts", icon: Wallet, title: "Treasury", desc: "Multi-country ledger and FX rates", tone: "text-emerald-700", bg: "bg-emerald-500/10" },
+  {
+    to: "/crm/contacts",
+    icon: Users,
+    title: "Sales",
+    desc: "Leads, contacts, and customer pipeline",
+    tone: "text-brand-sky",
+    bg: "bg-brand-sky/10",
+  },
+  {
+    to: "/invoices",
+    icon: Receipt,
+    title: "Accountant",
+    desc: "Invoices, payments and receivables",
+    tone: "text-emerald-700",
+    bg: "bg-emerald-500/10",
+  },
+  {
+    to: "/support",
+    icon: Headphones,
+    title: "Customer Service",
+    desc: "Look up any customer or package",
+    tone: "text-amber-700",
+    bg: "bg-amber-500/10",
+  },
+  {
+    to: "/sourcing/pos",
+    icon: ShoppingBag,
+    title: "Sourcing Agent",
+    desc: "China desk POs and supplier payments",
+    tone: "text-brand-orange",
+    bg: "bg-brand-orange/10",
+  },
+  {
+    to: "/packages",
+    icon: Package,
+    title: "Warehouse Ops",
+    desc: "Intake, CBM, and shipment loading",
+    tone: "text-brand-navy",
+    bg: "bg-brand-navy/10",
+  },
+  {
+    to: "/treasury/accounts",
+    icon: Wallet,
+    title: "Treasury",
+    desc: "Multi-country ledger and FX rates",
+    tone: "text-emerald-700",
+    bg: "bg-emerald-500/10",
+  },
 ] as const;
 
 function Dashboard() {
@@ -56,7 +109,9 @@ function Dashboard() {
   return (
     <div className="p-6 md:p-8">
       <div className="mb-8">
-        <div className="text-xs font-semibold uppercase tracking-widest text-brand-orange">Overview</div>
+        <div className="text-xs font-semibold uppercase tracking-widest text-brand-orange">
+          Overview
+        </div>
         <h1 className="font-display text-3xl font-extrabold text-brand-navy">Ops Dashboard</h1>
         <p className="mt-1 text-sm text-muted-foreground">
           Live status of shipments, sourcing, treasury and deliveries across all NDL hubs.
@@ -68,8 +123,12 @@ function Dashboard() {
           <Card key={s.label} className="p-5">
             <div className="flex items-start justify-between">
               <div>
-                <div className="text-xs uppercase tracking-wider text-muted-foreground">{s.label}</div>
-                <div className="mt-2 font-display text-3xl font-extrabold text-brand-navy">{s.value}</div>
+                <div className="text-xs uppercase tracking-wider text-muted-foreground">
+                  {s.label}
+                </div>
+                <div className="mt-2 font-display text-3xl font-extrabold text-brand-navy">
+                  {s.value}
+                </div>
               </div>
               <div className="rounded-lg bg-brand-orange/10 p-2 text-brand-orange">
                 <s.icon className="h-5 w-5" />
@@ -91,7 +150,8 @@ function Dashboard() {
                 <div className="font-display text-lg font-bold text-brand-navy">{p.title}</div>
                 <p className="mt-1 text-sm text-muted-foreground">{p.desc}</p>
                 <div className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-brand-orange">
-                  Open portal <ArrowRight className="h-3 w-3 transition group-hover:translate-x-0.5" />
+                  Open portal{" "}
+                  <ArrowRight className="h-3 w-3 transition group-hover:translate-x-0.5" />
                 </div>
               </Card>
             </Link>

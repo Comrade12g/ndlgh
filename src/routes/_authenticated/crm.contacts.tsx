@@ -66,7 +66,12 @@ function ContactsPage() {
                 <Plus className="mr-2 h-4 w-4" /> New contact
               </Button>
             </DialogTrigger>
-            <NewContactDialog onDone={() => { setOpen(false); qc.invalidateQueries({ queryKey: ["contacts"] }); }} />
+            <NewContactDialog
+              onDone={() => {
+                setOpen(false);
+                qc.invalidateQueries({ queryKey: ["contacts"] });
+              }}
+            />
           </Dialog>
         }
       />
@@ -111,12 +116,22 @@ function ContactsPage() {
                     <td className="px-4 py-3 text-muted-foreground">{c.company ?? "—"}</td>
                     <td className="px-4 py-3">
                       <div className="flex flex-col gap-0.5 text-xs">
-                        {c.email && <span className="inline-flex items-center gap-1 text-muted-foreground"><Mail className="h-3 w-3" /> {c.email}</span>}
-                        {c.phone && <span className="inline-flex items-center gap-1 text-muted-foreground"><Phone className="h-3 w-3" /> {c.phone}</span>}
+                        {c.email && (
+                          <span className="inline-flex items-center gap-1 text-muted-foreground">
+                            <Mail className="h-3 w-3" /> {c.email}
+                          </span>
+                        )}
+                        {c.phone && (
+                          <span className="inline-flex items-center gap-1 text-muted-foreground">
+                            <Phone className="h-3 w-3" /> {c.phone}
+                          </span>
+                        )}
                       </div>
                     </td>
                     <td className="px-4 py-3 text-muted-foreground">{c.country ?? "—"}</td>
-                    <td className="px-4 py-3 capitalize text-muted-foreground">{c.type.replace("_", " ")}</td>
+                    <td className="px-4 py-3 capitalize text-muted-foreground">
+                      {c.type.replace("_", " ")}
+                    </td>
                     <td className="px-4 py-3">
                       <StatusBadge tone={statusTone(c.status)}>{c.status}</StatusBadge>
                     </td>
@@ -149,46 +164,76 @@ function NewContactDialog({ onDone }: { onDone: () => void }) {
       const { error } = await supabase.from("contacts").insert({ ...form, created_by: u.user?.id });
       if (error) throw error;
     },
-    onSuccess: () => { toast.success("Contact created"); onDone(); },
+    onSuccess: () => {
+      toast.success("Contact created");
+      onDone();
+    },
     onError: (e) => toast.error(e instanceof Error ? e.message : "Failed"),
   });
 
   return (
     <DialogContent className="max-w-lg">
-      <DialogHeader><DialogTitle>New contact</DialogTitle></DialogHeader>
+      <DialogHeader>
+        <DialogTitle>New contact</DialogTitle>
+      </DialogHeader>
       <form
-        onSubmit={(e) => { e.preventDefault(); mut.mutate(); }}
+        onSubmit={(e) => {
+          e.preventDefault();
+          mut.mutate();
+        }}
         className="grid gap-3"
       >
         <div className="grid gap-2">
           <Label>Full name</Label>
-          <Input required value={form.full_name} onChange={(e) => setForm({ ...form, full_name: e.target.value })} />
+          <Input
+            required
+            value={form.full_name}
+            onChange={(e) => setForm({ ...form, full_name: e.target.value })}
+          />
         </div>
         <div className="grid grid-cols-2 gap-3">
           <div className="grid gap-2">
             <Label>Company</Label>
-            <Input value={form.company} onChange={(e) => setForm({ ...form, company: e.target.value })} />
+            <Input
+              value={form.company}
+              onChange={(e) => setForm({ ...form, company: e.target.value })}
+            />
           </div>
           <div className="grid gap-2">
             <Label>Country</Label>
-            <Input value={form.country} onChange={(e) => setForm({ ...form, country: e.target.value })} />
+            <Input
+              value={form.country}
+              onChange={(e) => setForm({ ...form, country: e.target.value })}
+            />
           </div>
         </div>
         <div className="grid grid-cols-2 gap-3">
           <div className="grid gap-2">
             <Label>Email</Label>
-            <Input type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
+            <Input
+              type="email"
+              value={form.email}
+              onChange={(e) => setForm({ ...form, email: e.target.value })}
+            />
           </div>
           <div className="grid gap-2">
             <Label>Phone</Label>
-            <Input value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
+            <Input
+              value={form.phone}
+              onChange={(e) => setForm({ ...form, phone: e.target.value })}
+            />
           </div>
         </div>
         <div className="grid grid-cols-2 gap-3">
           <div className="grid gap-2">
             <Label>Type</Label>
-            <Select value={form.type} onValueChange={(v) => setForm({ ...form, type: v as ContactType })}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
+            <Select
+              value={form.type}
+              onValueChange={(v) => setForm({ ...form, type: v as ContactType })}
+            >
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
               <SelectContent>
                 <SelectItem value="lead">Lead</SelectItem>
                 <SelectItem value="customer">Customer</SelectItem>
@@ -198,8 +243,13 @@ function NewContactDialog({ onDone }: { onDone: () => void }) {
           </div>
           <div className="grid gap-2">
             <Label>Status</Label>
-            <Select value={form.status} onValueChange={(v) => setForm({ ...form, status: v as ContactStatus })}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
+            <Select
+              value={form.status}
+              onValueChange={(v) => setForm({ ...form, status: v as ContactStatus })}
+            >
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
               <SelectContent>
                 <SelectItem value="new">New</SelectItem>
                 <SelectItem value="active">Active</SelectItem>
@@ -212,10 +262,18 @@ function NewContactDialog({ onDone }: { onDone: () => void }) {
         </div>
         <div className="grid gap-2">
           <Label>Notes</Label>
-          <Textarea rows={3} value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} />
+          <Textarea
+            rows={3}
+            value={form.notes}
+            onChange={(e) => setForm({ ...form, notes: e.target.value })}
+          />
         </div>
         <DialogFooter>
-          <Button type="submit" disabled={mut.isPending} className="bg-brand-orange hover:bg-brand-orange/90">
+          <Button
+            type="submit"
+            disabled={mut.isPending}
+            className="bg-brand-orange hover:bg-brand-orange/90"
+          >
             {mut.isPending ? "Saving…" : "Save contact"}
           </Button>
         </DialogFooter>
