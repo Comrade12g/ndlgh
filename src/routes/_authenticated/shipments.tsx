@@ -742,3 +742,207 @@ function AddPackagesDialog({
     </DialogContent>
   );
 }
+
+function EditShipmentDialog({ id, onDone }: { id: string; onDone: () => void }) {
+  const { data: warehouses } = useQuery({
+    queryKey: ["warehouses-all"],
+    queryFn: async () =>
+      (await supabase.from("warehouses").select("code, name").order("code")).data ?? [],
+  });
+
+  const { data: shipment } = useQuery({
+    queryKey: ["shipment-edit", id],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("shipments")
+        .select(
+          "id, mode, origin_warehouse, destination_warehouse, container_no, bol_no, vessel_or_flight, etd, eta, status, notes",
+        )
+        .eq("id", id)
+        .single();
+      if (error) throw error;
+      return data;
+    },
+  });
+
+  const [form, setForm] = useState<{
+    mode: "sea_lcl" | "sea_fcl" | "air" | "intercity";
+    origin_warehouse: string;
+    destination_warehouse: string;
+    container_no: string;
+    bol_no: string;
+    vessel_or_flight: string;
+    etd: string;
+    eta: string;
+    notes: string;
+  } | null>(null);
+
+  if (shipment && !form) {
+    setForm({
+      mode: shipment.mode as "sea_lcl" | "sea_fcl" | "air" | "intercity",
+      origin_warehouse: shipment.origin_warehouse ?? "CN",
+      destination_warehouse: shipment.destination_warehouse ?? "GH",
+      container_no: shipment.container_no ?? "",
+      bol_no: shipment.bol_no ?? "",
+      vessel_or_flight: shipment.vessel_or_flight ?? "",
+      etd: shipment.etd ?? "",
+      eta: shipment.eta ?? "",
+      notes: shipment.notes ?? "",
+    });
+  }
+
+  const mut = useMutation({
+    mutationFn: async () => {
+      if (!form) return;
+      const { error } = await supabase
+        .from("shipments")
+        .update({
+          mode: form.mode,
+          origin_warehouse: form.origin_warehouse,
+          destination_warehouse: form.destination_warehouse,
+          container_no: form.container_no || null,
+          bol_no: form.bol_no || null,
+          vessel_or_flight: form.vessel_or_flight || null,
+          etd: form.etd || null,
+          eta: form.eta || null,
+          notes: form.notes || null,
+        })
+        .eq("id", id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      toast.success("Shipment updated");
+      onDone();
+    },
+    onError: (e) => toast.error(e instanceof Error ? e.message : "Failed"),
+  });
+
+  if (!form) {
+    return (
+      <DialogContent className="max-w-xl">
+        <div className="p-8 text-center text-sm text-muted-foreground">Loading…</div>
+      </DialogContent>
+    );
+  }
+
+  return (
+    <DialogContent className="max-w-xl">
+      <DialogHeader>
+        <DialogTitle>Edit shipment</DialogTitle>
+      </DialogHeader>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          mut.mutate();
+        }}
+        className="grid gap-3"
+      >
+        <div className="grid grid-cols-3 gap-3">
+          <div className="grid gap-2">
+            <Label>Mode</Label>
+            <Select
+              value={form.mode}
+              onValueChange={(v) => setForm({ ...form, mode: v as typeof form.mode })}
+            >
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="sea_lcl">Sea LCL</SelectItem>
+                <SelectItem value="sea_fcl">Sea FCL</SelectItem>
+                <SelectItem value="air">Air</SelectItem>
+                <SelectItem value="intercity">Intercity</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="grid gap-2">
+            <Label>Origin</Label>
+            <Select
+              value={form.origin_warehouse}
+              onValueChange={(v) => setForm({ ...form, origin_warehouse: v })}
+            >
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {warehouses?.map((w) => (
+                  <SelectItem key={w.code} value={w.code}>
+                    {w.code}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="grid gap-2">
+            <Label>Destination</Label>
+            <Select
+              value={form.destination_warehouse}
+              onValueChange={(v) => setForm({ ...form, destination_warehouse: v })}
+            >
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {warehouses?.map((w) => (
+                  <SelectItem key={w.code} value={w.code}>
+                    {w.code}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+        <div className="grid grid-cols-2 gap-3">
+          <div className="grid gap-2">
+            <Label>Container / AWB</Label>
+            <Input
+              value={form.container_no}
+              onChange={(e) => setForm({ ...form, container_no: e.target.value })}
+            />
+          </div>
+          <div className="grid gap-2">
+            <Label>BOL no.</Label>
+            <Input
+              value={form.bol_no}
+              onChange={(e) => setForm({ ...form, bol_no: e.target.value })}
+            />
+          </div>
+        </div>
+        <div className="grid gap-2">
+          <Label>Vessel / Flight</Label>
+          <Input
+            value={form.vessel_or_flight}
+            onChange={(e) => setForm({ ...form, vessel_or_flight: e.target.value })}
+          />
+        </div>
+        <div className="grid grid-cols-2 gap-3">
+          <div className="grid gap-2">
+            <Label>ETD</Label>
+            <Input
+              type="date"
+              value={form.etd}
+              onChange={(e) => setForm({ ...form, etd: e.target.value })}
+            />
+          </div>
+          <div className="grid gap-2">
+            <Label>ETA</Label>
+            <Input
+              type="date"
+              value={form.eta}
+              onChange={(e) => setForm({ ...form, eta: e.target.value })}
+            />
+          </div>
+        </div>
+        <DialogFooter>
+          <Button
+            type="submit"
+            disabled={mut.isPending}
+            className="bg-brand-orange hover:bg-brand-orange/90"
+          >
+            {mut.isPending ? "Saving…" : "Save changes"}
+          </Button>
+        </DialogFooter>
+      </form>
+    </DialogContent>
+  );
+}
