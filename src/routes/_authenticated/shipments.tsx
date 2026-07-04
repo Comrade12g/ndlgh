@@ -23,7 +23,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { PageHeader, EmptyState, StatusBadge, statusTone } from "@/components/ops/PageHeader";
-import { Plus, Ship, PackagePlus, Trash2, Search } from "lucide-react";
+import { Plus, Ship, PackagePlus, Trash2, Search, Pencil, FileText } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/shipments")({
