@@ -35,6 +35,7 @@ function PackagesPage() {
   const qc = useQueryClient();
   const [search, setSearch] = useState("");
   const [open, setOpen] = useState(false);
+  const [editId, setEditId] = useState<string | null>(null);
 
   const { data: packages, isLoading } = useQuery({
     queryKey: ["packages", search],
