@@ -26,6 +26,7 @@ import { PageHeader, EmptyState, StatusBadge, statusTone } from "@/components/op
 import { openWhatsApp, waTemplates, copyToClipboard } from "@/lib/whatsapp";
 import { Plus, Trash2, Search, Receipt, MessageCircle, Copy } from "lucide-react";
 import { toast } from "sonner";
+import { getErrorMessage } from "@/lib/errors";
 
 export const Route = createFileRoute("/_authenticated/invoices")({
   component: InvoicesPage,
@@ -244,6 +245,182 @@ function InvoicesPage() {
 
 type LineItem = { description: string; qty: number; unit_price: number };
 
+type FreightSuggestion = {
+  shipmentId: string;
+  code: string;
+  mode: string;
+  route: string;
+  customerCbm: number;
+  customerWeightKg: number;
+  rate: { unit: string; price: number; currency: string; min_qty: number | null } | null;
+  billableQty: number;
+  amount: number;
+};
+
+/** Finds the customer's shipments and matches each to an active rate, computing a suggested freight line (with minimum-qty applied). */
+function useFreightSuggestions(customerId: string) {
+  return useQuery({
+    queryKey: ["freight-suggestions", customerId],
+    enabled: !!customerId,
+    queryFn: async (): Promise<FreightSuggestion[]> => {
+      const { data: packages } = await supabase
+        .from("packages")
+        .select("id, cbm, weight_kg")
+        .eq("customer_id", customerId);
+      if (!packages?.length) return [];
+      const packageIds = packages.map((p) => p.id);
+      const cbmById = new Map(packages.map((p) => [p.id, Number(p.cbm ?? 0)]));
+      const weightById = new Map(packages.map((p) => [p.id, Number(p.weight_kg ?? 0)]));
+
+      const { data: links } = await supabase
+        .from("shipment_packages")
+        .select("shipment_id, package_id")
+        .in("package_id", packageIds);
+      if (!links?.length) return [];
+
+      const byShipment = new Map<string, { cbm: number; weight: number }>();
+      for (const l of links) {
+        const cur = byShipment.get(l.shipment_id) ?? { cbm: 0, weight: 0 };
+        cur.cbm += cbmById.get(l.package_id) ?? 0;
+        cur.weight += weightById.get(l.package_id) ?? 0;
+        byShipment.set(l.shipment_id, cur);
+      }
+
+      const shipmentIds = Array.from(byShipment.keys());
+      const { data: shipments } = await supabase
+        .from("shipments")
+        .select("id, code, mode, origin_warehouse, destination_warehouse")
+        .in("id", shipmentIds);
+
+      // Guard against double-billing: packages get auto-invoiced individually
+      // the moment they're intaken (see fn_autoinvoice_package trigger). If a
+      // shipment's packages already have invoice_items, don't suggest adding
+      // another freight line for the same cargo.
+      const { data: alreadyInvoiced } = await supabase
+        .from("invoice_items")
+        .select("package_id")
+        .in("package_id", packageIds);
+      const invoicedPackageIds = new Set(
+        (alreadyInvoiced ?? []).map((r) => r.package_id).filter(Boolean),
+      );
+
+      const suggestions: FreightSuggestion[] = [];
+      for (const s of shipments ?? []) {
+        const totals = byShipment.get(s.id)!;
+        const shipmentPackageIds = links
+          .filter((l) => l.shipment_id === s.id)
+          .map((l) => l.package_id);
+        const alreadyBilled = shipmentPackageIds.every((pid) => invoicedPackageIds.has(pid));
+        if (alreadyBilled) continue; // already auto-invoiced per package — skip to avoid double charging
+        if (!s.origin_warehouse || !s.destination_warehouse) continue; // can't rate-match an incomplete shipment
+
+        const { data: rate } = await supabase
+          .from("rates")
+          .select("unit, price, currency, min_qty")
+          .eq("origin_code", s.origin_warehouse)
+          .eq("destination_code", s.destination_warehouse)
+          .eq("mode", s.mode)
+          .eq("active", true)
+          .order("effective_from", { ascending: false })
+          .limit(1)
+          .maybeSingle();
+
+        let billableQty = 1;
+        let amount = rate?.price ?? 0;
+        if (rate?.unit === "CBM") {
+          billableQty = Math.max(totals.cbm, rate.min_qty ?? 0);
+          amount = billableQty * rate.price;
+        } else if (rate?.unit === "KG") {
+          billableQty = Math.max(totals.weight, rate.min_qty ?? 0);
+          amount = billableQty * rate.price;
+        }
+
+        suggestions.push({
+          shipmentId: s.id,
+          code: s.code,
+          mode: s.mode,
+          route: `${s.origin_warehouse} → ${s.destination_warehouse}`,
+          customerCbm: totals.cbm,
+          customerWeightKg: totals.weight,
+          rate: rate ?? null,
+          billableQty,
+          amount,
+        });
+      }
+      return suggestions;
+    },
+  });
+}
+
+function FreightSuggestions({
+  customerId,
+  onAdd,
+}: {
+  customerId: string;
+  onAdd: (item: LineItem, currency: string) => void;
+}) {
+  const { data: suggestions, isLoading } = useFreightSuggestions(customerId);
+
+  if (!customerId) return null;
+  if (isLoading)
+    return (
+      <div className="text-xs text-muted-foreground">Checking shipments for a rate match…</div>
+    );
+  if (!suggestions?.length) return null;
+
+  return (
+    <div className="grid gap-2 rounded-md border border-brand-orange/30 bg-brand-orange/5 p-3">
+      <div className="text-xs font-semibold uppercase tracking-wider text-brand-orange">
+        Freight suggestions (not yet auto-billed)
+      </div>
+      <div className="text-xs text-muted-foreground -mt-1">
+        Most packages are billed automatically the moment they're received. These are shipments
+        whose packages haven't been invoiced yet — add manually only if you're sure it wasn't
+        already billed.
+      </div>
+      {suggestions.map((s) => (
+        <div key={s.shipmentId} className="flex items-center justify-between gap-3 text-xs">
+          <div>
+            <span className="font-mono font-semibold text-brand-navy">{s.code}</span>
+            <span className="ml-2 text-muted-foreground">
+              {s.route} · {s.mode.replace("_", " ")}
+            </span>
+            {s.rate ? (
+              <div className="text-muted-foreground">
+                {s.customerCbm.toFixed(3)} CBM{s.rate.min_qty ? ` (min ${s.rate.min_qty})` : ""} ×{" "}
+                {s.rate.currency} {s.rate.price.toFixed(2)}
+              </div>
+            ) : (
+              <div className="text-red-600">
+                No active rate for this route/mode — add one on the Rates page
+              </div>
+            )}
+          </div>
+          {s.rate && (
+            <Button
+              type="button"
+              size="sm"
+              variant="outline"
+              onClick={() =>
+                onAdd(
+                  {
+                    description: `Freight — ${s.code} (${s.mode.replace("_", " ")}, ${s.route})`,
+                    qty: s.billableQty,
+                    unit_price: s.rate!.price,
+                  },
+                  s.rate!.currency,
+                )
+              }
+            >
+              Add {s.rate.currency} {s.amount.toFixed(2)}
+            </Button>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+}
+
 function NewInvoiceDialog({ onDone }: { onDone: (id: string) => void }) {
   const [customerId, setCustomerId] = useState("");
   const [customerSearch, setCustomerSearch] = useState("");
@@ -312,11 +489,26 @@ function NewInvoiceDialog({ onDone }: { onDone: (id: string) => void }) {
       toast.success(`Invoice ${inv.number} created`);
       onDone(inv.id);
     },
-    onError: (e) => toast.error(e instanceof Error ? e.message : "Failed"),
+    onError: (e) => toast.error(getErrorMessage(e)),
   });
 
   function updateItem(idx: number, patch: Partial<LineItem>) {
     setItems((prev) => prev.map((it, i) => (i === idx ? { ...it, ...patch } : it)));
+  }
+
+  function handleAddFreightLine(item: LineItem, rateCurrency: string) {
+    const hasRealItems = items.some((i) => i.description.trim());
+    if (hasRealItems && rateCurrency !== currency) {
+      toast.error(
+        `This rate is in ${rateCurrency} but the invoice is already in ${currency}. Create separate invoices to avoid mixing currencies.`,
+      );
+      return;
+    }
+    if (!hasRealItems) setCurrency(rateCurrency);
+    setItems((prev) => {
+      const withoutBlankFirst = prev.length === 1 && !prev[0].description.trim() ? [] : prev;
+      return [...withoutBlankFirst, item];
+    });
   }
 
   return (
@@ -353,6 +545,8 @@ function NewInvoiceDialog({ onDone }: { onDone: (id: string) => void }) {
             </SelectContent>
           </Select>
         </div>
+
+        {customerId && <FreightSuggestions customerId={customerId} onAdd={handleAddFreightLine} />}
 
         <div className="grid grid-cols-2 gap-3">
           <div className="grid gap-2">
@@ -521,7 +715,7 @@ function InvoiceDetailDialog({ id, onChanged }: { id: string; onChanged: () => v
       qc.invalidateQueries({ queryKey: ["invoice-detail", id] });
       onChanged();
     },
-    onError: (e) => toast.error(e instanceof Error ? e.message : "Failed"),
+    onError: (e) => toast.error(getErrorMessage(e)),
   });
 
   if (isLoading || !invoice) {
@@ -807,7 +1001,7 @@ function RecordPaymentDialog({
       openWhatsApp(customerPhone, msg);
       onDone();
     },
-    onError: (e) => toast.error(e instanceof Error ? e.message : "Failed"),
+    onError: (e) => toast.error(getErrorMessage(e)),
   });
 
   return (

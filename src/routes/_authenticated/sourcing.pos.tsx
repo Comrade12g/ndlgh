@@ -24,6 +24,7 @@ import {
 import { PageHeader, EmptyState, StatusBadge, statusTone } from "@/components/ops/PageHeader";
 import { Plus, ShoppingBag } from "lucide-react";
 import { toast } from "sonner";
+import { getErrorMessage } from "@/lib/errors";
 
 export const Route = createFileRoute("/_authenticated/sourcing/pos")({
   component: SourcingPage,
@@ -203,7 +204,7 @@ function NewPoDialog({ onDone }: { onDone: () => void }) {
       toast.success("Purchase order created");
       onDone();
     },
-    onError: (e) => toast.error(e instanceof Error ? e.message : "Failed"),
+    onError: (e) => toast.error(getErrorMessage(e)),
   });
 
   return (
@@ -363,7 +364,7 @@ function QuickSupplierDialog({ onDone }: { onDone: (id: string) => void }) {
       toast.success("Supplier added");
       onDone(d.id);
     },
-    onError: (e) => toast.error(e instanceof Error ? e.message : "Failed"),
+    onError: (e) => toast.error(getErrorMessage(e)),
   });
 
   return (
@@ -446,7 +447,7 @@ function PoDetailDialog({ id, onChanged }: { id: string; onChanged: () => void }
       qc.invalidateQueries({ queryKey: ["po-detail", id] });
       onChanged();
     },
-    onError: (e) => toast.error(e instanceof Error ? e.message : "Failed"),
+    onError: (e) => toast.error(getErrorMessage(e)),
   });
 
   if (isLoading || !po) {

@@ -25,6 +25,7 @@ import {
 import { PageHeader, EmptyState, StatusBadge, statusTone } from "@/components/ops/PageHeader";
 import { Plus, Ship, PackagePlus, Trash2, Search, Pencil, FileText } from "lucide-react";
 import { toast } from "sonner";
+import { getErrorMessage } from "@/lib/errors";
 
 export const Route = createFileRoute("/_authenticated/shipments")({
   component: ShipmentsPage,
@@ -204,7 +205,7 @@ function NewShipmentDialog({ onDone }: { onDone: () => void }) {
       toast.success("Shipment created — now load packages onto it");
       onDone();
     },
-    onError: (e) => toast.error(e instanceof Error ? e.message : "Failed"),
+    onError: (e) => toast.error(getErrorMessage(e)),
   });
 
   return (
@@ -412,7 +413,7 @@ function ShipmentDetailDialog({ id, onChanged }: { id: string; onChanged: () => 
       toast.success("Package removed from shipment");
       invalidateAll();
     },
-    onError: (e) => toast.error(e instanceof Error ? e.message : "Failed"),
+    onError: (e) => toast.error(getErrorMessage(e)),
   });
 
   const advanceStatus = useMutation({
@@ -441,7 +442,7 @@ function ShipmentDetailDialog({ id, onChanged }: { id: string; onChanged: () => 
       toast.success("Shipment updated");
       invalidateAll();
     },
-    onError: (e) => toast.error(e instanceof Error ? e.message : "Failed"),
+    onError: (e) => toast.error(getErrorMessage(e)),
   });
 
   const genConsolidated = useMutation({
@@ -453,7 +454,7 @@ function ShipmentDetailDialog({ id, onChanged }: { id: string; onChanged: () => 
       return data;
     },
     onSuccess: () => toast.success("Consolidated invoice generated"),
-    onError: (e) => toast.error(e instanceof Error ? e.message : "Failed"),
+    onError: (e) => toast.error(getErrorMessage(e)),
   });
 
   if (isLoading || !shipment) {
@@ -675,7 +676,7 @@ function AddPackagesDialog({
       toast.success(`${selected.size} package(s) loaded`);
       onDone();
     },
-    onError: (e) => toast.error(e instanceof Error ? e.message : "Failed"),
+    onError: (e) => toast.error(getErrorMessage(e)),
   });
 
   function toggle(id: string) {
@@ -814,7 +815,7 @@ function EditShipmentDialog({ id, onDone }: { id: string; onDone: () => void }) 
       toast.success("Shipment updated");
       onDone();
     },
-    onError: (e) => toast.error(e instanceof Error ? e.message : "Failed"),
+    onError: (e) => toast.error(getErrorMessage(e)),
   });
 
   if (!form) {

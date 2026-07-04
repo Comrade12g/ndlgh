@@ -17,6 +17,7 @@ import {
 import { PageHeader, EmptyState } from "@/components/ops/PageHeader";
 import { Plus, TrendingUp } from "lucide-react";
 import { toast } from "sonner";
+import { getErrorMessage } from "@/lib/errors";
 
 export const Route = createFileRoute("/_authenticated/treasury/accounts")({
   component: TreasuryPage,
@@ -181,7 +182,7 @@ function FxDialog({ onDone }: { onDone: () => void }) {
       toast.success("FX rate saved");
       onDone();
     },
-    onError: (e) => toast.error(e instanceof Error ? e.message : "Failed"),
+    onError: (e) => toast.error(getErrorMessage(e)),
   });
 
   return (

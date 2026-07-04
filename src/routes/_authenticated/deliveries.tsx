@@ -26,6 +26,7 @@ import { PageHeader, EmptyState, StatusBadge, statusTone } from "@/components/op
 import { openWhatsApp, waTemplates, copyToClipboard } from "@/lib/whatsapp";
 import { Plus, Truck, MessageCircle, PackagePlus, Trash2, Copy } from "lucide-react";
 import { toast } from "sonner";
+import { getErrorMessage } from "@/lib/errors";
 
 export const Route = createFileRoute("/_authenticated/deliveries")({
   component: DeliveriesPage,
@@ -266,7 +267,7 @@ function NewDeliveryDialog({ onDone }: { onDone: () => void }) {
       toast.success("Delivery booked");
       onDone();
     },
-    onError: (e) => toast.error(e instanceof Error ? e.message : "Failed"),
+    onError: (e) => toast.error(getErrorMessage(e)),
   });
 
   return (
@@ -518,7 +519,7 @@ function DeliveryDetailDialog({ id, onChanged }: { id: string; onChanged: () => 
       toast.success("Package removed from delivery");
       invalidateAll();
     },
-    onError: (e) => toast.error(e instanceof Error ? e.message : "Failed"),
+    onError: (e) => toast.error(getErrorMessage(e)),
   });
 
   const updateMut = useMutation({
@@ -547,7 +548,7 @@ function DeliveryDetailDialog({ id, onChanged }: { id: string; onChanged: () => 
       toast.success("Delivery updated");
       invalidateAll();
     },
-    onError: (e) => toast.error(e instanceof Error ? e.message : "Failed"),
+    onError: (e) => toast.error(getErrorMessage(e)),
   });
 
   if (isLoading || !delivery) {
@@ -801,7 +802,7 @@ function AddPackagesToDeliveryDialog({
       toast.success(`${selected.size} package(s) attached`);
       onDone();
     },
-    onError: (e) => toast.error(e instanceof Error ? e.message : "Failed"),
+    onError: (e) => toast.error(getErrorMessage(e)),
   });
 
   return (

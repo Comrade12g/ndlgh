@@ -25,6 +25,7 @@ import {
 import { PageHeader, EmptyState, StatusBadge, statusTone } from "@/components/ops/PageHeader";
 import { Plus, Search, Mail, Phone } from "lucide-react";
 import { toast } from "sonner";
+import { getErrorMessage } from "@/lib/errors";
 
 export const Route = createFileRoute("/_authenticated/crm/contacts")({
   component: ContactsPage,
@@ -168,7 +169,7 @@ function NewContactDialog({ onDone }: { onDone: () => void }) {
       toast.success("Contact created");
       onDone();
     },
-    onError: (e) => toast.error(e instanceof Error ? e.message : "Failed"),
+    onError: (e) => toast.error(getErrorMessage(e)),
   });
 
   return (

@@ -17,6 +17,7 @@ import { Route as TrackCodeRouteImport } from './routes/track.$code'
 import { Route as AuthenticatedSupportRouteImport } from './routes/_authenticated/support'
 import { Route as AuthenticatedShipmentsRouteImport } from './routes/_authenticated/shipments'
 import { Route as AuthenticatedReportsRouteImport } from './routes/_authenticated/reports'
+import { Route as AuthenticatedRatesRouteImport } from './routes/_authenticated/rates'
 import { Route as AuthenticatedPackagesRouteImport } from './routes/_authenticated/packages'
 import { Route as AuthenticatedInvoicesRouteImport } from './routes/_authenticated/invoices'
 import { Route as AuthenticatedDeliveriesRouteImport } from './routes/_authenticated/deliveries'
@@ -63,6 +64,11 @@ const AuthenticatedShipmentsRoute = AuthenticatedShipmentsRouteImport.update({
 const AuthenticatedReportsRoute = AuthenticatedReportsRouteImport.update({
   id: '/reports',
   path: '/reports',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedRatesRoute = AuthenticatedRatesRouteImport.update({
+  id: '/rates',
+  path: '/rates',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
 const AuthenticatedPackagesRoute = AuthenticatedPackagesRouteImport.update({
@@ -117,6 +123,7 @@ export interface FileRoutesByFullPath {
   '/deliveries': typeof AuthenticatedDeliveriesRoute
   '/invoices': typeof AuthenticatedInvoicesRoute
   '/packages': typeof AuthenticatedPackagesRoute
+  '/rates': typeof AuthenticatedRatesRoute
   '/reports': typeof AuthenticatedReportsRoute
   '/shipments': typeof AuthenticatedShipmentsRoute
   '/support': typeof AuthenticatedSupportRoute
@@ -134,6 +141,7 @@ export interface FileRoutesByTo {
   '/deliveries': typeof AuthenticatedDeliveriesRoute
   '/invoices': typeof AuthenticatedInvoicesRoute
   '/packages': typeof AuthenticatedPackagesRoute
+  '/rates': typeof AuthenticatedRatesRoute
   '/reports': typeof AuthenticatedReportsRoute
   '/shipments': typeof AuthenticatedShipmentsRoute
   '/support': typeof AuthenticatedSupportRoute
@@ -153,6 +161,7 @@ export interface FileRoutesById {
   '/_authenticated/deliveries': typeof AuthenticatedDeliveriesRoute
   '/_authenticated/invoices': typeof AuthenticatedInvoicesRoute
   '/_authenticated/packages': typeof AuthenticatedPackagesRoute
+  '/_authenticated/rates': typeof AuthenticatedRatesRoute
   '/_authenticated/reports': typeof AuthenticatedReportsRoute
   '/_authenticated/shipments': typeof AuthenticatedShipmentsRoute
   '/_authenticated/support': typeof AuthenticatedSupportRoute
@@ -172,6 +181,7 @@ export interface FileRouteTypes {
     | '/deliveries'
     | '/invoices'
     | '/packages'
+    | '/rates'
     | '/reports'
     | '/shipments'
     | '/support'
@@ -189,6 +199,7 @@ export interface FileRouteTypes {
     | '/deliveries'
     | '/invoices'
     | '/packages'
+    | '/rates'
     | '/reports'
     | '/shipments'
     | '/support'
@@ -207,6 +218,7 @@ export interface FileRouteTypes {
     | '/_authenticated/deliveries'
     | '/_authenticated/invoices'
     | '/_authenticated/packages'
+    | '/_authenticated/rates'
     | '/_authenticated/reports'
     | '/_authenticated/shipments'
     | '/_authenticated/support'
@@ -283,6 +295,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedReportsRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/rates': {
+      id: '/_authenticated/rates'
+      path: '/rates'
+      fullPath: '/rates'
+      preLoaderRoute: typeof AuthenticatedRatesRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/packages': {
       id: '/_authenticated/packages'
       path: '/packages'
@@ -347,6 +366,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedDeliveriesRoute: typeof AuthenticatedDeliveriesRoute
   AuthenticatedInvoicesRoute: typeof AuthenticatedInvoicesRoute
   AuthenticatedPackagesRoute: typeof AuthenticatedPackagesRoute
+  AuthenticatedRatesRoute: typeof AuthenticatedRatesRoute
   AuthenticatedReportsRoute: typeof AuthenticatedReportsRoute
   AuthenticatedShipmentsRoute: typeof AuthenticatedShipmentsRoute
   AuthenticatedSupportRoute: typeof AuthenticatedSupportRoute
@@ -361,6 +381,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedDeliveriesRoute: AuthenticatedDeliveriesRoute,
   AuthenticatedInvoicesRoute: AuthenticatedInvoicesRoute,
   AuthenticatedPackagesRoute: AuthenticatedPackagesRoute,
+  AuthenticatedRatesRoute: AuthenticatedRatesRoute,
   AuthenticatedReportsRoute: AuthenticatedReportsRoute,
   AuthenticatedShipmentsRoute: AuthenticatedShipmentsRoute,
   AuthenticatedSupportRoute: AuthenticatedSupportRoute,

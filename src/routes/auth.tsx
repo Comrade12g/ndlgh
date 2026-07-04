@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { LogoLockup } from "@/components/brand/Logo";
 import { toast } from "sonner";
+import { getErrorMessage } from "@/lib/errors";
 import { ArrowLeft } from "lucide-react";
 
 export const Route = createFileRoute("/auth")({
@@ -56,7 +57,7 @@ function AuthPage() {
         navigate({ to: "/portal" });
       }
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Authentication failed");
+      toast.error(getErrorMessage(err));
     } finally {
       setLoading(false);
     }
@@ -71,7 +72,7 @@ function AuthPage() {
       if (result.error) throw result.error;
       if (!result.redirected) navigate({ to: "/portal" });
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Google sign-in failed");
+      toast.error(getErrorMessage(err));
       setLoading(false);
     }
   }

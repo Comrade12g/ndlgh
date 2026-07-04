@@ -21,6 +21,7 @@ import {
   Settings,
   LogOut,
   Headphones,
+  Tags,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
@@ -105,6 +106,12 @@ const NAV: NavItem[] = [
     to: "/invoices",
     label: "Invoices",
     icon: Receipt,
+    roles: ["admin", "accountant", "sales", "sales_accountant"],
+  },
+  {
+    to: "/rates",
+    label: "Rates",
+    icon: Tags,
     roles: ["admin", "accountant", "sales", "sales_accountant"],
   },
   {

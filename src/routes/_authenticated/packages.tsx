@@ -26,6 +26,7 @@ import { PageHeader, EmptyState, StatusBadge, statusTone } from "@/components/op
 import { openWhatsApp, waTemplates, copyToClipboard } from "@/lib/whatsapp";
 import { Plus, Search, Package as PackageIcon, MessageCircle, Copy, Pencil } from "lucide-react";
 import { toast } from "sonner";
+import { getErrorMessage } from "@/lib/errors";
 
 export const Route = createFileRoute("/_authenticated/packages")({
   component: PackagesPage,
@@ -288,7 +289,7 @@ function IntakePackageDialog({ onDone }: { onDone: () => void }) {
       );
       onDone();
     },
-    onError: (e) => toast.error(e instanceof Error ? e.message : "Failed"),
+    onError: (e) => toast.error(getErrorMessage(e)),
   });
 
   const cbm = ((form.length_cm * form.width_cm * form.height_cm) / 1_000_000).toFixed(4);
@@ -542,7 +543,7 @@ function EditPackageDialog({ id, onDone }: { id: string; onDone: () => void }) {
       toast.success("Package updated");
       onDone();
     },
-    onError: (e) => toast.error(e instanceof Error ? e.message : "Failed"),
+    onError: (e) => toast.error(getErrorMessage(e)),
   });
 
   if (isLoading || !form) {
