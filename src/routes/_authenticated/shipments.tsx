@@ -444,6 +444,18 @@ function ShipmentDetailDialog({ id, onChanged }: { id: string; onChanged: () => 
     onError: (e) => toast.error(e instanceof Error ? e.message : "Failed"),
   });
 
+  const genConsolidated = useMutation({
+    mutationFn: async () => {
+      const { data, error } = await supabase.rpc("fn_generate_consolidated_invoice", {
+        _shipment_id: id,
+      });
+      if (error) throw error;
+      return data;
+    },
+    onSuccess: () => toast.success("Consolidated invoice generated"),
+    onError: (e) => toast.error(e instanceof Error ? e.message : "Failed"),
+  });
+
   if (isLoading || !shipment) {
     return (
       <DialogContent className="max-w-2xl">
