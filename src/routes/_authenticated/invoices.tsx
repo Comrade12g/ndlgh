@@ -469,11 +469,13 @@ function InvoiceDetailDialog({ id, onChanged }: { id: string; onChanged: () => v
         .eq("id", id)
         .single();
       if (error) throw error;
-      const { data: customer } = await supabase
-        .from("profiles")
-        .select("full_name, phone, shipping_mark")
-        .eq("id", data.customer_id)
-        .maybeSingle();
+      const { data: customer } = data.customer_id
+        ? await supabase
+            .from("profiles")
+            .select("full_name, phone, shipping_mark")
+            .eq("id", data.customer_id)
+            .maybeSingle()
+        : { data: null as null | { full_name: string | null; phone: string | null; shipping_mark: string } };
       return { ...data, customer };
     },
   });
