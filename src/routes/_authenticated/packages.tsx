@@ -428,3 +428,263 @@ function IntakePackageDialog({ onDone }: { onDone: () => void }) {
     </DialogContent>
   );
 }
+
+function EditPackageDialog({ id, onDone }: { id: string; onDone: () => void }) {
+  const { data: warehouses } = useQuery({
+    queryKey: ["warehouses-all"],
+    queryFn: async () =>
+      (await supabase.from("warehouses").select("code, name").order("code")).data ?? [],
+  });
+
+  const { data: pkg, isLoading } = useQuery({
+    queryKey: ["package-edit", id],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("packages")
+        .select(
+          "id, tracking_code, shipping_mark, warehouse_code, supplier_name, description, pieces, weight_kg, length_cm, width_cm, height_cm, external_tracking, notes, rate_override, status",
+        )
+        .eq("id", id)
+        .single();
+      if (error) throw error;
+      return data;
+    },
+  });
+
+  const [form, setForm] = useState<{
+    shipping_mark: string;
+    warehouse_code: string;
+    supplier_name: string;
+    description: string;
+    pieces: number;
+    weight_kg: number;
+    length_cm: number;
+    width_cm: number;
+    height_cm: number;
+    external_tracking: string;
+    notes: string;
+    rate_override: string;
+  } | null>(null);
+
+  // Hydrate form once when data arrives
+  if (pkg && !form) {
+    setForm({
+      shipping_mark: pkg.shipping_mark ?? "",
+      warehouse_code: pkg.warehouse_code ?? "CN",
+      supplier_name: pkg.supplier_name ?? "",
+      description: pkg.description ?? "",
+      pieces: pkg.pieces,
+      weight_kg: Number(pkg.weight_kg),
+      length_cm: Number(pkg.length_cm ?? 0),
+      width_cm: Number(pkg.width_cm ?? 0),
+      height_cm: Number(pkg.height_cm ?? 0),
+      external_tracking: pkg.external_tracking ?? "",
+      notes: pkg.notes ?? "",
+      rate_override: pkg.rate_override != null ? String(pkg.rate_override) : "",
+    });
+  }
+
+  const locked = pkg?.status === "delivered" || pkg?.status === "returned" || pkg?.status === "lost";
+
+  const mut = useMutation({
+    mutationFn: async () => {
+      if (!form) return;
+      // Re-match customer if shipping mark changed
+      let customer_id: string | null | undefined = undefined;
+      if (form.shipping_mark) {
+        const { data } = await supabase
+          .from("profiles")
+          .select("id")
+          .eq("shipping_mark", form.shipping_mark.trim().toUpperCase())
+          .maybeSingle();
+        customer_id = data?.id ?? null;
+      }
+      const cbm = (form.length_cm * form.width_cm * form.height_cm) / 1_000_000;
+      const patch: Record<string, unknown> = {
+        shipping_mark: form.shipping_mark.trim().toUpperCase() || null,
+        warehouse_code: form.warehouse_code,
+        supplier_name: form.supplier_name || null,
+        description: form.description || null,
+        pieces: form.pieces,
+        weight_kg: form.weight_kg,
+        length_cm: form.length_cm || null,
+        width_cm: form.width_cm || null,
+        height_cm: form.height_cm || null,
+        cbm,
+        external_tracking: form.external_tracking || null,
+        notes: form.notes || null,
+        rate_override: form.rate_override ? Number(form.rate_override) : null,
+      };
+      if (customer_id !== undefined) patch.customer_id = customer_id;
+      const { error } = await supabase.from("packages").update(patch).eq("id", id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      toast.success("Package updated");
+      onDone();
+    },
+    onError: (e) => toast.error(e instanceof Error ? e.message : "Failed"),
+  });
+
+  if (isLoading || !form) {
+    return (
+      <DialogContent className="max-w-2xl">
+        <div className="p-8 text-center text-sm text-muted-foreground">Loading…</div>
+      </DialogContent>
+    );
+  }
+
+  const cbm = ((form.length_cm * form.width_cm * form.height_cm) / 1_000_000).toFixed(4);
+
+  return (
+    <DialogContent className="max-w-2xl">
+      <DialogHeader>
+        <DialogTitle className="flex items-center gap-2">
+          <PackageIcon className="h-5 w-5 text-brand-orange" />
+          Edit {pkg?.tracking_code}
+        </DialogTitle>
+      </DialogHeader>
+      {locked && (
+        <div className="rounded-md border border-amber-300 bg-amber-50 p-2 text-xs text-amber-900">
+          This package is {pkg?.status}. Fields are read-only.
+        </div>
+      )}
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          mut.mutate();
+        }}
+        className="grid gap-3"
+      >
+        <fieldset disabled={locked} className="grid gap-3">
+          <div className="grid grid-cols-3 gap-3">
+            <div className="grid gap-2 col-span-2">
+              <Label>Shipping mark</Label>
+              <Input
+                value={form.shipping_mark}
+                onChange={(e) => setForm({ ...form, shipping_mark: e.target.value })}
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label>Warehouse</Label>
+              <Select
+                value={form.warehouse_code}
+                onValueChange={(v) => setForm({ ...form, warehouse_code: v })}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {warehouses?.map((w) => (
+                    <SelectItem key={w.code} value={w.code}>
+                      {w.code} — {w.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div className="grid gap-2">
+              <Label>Supplier / sender</Label>
+              <Input
+                value={form.supplier_name}
+                onChange={(e) => setForm({ ...form, supplier_name: e.target.value })}
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label>External tracking</Label>
+              <Input
+                value={form.external_tracking}
+                onChange={(e) => setForm({ ...form, external_tracking: e.target.value })}
+              />
+            </div>
+          </div>
+          <div className="grid gap-2">
+            <Label>Description</Label>
+            <Input
+              value={form.description}
+              onChange={(e) => setForm({ ...form, description: e.target.value })}
+            />
+          </div>
+          <div className="grid grid-cols-4 gap-3">
+            <div className="grid gap-2">
+              <Label>Pieces</Label>
+              <Input
+                type="number"
+                min="1"
+                value={form.pieces}
+                onChange={(e) => setForm({ ...form, pieces: Number(e.target.value) })}
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label>Weight (kg)</Label>
+              <Input
+                type="number"
+                step="0.01"
+                value={form.weight_kg}
+                onChange={(e) => setForm({ ...form, weight_kg: Number(e.target.value) })}
+              />
+            </div>
+            <div className="grid gap-2 col-span-2">
+              <Label>L × W × H (cm)</Label>
+              <div className="flex gap-1">
+                <Input
+                  type="number"
+                  placeholder="L"
+                  value={form.length_cm || ""}
+                  onChange={(e) => setForm({ ...form, length_cm: Number(e.target.value) })}
+                />
+                <Input
+                  type="number"
+                  placeholder="W"
+                  value={form.width_cm || ""}
+                  onChange={(e) => setForm({ ...form, width_cm: Number(e.target.value) })}
+                />
+                <Input
+                  type="number"
+                  placeholder="H"
+                  value={form.height_cm || ""}
+                  onChange={(e) => setForm({ ...form, height_cm: Number(e.target.value) })}
+                />
+              </div>
+            </div>
+          </div>
+          <div className="rounded-md bg-muted p-3 text-sm">
+            Computed volume:{" "}
+            <span className="font-mono font-bold text-brand-navy">{cbm} CBM</span>
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div className="grid gap-2">
+              <Label>Rate override (per unit)</Label>
+              <Input
+                type="number"
+                step="0.01"
+                placeholder="Leave blank for rate card"
+                value={form.rate_override}
+                onChange={(e) => setForm({ ...form, rate_override: e.target.value })}
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label>Notes</Label>
+              <Textarea
+                rows={2}
+                value={form.notes}
+                onChange={(e) => setForm({ ...form, notes: e.target.value })}
+              />
+            </div>
+          </div>
+        </fieldset>
+        <DialogFooter>
+          <Button
+            type="submit"
+            disabled={mut.isPending || locked}
+            className="bg-brand-orange hover:bg-brand-orange/90"
+          >
+            {mut.isPending ? "Saving…" : "Save changes"}
+          </Button>
+        </DialogFooter>
+      </form>
+    </DialogContent>
+  );
+}
