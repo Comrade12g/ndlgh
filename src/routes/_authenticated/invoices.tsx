@@ -668,7 +668,7 @@ function InvoiceDetailDialog({ id, onChanged }: { id: string; onChanged: () => v
               <RecordPaymentDialog
                 invoiceId={id}
                 invoiceNumber={invoice.number}
-                customerId={invoice.customer_id}
+                customerId={invoice.customer_id ?? ""}
                 customerName={invoice.customer?.full_name ?? "there"}
                 customerPhone={invoice.customer?.phone}
                 currency={invoice.currency}
