@@ -27,6 +27,7 @@ import { openWhatsApp, waTemplates, copyToClipboard } from "@/lib/whatsapp";
 import { Plus, Trash2, Search, Receipt, MessageCircle, Copy } from "lucide-react";
 import { toast } from "sonner";
 import { getErrorMessage } from "@/lib/errors";
+import { ensureContactShadow } from "@/lib/ensureContactShadow";
 
 export const Route = createFileRoute("/_authenticated/invoices")({
   component: InvoicesPage,
@@ -454,6 +455,11 @@ function NewInvoiceDialog({ onDone }: { onDone: (id: string) => void }) {
       if (!customerId) throw new Error("Select a customer");
       const validItems = items.filter((i) => i.description.trim());
       if (!validItems.length) throw new Error("Add at least one line item");
+
+      // Workaround for a live-DB bug: invoices.customer_id FK wrongly points
+      // at contacts instead of profiles. Remove once fixed at the DB level.
+      const selectedCustomer = customers?.find((c) => c.id === customerId);
+      await ensureContactShadow(customerId, selectedCustomer?.full_name, selectedCustomer?.phone);
 
       const { data: u } = await supabase.auth.getUser();
       const { data: invoice, error } = await supabase

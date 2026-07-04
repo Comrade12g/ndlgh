@@ -27,6 +27,7 @@ import { openWhatsApp, waTemplates, copyToClipboard } from "@/lib/whatsapp";
 import { Plus, Truck, MessageCircle, PackagePlus, Trash2, Copy } from "lucide-react";
 import { toast } from "sonner";
 import { getErrorMessage } from "@/lib/errors";
+import { ensureContactShadow } from "@/lib/ensureContactShadow";
 
 export const Route = createFileRoute("/_authenticated/deliveries")({
   component: DeliveriesPage,
@@ -232,6 +233,13 @@ function NewDeliveryDialog({ onDone }: { onDone: () => void }) {
 
   const mut = useMutation({
     mutationFn: async () => {
+      // Workaround for a live-DB bug: deliveries.customer_id FK wrongly
+      // points at contacts instead of profiles. Remove once fixed at the DB level.
+      if (customerId) {
+        const selectedCustomer = customers?.find((c) => c.id === customerId);
+        await ensureContactShadow(customerId, selectedCustomer?.full_name, selectedCustomer?.phone);
+      }
+
       const { data: u } = await supabase.auth.getUser();
       const { data: delivery, error } = await supabase
         .from("deliveries")

@@ -27,6 +27,7 @@ import { openWhatsApp, waTemplates, copyToClipboard } from "@/lib/whatsapp";
 import { Plus, Search, Package as PackageIcon, MessageCircle, Copy, Pencil } from "lucide-react";
 import { toast } from "sonner";
 import { getErrorMessage } from "@/lib/errors";
+import { ensureContactShadow } from "@/lib/ensureContactShadow";
 
 export const Route = createFileRoute("/_authenticated/packages")({
   component: PackagesPage,
@@ -253,10 +254,16 @@ function IntakePackageDialog({ onDone }: { onDone: () => void }) {
       if (form.shipping_mark) {
         const { data } = await supabase
           .from("profiles")
-          .select("id")
+          .select("id, full_name, phone")
           .eq("shipping_mark", form.shipping_mark.trim().toUpperCase())
           .maybeSingle();
         customer_id = data?.id ?? null;
+        // Workaround for a live-DB bug: customer_id FKs on several tables
+        // wrongly point at contacts instead of profiles. Ensuring a
+        // matching contacts row exists prevents the auto-invoice trigger
+        // (which fires right after this insert) from failing. Safe to
+        // remove once the DB constraint is fixed.
+        if (customer_id) await ensureContactShadow(customer_id, data?.full_name, data?.phone);
       }
       const cbm = (form.length_cm * form.width_cm * form.height_cm) / 1_000_000;
       const { data: u } = await supabase.auth.getUser();
@@ -514,10 +521,11 @@ function EditPackageDialog({ id, onDone }: { id: string; onDone: () => void }) {
       if (form.shipping_mark) {
         const { data } = await supabase
           .from("profiles")
-          .select("id")
+          .select("id, full_name, phone")
           .eq("shipping_mark", form.shipping_mark.trim().toUpperCase())
           .maybeSingle();
         customer_id = data?.id ?? null;
+        if (customer_id) await ensureContactShadow(customer_id, data?.full_name, data?.phone);
       }
       const cbm = (form.length_cm * form.width_cm * form.height_cm) / 1_000_000;
       const patch = {
