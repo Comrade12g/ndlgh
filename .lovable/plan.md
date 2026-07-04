@@ -1,158 +1,75 @@
 
-# NDL Ghana — CRM, Sourcing, Treasury & Shipping Ops Platform
+# Editable Records + Auto-Invoicing at Intake
 
-End-to-end control tower for NDL Ghana: sourcing/procurement in China (and UK/Dubai), multi-country payments ledger, warehouse + shipment ops, CRM, invoicing, and customer self-service portal. Overseas → Ghana door: sea LCL, FCL, air, and intercity.
+## 1. Editable fields
 
-## Brand & Design
+Add an "Edit" action (pencil icon) on each row that opens a dialog reusing the intake/creation form pre-filled with existing values.
 
-- **Orange** `#F58220` · **Navy** `#0A2E5C` · **Sky** `#1E7FD1` · bg `#F7F9FC`
-- Plus Jakarta Sans (headings) + Inter (body) via `@fontsource`
-- NDL Ghana logo in sidebar, auth, portal, favicon
-- Status chips throughout, dense ops tables, crisp cards
+**Packages** (`_authenticated/packages.tsx`)
+- Editable: shipping_mark, warehouse_code, supplier_name, description, pieces, weight_kg, L/W/H (recomputes cbm), external_tracking, notes
+- Locked once status is `shipped`, `delivered`, or `closed` (ops/admin can still override)
+- Re-matches customer by shipping_mark on save; recomputes invoice line if attached
 
-## Locked Decisions
+**Shipments** (`_authenticated/shipments.tsx`)
+- Editable: mode, origin/destination warehouse, vessel/flight/AWB, ETD, ETA, status, notes
+- Locked once status is `delivered`
 
-| Area | Value |
-|---|---|
-| Currency | Multi-currency (GHS, USD, GBP, CNY, AED); manual daily FX rate per currency; FX snapshot stored on every transaction |
-| Shipping mark | `NDL-GH-#####` auto-sequential (DB trigger on customer signup) |
-| Rate units | Sea LCL / CBM · Air / kg · FCL flat 20ft/40ft · Intercity / package |
-| Package media | Photos at intake · Signature + photo POD |
-| Sourcing model | You get a supplier rate → add margin → quote customer. Agent pays supplier, uploads proof; agent later pays the margin into a company account. System tracks proof + margin owed per agent. |
-| Customer sourcing view | Internal only — customers see the parcel once it reaches the warehouse |
+**Deliveries** (`_authenticated/deliveries.tsx`)
+- Editable: address, contact_phone, driver_id, scheduled_at, delivery_fee, status, notes
+- Locked once status is `completed`
 
-## Roles
+Role gating: `admin`, `ops_warehouse` edit packages/shipments; `admin`, `customer_service`, `ops_warehouse` edit deliveries.
 
-- `admin` — everything
-- `ops_warehouse` — packages, shipments, deliveries
-- `sales_accountant` — CRM, quotes, invoices, customer payments
-- `sourcing_agent` — own POs, own supplier payments, upload proof, own margin-owed balance
-- `driver` — assigned deliveries + POD only
-- `customer` — portal only (own packages/invoices)
+## 2. Auto-invoice on intake
 
-Roles stored in `user_roles` table with `has_role()` security-definer function.
+Trigger: when a package row is inserted with `status = 'received'` AND `customer_id IS NOT NULL`.
 
-## Data Model (Lovable Cloud / Postgres — RLS + GRANTs on every table)
+**Database trigger** `trg_package_autoinvoice` (AFTER INSERT on `packages`):
+1. Find or create an open draft invoice for `(customer_id, status='draft', shipment_id IS NULL)` — one draft per customer accumulates packages until sent.
+2. Look up rate from `public.rates` matching warehouse_code + a default mode ('sea' fallback) → pick rate/kg or rate/CBM based on chargeable weight (max of weight_kg vs cbm × conversion).
+3. Insert an `invoice_items` row: description = package description or tracking, qty = 1, unit_price = looked-up rate, amount = qty × chargeable × rate, links `package_id`.
+4. Recompute invoice `subtotal`, `total`.
 
-```text
-profiles(id, full_name, phone, shipping_mark, default_origin)
-user_roles(user_id, role)
-warehouses(code, country, address)             -- CN, UK, AE, GH-Accra
-companies · contacts · leads · quotes · quote_items
+**Manual override**: intake dialog gets an optional "Unit price override" field; when set, trigger uses it instead of rates lookup (stored on `packages.rate_override` — new nullable column).
 
--- Sourcing / Procurement
-suppliers(name, contact, wechat, country, categories, payment_prefs, rating)
-sourcing_requests(customer_id, description, links[], images[], qty,
-                  target_price, status, assigned_agent_id)
-purchase_orders(ref, sourcing_request_id, supplier_id, agent_id,
-                supplier_price, currency, margin, margin_currency,
-                customer_price, deposit_pct, status,
-                expected_ready_date, notes)
-po_items · po_events
+**On package edit** that changes weight/dims/description: `AFTER UPDATE` trigger re-prices the linked `invoice_items` row (only if parent invoice is still `draft`).
 
--- Treasury / Payments Ledger
-accounts(name, owner_type [company|agent], owner_id, country,
-         currency, method [bank|momo|alipay|wechat|cash])
-fx_rates(currency, rate_to_ghs, effective_date)  -- admin-set daily
-transactions(type, from_account_id, to_account_id, amount, currency,
-             fx_rate_snapshot, linked_po_id, linked_invoice_id,
-             linked_customer_id, proof_url, status [pending|confirmed|rejected],
-             created_by, confirmed_by, note)
-agent_margin_ledger(agent_id, po_id, margin_amount, currency,
-                    status [owed|paid], settled_transaction_id)
+## 3. Groupage invoicing (per-customer + consolidated)
 
--- Shipping
-packages(tracking_no, customer_id, origin_wh, weight_kg, dims, cbm,
-         declared_value, currency, photos[], status, received_at,
-         shipment_id, source_po_id)
-shipments(ref, mode, container_no, container_size, origin_wh, eta, status)
-shipment_events(shipment_id|package_id, event, note, at, by_user)
+When a shipment is created and packages are attached:
 
--- Billing
-rate_cards(origin_wh, mode, unit, unit_price, currency, min_charge, effective_from)
-invoices(number, customer_id, currency, subtotal, tax, total,
-         fx_to_ghs, status)
-invoice_items · payments(method, currency, amount, reference, transaction_id)
+**Per-customer invoices**: existing draft invoices from step 2 get `shipment_id` set and status flipped to `issued`. One invoice per customer per shipment.
 
--- Dispatch
-deliveries(shipment_id|package_id, driver_id, run_date,
-           pod_signature_url, pod_photo_url, delivered_at)
-vehicles · drivers
-```
+**Consolidated shipment invoice**: new row in `invoices` with `is_consolidated = true` (new bool column), `customer_id = NULL`, `shipment_id` set, aggregating all package line items for internal/agent reconciliation. Not sent to customers.
 
-Storage buckets (all private, RLS scoped): `package-photos`, `pod`, `payment-proofs`, `sourcing-images`. Public bucket: `logos` only.
+Add a "Generate consolidated invoice" button on the shipment detail; also auto-generated when shipment status → `in_transit`.
 
-## The Sourcing → Payment → Shipping Flow
-
-1. Customer request (or sales creates) → **Sourcing Request**
-2. Admin/agent finds supplier → creates **PO** with supplier rate + your margin → customer quoted the total
-3. Agent pays supplier from their assigned account → logs **Transaction** (type `supplier_payment`) + uploads proof photo → admin reviews → confirms
-4. System auto-creates **agent_margin_ledger** entry (agent owes company the margin in the agreed currency)
-5. Agent pays margin into a company account → logs **Transaction** (type `agent_margin_settlement`) with proof → admin confirms → margin ledger marked paid
-6. Goods ready → PO linked to a **Package** at origin warehouse (no re-entry)
-7. Package flows through normal shipping pipeline → delivered to customer
-8. Customer invoice generated from rate card + PO customer price → payments recorded
-
-Every step generates a ledger entry with FX snapshot to GHS, so at any time you can see:
-- Cash in each account / country / currency
-- Outstanding margin per agent (unpaid, overdue)
-- Unconfirmed transactions (red flag list)
-- True cost of any shipment/customer/PO
-
-## Dashboards
-
-- **Admin overview** — cash on hand per currency, agents' margin balances, unconfirmed transactions, in-transit shipments, revenue this month, top customers, per-shipment margin
-- **Ops** — packages at each warehouse, containers in transit, deliveries today
-- **Agent (own view)** — my POs by stage, my float balance, margin I owe, my payment history
-- **Customer portal** — my packages, invoices, tracking; shows shipping mark + overseas warehouse addresses
-
-## Route Map
+## 4. Schema changes
 
 ```text
-/                              Public landing + track-by-code
-/track/$code                   Public tracking (safe columns only)
-/auth · /reset-password
-/portal                        Customer portal
-/_authenticated/
-  /dashboard
-  /crm/(contacts|leads|quotes)
-  /sourcing/(requests|pos|suppliers)
-  /treasury/(accounts|transactions|fx|agent-margins)
-  /packages · /shipments · /deliveries
-  /invoices
-  /reports
-  /admin/(users|rate-cards|warehouses|fx-rates)
+packages           + rate_override numeric NULL
+invoices           + is_consolidated bool default false
+                   + shipment_id (already exists — confirm)
+functions          + fn_autoinvoice_package() 
+                   + fn_reprice_package()
+                   + fn_generate_consolidated_invoice(shipment_id)
+triggers           trg_package_autoinvoice AFTER INSERT
+                   trg_package_reprice AFTER UPDATE OF weight_kg, cbm, rate_override
+RLS/policies       unchanged (existing invoice policies cover new rows)
 ```
 
-## Phased Build
+## 5. UI changes
 
-**Phase 1 — Foundation**
-Cloud on · schema for profiles/roles/warehouses/fx_rates + shipping-mark trigger · auth (email + Google) · brand system + logo + favicon · public landing · `/track/$code` · staff & portal shells
+- `packages.tsx`: add Edit button per row + `EditPackageDialog` (reuses intake form); add optional rate override input to intake dialog.
+- `shipments.tsx`: add Edit button + dialog; "Generate consolidated invoice" action.
+- `deliveries.tsx`: add Edit button + dialog.
+- `invoices.tsx`: badge for consolidated invoices; filter toggle "Show consolidated".
 
-**Phase 2 — Packages & Shipments**
-Package intake (photos, weight, dims → CBM), status timeline, shipments/containers, portal "My Packages", public track wired
+## Technical notes
 
-**Phase 3 — Sourcing & Treasury (the new core)**
-Suppliers · sourcing requests · POs with margin · accounts · transactions ledger · agent_margin_ledger · proof uploads · admin confirm workflow · FX rates admin · agent dashboard
+- Trigger functions use `SECURITY DEFINER` with `SET search_path = public`.
+- Rate lookup order: exact (warehouse_code, mode) → fallback (mode) → NULL (line saved as 0, flagged for review).
+- Chargeable weight = `GREATEST(weight_kg, cbm * 167)` for air, `GREATEST(weight_kg, cbm * 1000)` for sea — configurable per rate row.
+- Edit dialogs validate with the same zod schemas used at creation.
+- All edits write to `updated_at` via existing `set_updated_at` trigger.
 
-**Phase 4 — Rate cards, Quotes, Invoices**
-Multi-currency rate cards · auto-cost from package dims · invoices with FX snapshot · manual payment recording
-
-**Phase 5 — Dispatch, POD, CRM, Reports**
-Driver run sheet · mobile POD (signature + photo) · CRM pipeline · reports (revenue, margins, agent balances, on-time %, per-shipment true cost)
-
-**Phase 6 (optional)** — Paystack online payments · SMS/email status notifications · pre-alert workflow
-
-## Guardrails
-
-- RLS + explicit GRANTs on every public-schema table
-- `sourcing_agent` sees only own POs, transactions, margin balance — never other agents' or company treasury
-- Customers see only own rows (`customer_id = auth.uid()`)
-- All money math server-side (`createServerFn`); client never submits totals
-- Every transaction stores currency + FX snapshot at time of entry — historical reports never re-compute
-- Proof uploads required for supplier payments and margin settlements before status can go `confirmed`
-- Public track endpoint uses server publishable client + narrow `TO anon` policy — tracking_no + status + timeline only, no PII/prices
-- Shipping mark generated by DB trigger, never client-supplied
-- Roles in separate table (no privilege escalation via profile update)
-
-Approve and I'll ship Phase 1 in the next build.
