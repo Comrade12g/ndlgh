@@ -390,14 +390,30 @@ function IntakePackageDialog({ onDone }: { onDone: () => void }) {
           Computed volume: <span className="font-mono font-bold text-brand-navy">{cbm} CBM</span>
         </div>
 
-        <div className="grid gap-2">
-          <Label>Notes</Label>
-          <Textarea
-            rows={2}
-            value={form.notes}
-            onChange={(e) => setForm({ ...form, notes: e.target.value })}
-          />
+        <div className="grid grid-cols-2 gap-3">
+          <div className="grid gap-2">
+            <Label>Rate override (per unit)</Label>
+            <Input
+              type="number"
+              step="0.01"
+              placeholder="Leave blank to use rate card"
+              value={form.rate_override}
+              onChange={(e) => setForm({ ...form, rate_override: e.target.value })}
+            />
+            <div className="text-xs text-muted-foreground">
+              Optional. Overrides the auto-invoice line's unit price.
+            </div>
+          </div>
+          <div className="grid gap-2">
+            <Label>Notes</Label>
+            <Textarea
+              rows={2}
+              value={form.notes}
+              onChange={(e) => setForm({ ...form, notes: e.target.value })}
+            />
+          </div>
         </div>
+
 
         <DialogFooter>
           <Button
