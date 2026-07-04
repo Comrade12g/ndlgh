@@ -148,25 +148,36 @@ function PackagesPage() {
                       </StatusBadge>
                     </td>
                     <td className="px-4 py-3">
-                      {p.customer?.phone && (
+                      <div className="flex items-center gap-1">
                         <Button
                           size="icon"
                           variant="ghost"
-                          className="h-7 w-7 text-emerald-700 hover:bg-emerald-50"
-                          title="Notify customer on WhatsApp"
-                          onClick={() => {
-                            const msg = waTemplates.packageReceived(
-                              p.customer?.full_name ?? "there",
-                              p.tracking_code,
-                              p.warehouse_code ?? "our",
-                            );
-                            if (!openWhatsApp(p.customer?.phone, msg))
-                              toast.error("No valid phone number on file");
-                          }}
+                          className="h-7 w-7 text-brand-navy hover:bg-brand-navy/10"
+                          title="Edit package"
+                          onClick={() => setEditId(p.id)}
                         >
-                          <MessageCircle className="h-4 w-4" />
+                          <Pencil className="h-4 w-4" />
                         </Button>
-                      )}
+                        {p.customer?.phone && (
+                          <Button
+                            size="icon"
+                            variant="ghost"
+                            className="h-7 w-7 text-emerald-700 hover:bg-emerald-50"
+                            title="Notify customer on WhatsApp"
+                            onClick={() => {
+                              const msg = waTemplates.packageReceived(
+                                p.customer?.full_name ?? "there",
+                                p.tracking_code,
+                                p.warehouse_code ?? "our",
+                              );
+                              if (!openWhatsApp(p.customer?.phone, msg))
+                                toast.error("No valid phone number on file");
+                            }}
+                          >
+                            <MessageCircle className="h-4 w-4" />
+                          </Button>
+                        )}
+                      </div>
                     </td>
                   </tr>
                 ))}
