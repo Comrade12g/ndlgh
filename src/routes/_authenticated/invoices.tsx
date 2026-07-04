@@ -23,8 +23,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { PageHeader, EmptyState, StatusBadge, statusTone } from "@/components/ops/PageHeader";
-import { openWhatsApp, waTemplates } from "@/lib/whatsapp";
-import { Plus, Trash2, Search, Receipt, MessageCircle } from "lucide-react";
+import { openWhatsApp, waTemplates, copyToClipboard } from "@/lib/whatsapp";
+import { Plus, Trash2, Search, Receipt, MessageCircle, Copy } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/invoices")({
@@ -649,6 +649,26 @@ function InvoiceDetailDialog({ id, onChanged }: { id: string; onChanged: () => v
               }}
             >
               <MessageCircle className="mr-2 h-4 w-4" /> Notify on WhatsApp
+            </Button>
+            <Button
+              size="icon"
+              variant="outline"
+              title="Copy message (use if WhatsApp Web won't refresh an already-open chat)"
+              onClick={async () => {
+                const name = invoice.customer?.full_name ?? "there";
+                const msg = waTemplates.invoiceIssued(
+                  name,
+                  invoice.number,
+                  invoice.currency,
+                  Number(invoice.total),
+                  invoice.due_date,
+                );
+                if (await copyToClipboard(msg))
+                  toast.success("Message copied — paste it into the chat");
+                else toast.error("Couldn't copy — check clipboard permissions");
+              }}
+            >
+              <Copy className="h-4 w-4" />
             </Button>
           </div>
           {outstanding > 0 && invoice.status !== "void" && (

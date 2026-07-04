@@ -23,8 +23,8 @@ import {
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { PageHeader, EmptyState, StatusBadge, statusTone } from "@/components/ops/PageHeader";
-import { openWhatsApp, waTemplates } from "@/lib/whatsapp";
-import { Plus, Truck, MessageCircle, PackagePlus, Trash2 } from "lucide-react";
+import { openWhatsApp, waTemplates, copyToClipboard } from "@/lib/whatsapp";
+import { Plus, Truck, MessageCircle, PackagePlus, Trash2, Copy } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/deliveries")({
@@ -709,30 +709,58 @@ function DeliveryDetailDialog({ id, onChanged }: { id: string; onChanged: () => 
           )}
         </div>
 
-        <Button
-          type="button"
-          variant="outline"
-          className="border-emerald-600 text-emerald-700 hover:bg-emerald-50"
-          onClick={() => {
-            const msg =
-              delivery.status === "delivered"
-                ? waTemplates.deliveryDelivered(delivery.recipient_name, delivery.code)
-                : delivery.status === "out_for_delivery"
-                  ? waTemplates.deliveryOutForDelivery(delivery.recipient_name, delivery.code)
-                  : delivery.status === "failed"
-                    ? waTemplates.deliveryFailed(delivery.recipient_name, delivery.code)
-                    : waTemplates.deliveryScheduled(
-                        delivery.recipient_name,
-                        delivery.code,
-                        delivery.city,
-                        delivery.scheduled_for,
-                      );
-            if (!openWhatsApp(delivery.recipient_phone, msg))
-              toast.error("No valid phone number on file");
-          }}
-        >
-          <MessageCircle className="mr-2 h-4 w-4" /> Notify customer on WhatsApp
-        </Button>
+        <div className="flex gap-2">
+          <Button
+            type="button"
+            variant="outline"
+            className="flex-1 border-emerald-600 text-emerald-700 hover:bg-emerald-50"
+            onClick={() => {
+              const msg =
+                delivery.status === "delivered"
+                  ? waTemplates.deliveryDelivered(delivery.recipient_name, delivery.code)
+                  : delivery.status === "out_for_delivery"
+                    ? waTemplates.deliveryOutForDelivery(delivery.recipient_name, delivery.code)
+                    : delivery.status === "failed"
+                      ? waTemplates.deliveryFailed(delivery.recipient_name, delivery.code)
+                      : waTemplates.deliveryScheduled(
+                          delivery.recipient_name,
+                          delivery.code,
+                          delivery.city,
+                          delivery.scheduled_for,
+                        );
+              if (!openWhatsApp(delivery.recipient_phone, msg))
+                toast.error("No valid phone number on file");
+            }}
+          >
+            <MessageCircle className="mr-2 h-4 w-4" /> Notify customer on WhatsApp
+          </Button>
+          <Button
+            type="button"
+            size="icon"
+            variant="outline"
+            title="Copy message (use this if WhatsApp Web won't refresh an already-open chat)"
+            onClick={async () => {
+              const msg =
+                delivery.status === "delivered"
+                  ? waTemplates.deliveryDelivered(delivery.recipient_name, delivery.code)
+                  : delivery.status === "out_for_delivery"
+                    ? waTemplates.deliveryOutForDelivery(delivery.recipient_name, delivery.code)
+                    : delivery.status === "failed"
+                      ? waTemplates.deliveryFailed(delivery.recipient_name, delivery.code)
+                      : waTemplates.deliveryScheduled(
+                          delivery.recipient_name,
+                          delivery.code,
+                          delivery.city,
+                          delivery.scheduled_for,
+                        );
+              if (await copyToClipboard(msg))
+                toast.success("Message copied — paste it into the chat");
+              else toast.error("Couldn't copy — check clipboard permissions");
+            }}
+          >
+            <Copy className="h-4 w-4" />
+          </Button>
+        </div>
       </div>
     </DialogContent>
   );

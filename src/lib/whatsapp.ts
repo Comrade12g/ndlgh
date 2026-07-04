@@ -38,6 +38,16 @@ export function openWhatsApp(phone: string | null | undefined, message: string):
   return true;
 }
 
+/** Copies text to the clipboard. Returns true on success — use as a fallback when WhatsApp Web won't refresh an already-open chat's draft. */
+export async function copyToClipboard(text: string): Promise<boolean> {
+  try {
+    await navigator.clipboard.writeText(text);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 const SIGNOFF = "— NDL Global Shipping";
 
 export const waTemplates = {
