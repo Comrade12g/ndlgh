@@ -500,7 +500,7 @@ function EditPackageDialog({ id, onDone }: { id: string; onDone: () => void }) {
         customer_id = data?.id ?? null;
       }
       const cbm = (form.length_cm * form.width_cm * form.height_cm) / 1_000_000;
-      const patch: Record<string, unknown> = {
+      const patch = {
         shipping_mark: form.shipping_mark.trim().toUpperCase() || null,
         warehouse_code: form.warehouse_code,
         supplier_name: form.supplier_name || null,
@@ -514,8 +514,8 @@ function EditPackageDialog({ id, onDone }: { id: string; onDone: () => void }) {
         external_tracking: form.external_tracking || null,
         notes: form.notes || null,
         rate_override: form.rate_override ? Number(form.rate_override) : null,
+        ...(customer_id !== undefined ? { customer_id } : {}),
       };
-      if (customer_id !== undefined) patch.customer_id = customer_id;
       const { error } = await supabase.from("packages").update(patch).eq("id", id);
       if (error) throw error;
     },
