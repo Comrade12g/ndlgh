@@ -24,7 +24,7 @@ import {
 } from "@/components/ui/select";
 import { PageHeader, EmptyState, StatusBadge, statusTone } from "@/components/ops/PageHeader";
 import { openWhatsApp, waTemplates, copyToClipboard } from "@/lib/whatsapp";
-import { Plus, Search, Package as PackageIcon, MessageCircle, Copy } from "lucide-react";
+import { Plus, Search, Package as PackageIcon, MessageCircle, Copy, Pencil } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/packages")({
@@ -35,6 +35,7 @@ function PackagesPage() {
   const qc = useQueryClient();
   const [search, setSearch] = useState("");
   const [open, setOpen] = useState(false);
+  const [editId, setEditId] = useState<string | null>(null);
 
   const { data: packages, isLoading } = useQuery({
     queryKey: ["packages", search],
@@ -147,44 +148,55 @@ function PackagesPage() {
                       </StatusBadge>
                     </td>
                     <td className="px-4 py-3">
-                      {p.customer?.phone && (
-                        <div className="flex gap-1">
-                          <Button
-                            size="icon"
-                            variant="ghost"
-                            className="h-7 w-7 text-emerald-700 hover:bg-emerald-50"
-                            title="Notify customer on WhatsApp"
-                            onClick={() => {
-                              const msg = waTemplates.packageReceived(
-                                p.customer?.full_name ?? "there",
-                                p.tracking_code,
-                                p.warehouse_code ?? "our",
-                              );
-                              if (!openWhatsApp(p.customer?.phone, msg))
-                                toast.error("No valid phone number on file");
-                            }}
-                          >
-                            <MessageCircle className="h-4 w-4" />
-                          </Button>
-                          <Button
-                            size="icon"
-                            variant="ghost"
-                            className="h-7 w-7"
-                            title="Copy message"
-                            onClick={async () => {
-                              const msg = waTemplates.packageReceived(
-                                p.customer?.full_name ?? "there",
-                                p.tracking_code,
-                                p.warehouse_code ?? "our",
-                              );
-                              if (await copyToClipboard(msg)) toast.success("Message copied");
-                              else toast.error("Couldn't copy — check clipboard permissions");
-                            }}
-                          >
-                            <Copy className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      )}
+                      <div className="flex items-center gap-1">
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          className="h-7 w-7 text-brand-navy hover:bg-brand-navy/10"
+                          title="Edit package"
+                          onClick={() => setEditId(p.id)}
+                        >
+                          <Pencil className="h-4 w-4" />
+                        </Button>
+                        {p.customer?.phone && (
+                          <>
+                            <Button
+                              size="icon"
+                              variant="ghost"
+                              className="h-7 w-7 text-emerald-700 hover:bg-emerald-50"
+                              title="Notify customer on WhatsApp"
+                              onClick={() => {
+                                const msg = waTemplates.packageReceived(
+                                  p.customer?.full_name ?? "there",
+                                  p.tracking_code,
+                                  p.warehouse_code ?? "our",
+                                );
+                                if (!openWhatsApp(p.customer?.phone, msg))
+                                  toast.error("No valid phone number on file");
+                              }}
+                            >
+                              <MessageCircle className="h-4 w-4" />
+                            </Button>
+                            <Button
+                              size="icon"
+                              variant="ghost"
+                              className="h-7 w-7"
+                              title="Copy message"
+                              onClick={async () => {
+                                const msg = waTemplates.packageReceived(
+                                  p.customer?.full_name ?? "there",
+                                  p.tracking_code,
+                                  p.warehouse_code ?? "our",
+                                );
+                                if (await copyToClipboard(msg)) toast.success("Message copied");
+                                else toast.error("Couldn't copy — check clipboard permissions");
+                              }}
+                            >
+                              <Copy className="h-4 w-4" />
+                            </Button>
+                          </>
+                        )}
+                      </div>
                     </td>
                   </tr>
                 ))}
@@ -193,6 +205,18 @@ function PackagesPage() {
           </div>
         )}
       </Card>
+
+      <Dialog open={!!editId} onOpenChange={(o) => !o && setEditId(null)}>
+        {editId && (
+          <EditPackageDialog
+            id={editId}
+            onDone={() => {
+              setEditId(null);
+              qc.invalidateQueries({ queryKey: ["packages"] });
+            }}
+          />
+        )}
+      </Dialog>
     </div>
   );
 }
@@ -210,6 +234,7 @@ function IntakePackageDialog({ onDone }: { onDone: () => void }) {
     height_cm: 0,
     external_tracking: "",
     notes: "",
+    rate_override: "" as string,
   });
 
   const { data: warehouses } = useQuery({
@@ -248,6 +273,7 @@ function IntakePackageDialog({ onDone }: { onDone: () => void }) {
         cbm,
         external_tracking: form.external_tracking || null,
         notes: form.notes || null,
+        rate_override: form.rate_override ? Number(form.rate_override) : null,
         received_by: u.user?.id,
         status: "received",
       });
@@ -383,13 +409,28 @@ function IntakePackageDialog({ onDone }: { onDone: () => void }) {
           Computed volume: <span className="font-mono font-bold text-brand-navy">{cbm} CBM</span>
         </div>
 
-        <div className="grid gap-2">
-          <Label>Notes</Label>
-          <Textarea
-            rows={2}
-            value={form.notes}
-            onChange={(e) => setForm({ ...form, notes: e.target.value })}
-          />
+        <div className="grid grid-cols-2 gap-3">
+          <div className="grid gap-2">
+            <Label>Rate override (per unit)</Label>
+            <Input
+              type="number"
+              step="0.01"
+              placeholder="Leave blank to use rate card"
+              value={form.rate_override}
+              onChange={(e) => setForm({ ...form, rate_override: e.target.value })}
+            />
+            <div className="text-xs text-muted-foreground">
+              Optional. Overrides the auto-invoice line's unit price.
+            </div>
+          </div>
+          <div className="grid gap-2">
+            <Label>Notes</Label>
+            <Textarea
+              rows={2}
+              value={form.notes}
+              onChange={(e) => setForm({ ...form, notes: e.target.value })}
+            />
+          </div>
         </div>
 
         <DialogFooter>
@@ -399,6 +440,266 @@ function IntakePackageDialog({ onDone }: { onDone: () => void }) {
             className="bg-brand-orange hover:bg-brand-orange/90"
           >
             {mut.isPending ? "Saving…" : "Save intake"}
+          </Button>
+        </DialogFooter>
+      </form>
+    </DialogContent>
+  );
+}
+
+function EditPackageDialog({ id, onDone }: { id: string; onDone: () => void }) {
+  const { data: warehouses } = useQuery({
+    queryKey: ["warehouses-all"],
+    queryFn: async () =>
+      (await supabase.from("warehouses").select("code, name").order("code")).data ?? [],
+  });
+
+  const { data: pkg, isLoading } = useQuery({
+    queryKey: ["package-edit", id],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("packages")
+        .select(
+          "id, tracking_code, shipping_mark, warehouse_code, supplier_name, description, pieces, weight_kg, length_cm, width_cm, height_cm, external_tracking, notes, rate_override, status",
+        )
+        .eq("id", id)
+        .single();
+      if (error) throw error;
+      return data;
+    },
+  });
+
+  const [form, setForm] = useState<{
+    shipping_mark: string;
+    warehouse_code: string;
+    supplier_name: string;
+    description: string;
+    pieces: number;
+    weight_kg: number;
+    length_cm: number;
+    width_cm: number;
+    height_cm: number;
+    external_tracking: string;
+    notes: string;
+    rate_override: string;
+  } | null>(null);
+
+  // Hydrate form once when data arrives
+  if (pkg && !form) {
+    setForm({
+      shipping_mark: pkg.shipping_mark ?? "",
+      warehouse_code: pkg.warehouse_code ?? "CN",
+      supplier_name: pkg.supplier_name ?? "",
+      description: pkg.description ?? "",
+      pieces: pkg.pieces,
+      weight_kg: Number(pkg.weight_kg),
+      length_cm: Number(pkg.length_cm ?? 0),
+      width_cm: Number(pkg.width_cm ?? 0),
+      height_cm: Number(pkg.height_cm ?? 0),
+      external_tracking: pkg.external_tracking ?? "",
+      notes: pkg.notes ?? "",
+      rate_override: pkg.rate_override != null ? String(pkg.rate_override) : "",
+    });
+  }
+
+  const locked =
+    pkg?.status === "delivered" || pkg?.status === "returned" || pkg?.status === "lost";
+
+  const mut = useMutation({
+    mutationFn: async () => {
+      if (!form) return;
+      // Re-match customer if shipping mark changed
+      let customer_id: string | null | undefined = undefined;
+      if (form.shipping_mark) {
+        const { data } = await supabase
+          .from("profiles")
+          .select("id")
+          .eq("shipping_mark", form.shipping_mark.trim().toUpperCase())
+          .maybeSingle();
+        customer_id = data?.id ?? null;
+      }
+      const cbm = (form.length_cm * form.width_cm * form.height_cm) / 1_000_000;
+      const patch = {
+        shipping_mark: form.shipping_mark.trim().toUpperCase() || null,
+        warehouse_code: form.warehouse_code,
+        supplier_name: form.supplier_name || null,
+        description: form.description || null,
+        pieces: form.pieces,
+        weight_kg: form.weight_kg,
+        length_cm: form.length_cm || null,
+        width_cm: form.width_cm || null,
+        height_cm: form.height_cm || null,
+        cbm,
+        external_tracking: form.external_tracking || null,
+        notes: form.notes || null,
+        rate_override: form.rate_override ? Number(form.rate_override) : null,
+        ...(customer_id !== undefined ? { customer_id } : {}),
+      };
+      const { error } = await supabase.from("packages").update(patch).eq("id", id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      toast.success("Package updated");
+      onDone();
+    },
+    onError: (e) => toast.error(e instanceof Error ? e.message : "Failed"),
+  });
+
+  if (isLoading || !form) {
+    return (
+      <DialogContent className="max-w-2xl">
+        <div className="p-8 text-center text-sm text-muted-foreground">Loading…</div>
+      </DialogContent>
+    );
+  }
+
+  const cbm = ((form.length_cm * form.width_cm * form.height_cm) / 1_000_000).toFixed(4);
+
+  return (
+    <DialogContent className="max-w-2xl">
+      <DialogHeader>
+        <DialogTitle className="flex items-center gap-2">
+          <PackageIcon className="h-5 w-5 text-brand-orange" />
+          Edit {pkg?.tracking_code}
+        </DialogTitle>
+      </DialogHeader>
+      {locked && (
+        <div className="rounded-md border border-amber-300 bg-amber-50 p-2 text-xs text-amber-900">
+          This package is {pkg?.status}. Fields are read-only.
+        </div>
+      )}
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          mut.mutate();
+        }}
+        className="grid gap-3"
+      >
+        <fieldset disabled={locked} className="grid gap-3">
+          <div className="grid grid-cols-3 gap-3">
+            <div className="grid gap-2 col-span-2">
+              <Label>Shipping mark</Label>
+              <Input
+                value={form.shipping_mark}
+                onChange={(e) => setForm({ ...form, shipping_mark: e.target.value })}
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label>Warehouse</Label>
+              <Select
+                value={form.warehouse_code}
+                onValueChange={(v) => setForm({ ...form, warehouse_code: v })}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {warehouses?.map((w) => (
+                    <SelectItem key={w.code} value={w.code}>
+                      {w.code} — {w.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div className="grid gap-2">
+              <Label>Supplier / sender</Label>
+              <Input
+                value={form.supplier_name}
+                onChange={(e) => setForm({ ...form, supplier_name: e.target.value })}
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label>External tracking</Label>
+              <Input
+                value={form.external_tracking}
+                onChange={(e) => setForm({ ...form, external_tracking: e.target.value })}
+              />
+            </div>
+          </div>
+          <div className="grid gap-2">
+            <Label>Description</Label>
+            <Input
+              value={form.description}
+              onChange={(e) => setForm({ ...form, description: e.target.value })}
+            />
+          </div>
+          <div className="grid grid-cols-4 gap-3">
+            <div className="grid gap-2">
+              <Label>Pieces</Label>
+              <Input
+                type="number"
+                min="1"
+                value={form.pieces}
+                onChange={(e) => setForm({ ...form, pieces: Number(e.target.value) })}
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label>Weight (kg)</Label>
+              <Input
+                type="number"
+                step="0.01"
+                value={form.weight_kg}
+                onChange={(e) => setForm({ ...form, weight_kg: Number(e.target.value) })}
+              />
+            </div>
+            <div className="grid gap-2 col-span-2">
+              <Label>L × W × H (cm)</Label>
+              <div className="flex gap-1">
+                <Input
+                  type="number"
+                  placeholder="L"
+                  value={form.length_cm || ""}
+                  onChange={(e) => setForm({ ...form, length_cm: Number(e.target.value) })}
+                />
+                <Input
+                  type="number"
+                  placeholder="W"
+                  value={form.width_cm || ""}
+                  onChange={(e) => setForm({ ...form, width_cm: Number(e.target.value) })}
+                />
+                <Input
+                  type="number"
+                  placeholder="H"
+                  value={form.height_cm || ""}
+                  onChange={(e) => setForm({ ...form, height_cm: Number(e.target.value) })}
+                />
+              </div>
+            </div>
+          </div>
+          <div className="rounded-md bg-muted p-3 text-sm">
+            Computed volume: <span className="font-mono font-bold text-brand-navy">{cbm} CBM</span>
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div className="grid gap-2">
+              <Label>Rate override (per unit)</Label>
+              <Input
+                type="number"
+                step="0.01"
+                placeholder="Leave blank for rate card"
+                value={form.rate_override}
+                onChange={(e) => setForm({ ...form, rate_override: e.target.value })}
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label>Notes</Label>
+              <Textarea
+                rows={2}
+                value={form.notes}
+                onChange={(e) => setForm({ ...form, notes: e.target.value })}
+              />
+            </div>
+          </div>
+        </fieldset>
+        <DialogFooter>
+          <Button
+            type="submit"
+            disabled={mut.isPending || locked}
+            className="bg-brand-orange hover:bg-brand-orange/90"
+          >
+            {mut.isPending ? "Saving…" : "Save changes"}
           </Button>
         </DialogFooter>
       </form>
