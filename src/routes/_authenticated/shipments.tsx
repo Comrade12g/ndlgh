@@ -473,9 +473,37 @@ function ShipmentDetailDialog({ id, onChanged }: { id: string; onChanged: () => 
       <DialogHeader>
         <DialogTitle className="flex items-center justify-between gap-2 pr-6">
           <span className="font-mono">{shipment.code}</span>
-          <StatusBadge tone={statusTone(shipment.status)}>{shipment.status}</StatusBadge>
+          <div className="flex items-center gap-2">
+            <StatusBadge tone={statusTone(shipment.status)}>{shipment.status}</StatusBadge>
+            {shipment.status !== "closed" && shipment.status !== "cancelled" && (
+              <Button size="sm" variant="outline" onClick={() => setEditOpen(true)}>
+                <Pencil className="mr-1 h-3 w-3" /> Edit
+              </Button>
+            )}
+            <Button
+              size="sm"
+              variant="outline"
+              disabled={genConsolidated.isPending || !loadedPackages?.length}
+              onClick={() => genConsolidated.mutate()}
+              title="Generate/refresh consolidated shipment invoice"
+            >
+              <FileText className="mr-1 h-3 w-3" /> Consolidated invoice
+            </Button>
+          </div>
         </DialogTitle>
       </DialogHeader>
+
+      <Dialog open={editOpen} onOpenChange={setEditOpen}>
+        {editOpen && (
+          <EditShipmentDialog
+            id={id}
+            onDone={() => {
+              setEditOpen(false);
+              invalidateAll();
+            }}
+          />
+        )}
+      </Dialog>
 
       <div className="grid gap-4 text-sm">
         <div className="grid grid-cols-2 gap-4">
