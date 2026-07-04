@@ -186,6 +186,18 @@ function PackagesPage() {
           </div>
         )}
       </Card>
+
+      <Dialog open={!!editId} onOpenChange={(o) => !o && setEditId(null)}>
+        {editId && (
+          <EditPackageDialog
+            id={editId}
+            onDone={() => {
+              setEditId(null);
+              qc.invalidateQueries({ queryKey: ["packages"] });
+            }}
+          />
+        )}
+      </Dialog>
     </div>
   );
 }
