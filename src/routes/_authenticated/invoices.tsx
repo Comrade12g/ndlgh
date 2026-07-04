@@ -56,7 +56,9 @@ function InvoicesPage() {
       if (error) throw error;
       const rows = data ?? [];
 
-      const customerIds = Array.from(new Set(rows.map((r) => r.customer_id)));
+      const customerIds = Array.from(
+        new Set(rows.map((r) => r.customer_id).filter((v): v is string => !!v)),
+      );
       const { data: profiles } = customerIds.length
         ? await supabase
             .from("profiles")
@@ -71,7 +73,10 @@ function InvoicesPage() {
             }[],
           };
       const byId = new Map((profiles ?? []).map((p) => [p.id, p]));
-      let withCustomer = rows.map((r) => ({ ...r, customer: byId.get(r.customer_id) }));
+      let withCustomer = rows.map((r) => ({
+        ...r,
+        customer: r.customer_id ? byId.get(r.customer_id) : undefined,
+      }));
 
       if (search) {
         const s = search.toLowerCase();
@@ -464,11 +469,13 @@ function InvoiceDetailDialog({ id, onChanged }: { id: string; onChanged: () => v
         .eq("id", id)
         .single();
       if (error) throw error;
-      const { data: customer } = await supabase
-        .from("profiles")
-        .select("full_name, phone, shipping_mark")
-        .eq("id", data.customer_id)
-        .maybeSingle();
+      const { data: customer } = data.customer_id
+        ? await supabase
+            .from("profiles")
+            .select("full_name, phone, shipping_mark")
+            .eq("id", data.customer_id)
+            .maybeSingle()
+        : { data: null as null | { full_name: string | null; phone: string | null; shipping_mark: string } };
       return { ...data, customer };
     },
   });
@@ -661,7 +668,7 @@ function InvoiceDetailDialog({ id, onChanged }: { id: string; onChanged: () => v
               <RecordPaymentDialog
                 invoiceId={id}
                 invoiceNumber={invoice.number}
-                customerId={invoice.customer_id}
+                customerId={invoice.customer_id ?? ""}
                 customerName={invoice.customer?.full_name ?? "there"}
                 customerPhone={invoice.customer?.phone}
                 currency={invoice.currency}

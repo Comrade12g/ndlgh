@@ -382,10 +382,11 @@ export type Database = {
           created_at: string
           created_by: string | null
           currency: string
-          customer_id: string
+          customer_id: string | null
           delivery_id: string | null
           due_date: string | null
           id: string
+          is_consolidated: boolean
           issue_date: string
           notes: string | null
           number: string
@@ -401,10 +402,11 @@ export type Database = {
           created_at?: string
           created_by?: string | null
           currency?: string
-          customer_id: string
+          customer_id?: string | null
           delivery_id?: string | null
           due_date?: string | null
           id?: string
+          is_consolidated?: boolean
           issue_date?: string
           notes?: string | null
           number?: string
@@ -420,10 +422,11 @@ export type Database = {
           created_at?: string
           created_by?: string | null
           currency?: string
-          customer_id?: string
+          customer_id?: string | null
           delivery_id?: string | null
           due_date?: string | null
           id?: string
+          is_consolidated?: boolean
           issue_date?: string
           notes?: string | null
           number?: string
@@ -495,6 +498,7 @@ export type Database = {
           photos_urls: string[]
           pieces: number
           purchase_order_id: string | null
+          rate_override: number | null
           received_at: string | null
           received_by: string | null
           shipping_mark: string | null
@@ -521,6 +525,7 @@ export type Database = {
           photos_urls?: string[]
           pieces?: number
           purchase_order_id?: string | null
+          rate_override?: number | null
           received_at?: string | null
           received_by?: string | null
           shipping_mark?: string | null
@@ -547,6 +552,7 @@ export type Database = {
           photos_urls?: string[]
           pieces?: number
           purchase_order_id?: string | null
+          rate_override?: number | null
           received_at?: string | null
           received_by?: string | null
           shipping_mark?: string | null
@@ -1309,6 +1315,14 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      fn_autoinvoice_package_manual: {
+        Args: { _package_id: string }
+        Returns: undefined
+      }
+      fn_generate_consolidated_invoice: {
+        Args: { _shipment_id: string }
+        Returns: string
+      }
       generate_shipping_mark: { Args: never; Returns: string }
       has_role: {
         Args: {
@@ -1318,6 +1332,19 @@ export type Database = {
         Returns: boolean
       }
       is_staff: { Args: { _user_id: string }; Returns: boolean }
+      price_package_line: {
+        Args: { _pkg: Database["public"]["Tables"]["packages"]["Row"] }
+        Returns: {
+          amount: number
+          qty: number
+          unit: string
+          unit_price: number
+        }[]
+      }
+      recompute_invoice_totals: {
+        Args: { _invoice_id: string }
+        Returns: undefined
+      }
     }
     Enums: {
       app_role:
