@@ -59,7 +59,7 @@ function RatesPage() {
       const { data, error } = await supabase
         .from("rates")
         .select(
-          "id, origin_code, destination_code, mode, unit, price, currency, min_qty, effective_from, active, notes",
+          "id, origin_code, destination_code, mode, unit, price, currency, effective_from, active, notes",
         )
         .order("active", { ascending: false })
         .order("origin_code");
@@ -131,7 +131,6 @@ function RatesPage() {
                   <th className="px-4 py-3 text-left">Mode</th>
                   <th className="px-4 py-3 text-left">Unit</th>
                   <th className="px-4 py-3 text-right">Price</th>
-                  <th className="px-4 py-3 text-right">Min qty</th>
                   <th className="px-4 py-3 text-left">Effective</th>
                   <th className="px-4 py-3 text-left">Active</th>
                 </tr>
@@ -157,9 +156,6 @@ function RatesPage() {
                     <td className="px-4 py-3 text-muted-foreground">{r.unit}</td>
                     <td className="px-4 py-3 text-right font-semibold">
                       {r.currency} {Number(r.price).toFixed(2)}
-                    </td>
-                    <td className="px-4 py-3 text-right text-muted-foreground">
-                      {r.min_qty ? Number(r.min_qty).toFixed(2) : "—"}
                     </td>
                     <td className="px-4 py-3 text-muted-foreground">{r.effective_from}</td>
                     <td className="px-4 py-3" onClick={(e) => e.stopPropagation()}>
@@ -207,7 +203,6 @@ function RateFormDialog({ id, onDone }: { id: string | null; onDone: () => void 
     unit: existing?.unit ?? "CBM",
     price: existing?.price ?? 0,
     currency: existing?.currency ?? "USD",
-    min_qty: existing?.min_qty ?? 1,
     effective_from: existing?.effective_from ?? new Date().toISOString().slice(0, 10),
     notes: existing?.notes ?? "",
   }));
@@ -222,7 +217,6 @@ function RateFormDialog({ id, onDone }: { id: string | null; onDone: () => void 
         unit: existing.unit,
         price: existing.price,
         currency: existing.currency,
-        min_qty: existing.min_qty ?? 1,
         effective_from: existing.effective_from,
         notes: existing.notes ?? "",
       });
@@ -239,7 +233,6 @@ function RateFormDialog({ id, onDone }: { id: string | null; onDone: () => void 
         unit: form.unit,
         price: form.price,
         currency: form.currency,
-        min_qty: form.min_qty || null,
         effective_from: form.effective_from,
         notes: form.notes || null,
       };
@@ -369,31 +362,16 @@ function RateFormDialog({ id, onDone }: { id: string | null; onDone: () => void 
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-3">
-          <div className="grid gap-2">
-            <Label>Price</Label>
-            <Input
-              type="number"
-              step="0.01"
-              min="0"
-              value={form.price}
-              onChange={(e) => setForm({ ...form, price: Number(e.target.value) })}
-              required
-            />
-          </div>
-          <div className="grid gap-2">
-            <Label>
-              Minimum qty{" "}
-              {form.unit === "CBM" || form.unit === "KG" ? "(recommended)" : "(usually blank)"}
-            </Label>
-            <Input
-              type="number"
-              step="0.01"
-              min="0"
-              value={form.min_qty}
-              onChange={(e) => setForm({ ...form, min_qty: Number(e.target.value) })}
-            />
-          </div>
+        <div className="grid gap-2">
+          <Label>Price</Label>
+          <Input
+            type="number"
+            step="0.01"
+            min="0"
+            value={form.price}
+            onChange={(e) => setForm({ ...form, price: Number(e.target.value) })}
+            required
+          />
         </div>
 
         <div className="grid gap-2">

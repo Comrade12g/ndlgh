@@ -816,7 +816,6 @@ export type Database = {
           effective_from: string;
           id: string;
           mode: Database["public"]["Enums"]["shipment_mode"];
-          min_qty: number | null;
           notes: string | null;
           origin_code: string | null;
           price: number;
@@ -832,7 +831,6 @@ export type Database = {
           effective_from?: string;
           id?: string;
           mode: Database["public"]["Enums"]["shipment_mode"];
-          min_qty?: number | null;
           notes?: string | null;
           origin_code?: string | null;
           price: number;
@@ -848,7 +846,6 @@ export type Database = {
           effective_from?: string;
           id?: string;
           mode?: Database["public"]["Enums"]["shipment_mode"];
-          min_qty?: number | null;
           notes?: string | null;
           origin_code?: string | null;
           price?: number;

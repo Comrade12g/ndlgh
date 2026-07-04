@@ -253,7 +253,7 @@ type FreightSuggestion = {
   route: string;
   customerCbm: number;
   customerWeightKg: number;
-  rate: { unit: string; price: number; currency: string; min_qty: number | null } | null;
+  rate: { unit: string; price: number; currency: string } | null;
   billableQty: number;
   amount: number;
 };
@@ -317,7 +317,7 @@ function useFreightSuggestions(customerId: string) {
 
         const { data: rate } = await supabase
           .from("rates")
-          .select("unit, price, currency, min_qty")
+          .select("unit, price, currency")
           .eq("origin_code", s.origin_warehouse)
           .eq("destination_code", s.destination_warehouse)
           .eq("mode", s.mode)
@@ -329,10 +329,10 @@ function useFreightSuggestions(customerId: string) {
         let billableQty = 1;
         let amount = rate?.price ?? 0;
         if (rate?.unit === "CBM") {
-          billableQty = Math.max(totals.cbm, rate.min_qty ?? 0);
+          billableQty = totals.cbm;
           amount = billableQty * rate.price;
         } else if (rate?.unit === "KG") {
-          billableQty = Math.max(totals.weight, rate.min_qty ?? 0);
+          billableQty = totals.weight;
           amount = billableQty * rate.price;
         }
 
@@ -388,8 +388,7 @@ function FreightSuggestions({
             </span>
             {s.rate ? (
               <div className="text-muted-foreground">
-                {s.customerCbm.toFixed(3)} CBM{s.rate.min_qty ? ` (min ${s.rate.min_qty})` : ""} ×{" "}
-                {s.rate.currency} {s.rate.price.toFixed(2)}
+                {s.customerCbm.toFixed(3)} CBM × {s.rate.currency} {s.rate.price.toFixed(2)}
               </div>
             ) : (
               <div className="text-red-600">
