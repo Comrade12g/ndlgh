@@ -356,6 +356,7 @@ async function recomputeShipmentTotals(shipmentId: string) {
 function ShipmentDetailDialog({ id, onChanged }: { id: string; onChanged: () => void }) {
   const qc = useQueryClient();
   const [addOpen, setAddOpen] = useState(false);
+  const [editOpen, setEditOpen] = useState(false);
 
   const { data: shipment, isLoading } = useQuery({
     queryKey: ["shipment-detail", id],
