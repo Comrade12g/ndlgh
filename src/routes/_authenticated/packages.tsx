@@ -24,7 +24,7 @@ import {
 } from "@/components/ui/select";
 import { PageHeader, EmptyState, StatusBadge, statusTone } from "@/components/ops/PageHeader";
 import { openWhatsApp, waTemplates } from "@/lib/whatsapp";
-import { Plus, Search, Package as PackageIcon, MessageCircle } from "lucide-react";
+import { Plus, Search, Package as PackageIcon, MessageCircle, Pencil } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/packages")({
