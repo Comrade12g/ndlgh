@@ -24,7 +24,8 @@ import {
 } from "@/components/ui/select";
 import { PageHeader, EmptyState, StatusBadge, statusTone } from "@/components/ops/PageHeader";
 import { openWhatsApp, waTemplates, copyToClipboard } from "@/lib/whatsapp";
-import { Plus, Trash2, Search, Receipt, MessageCircle, Copy } from "lucide-react";
+import { downloadInvoicePdf } from "@/lib/invoicePdf";
+import { Plus, Trash2, Search, Receipt, MessageCircle, Copy, Download } from "lucide-react";
 import { toast } from "sonner";
 import { getErrorMessage } from "@/lib/errors";
 import { ensureContactShadow } from "@/lib/ensureContactShadow";
@@ -723,6 +724,40 @@ function InvoiceDetailDialog({ id, onChanged }: { id: string; onChanged: () => v
     onError: (e) => toast.error(getErrorMessage(e)),
   });
 
+  function handleDownloadPdf() {
+    if (!invoice) return;
+    downloadInvoicePdf({
+      number: invoice.number,
+      currency: invoice.currency,
+      subtotal: Number(invoice.subtotal),
+      tax: Number(invoice.tax),
+      total: Number(invoice.total),
+      amountPaid: Number(invoice.amount_paid),
+      status: invoice.status,
+      issueDate: invoice.issue_date,
+      dueDate: invoice.due_date,
+      notes: invoice.notes,
+      customer: {
+        fullName: invoice.customer?.full_name ?? null,
+        phone: invoice.customer?.phone ?? null,
+        shippingMark: invoice.customer?.shipping_mark ?? null,
+      },
+      items: (items ?? []).map((i) => ({
+        description: i.description,
+        qty: Number(i.qty),
+        unitPrice: Number(i.unit_price),
+        amount: Number(i.amount),
+      })),
+      payments: (payments ?? []).map((p) => ({
+        date: new Date(p.received_at).toLocaleDateString(),
+        method: p.method,
+        amount: Number(p.amount),
+        reference: p.reference,
+      })),
+    });
+    toast.success("PDF downloaded — attach it in WhatsApp alongside the message");
+  }
+
   if (isLoading || !invoice) {
     return (
       <DialogContent className="max-w-2xl">
@@ -881,6 +916,9 @@ function InvoiceDetailDialog({ id, onChanged }: { id: string; onChanged: () => v
               }}
             >
               <Copy className="h-4 w-4" />
+            </Button>
+            <Button size="sm" variant="outline" onClick={handleDownloadPdf}>
+              <Download className="mr-2 h-4 w-4" /> Download PDF
             </Button>
           </div>
           {outstanding > 0 && invoice.status !== "void" && (

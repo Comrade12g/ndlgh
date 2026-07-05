@@ -23,7 +23,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { PageHeader, EmptyState, StatusBadge, statusTone } from "@/components/ops/PageHeader";
-import { Plus, Search, Mail, Phone } from "lucide-react";
+import { openWhatsApp } from "@/lib/whatsapp";
+import { Plus, Search, Mail, Phone, KeyRound, MessageCircle } from "lucide-react";
 import { toast } from "sonner";
 import { getErrorMessage } from "@/lib/errors";
 
@@ -38,6 +39,11 @@ function ContactsPage() {
   const qc = useQueryClient();
   const [search, setSearch] = useState("");
   const [open, setOpen] = useState(false);
+  const [loginContact, setLoginContact] = useState<{
+    id: string;
+    full_name: string;
+    phone: string | null;
+  } | null>(null);
 
   const { data: contacts, isLoading } = useQuery({
     queryKey: ["contacts", search],
@@ -108,6 +114,7 @@ function ContactsPage() {
                   <th className="px-4 py-3 text-left">Country</th>
                   <th className="px-4 py-3 text-left">Type</th>
                   <th className="px-4 py-3 text-left">Status</th>
+                  <th className="px-4 py-3 text-left"></th>
                 </tr>
               </thead>
               <tbody>
@@ -136,6 +143,19 @@ function ContactsPage() {
                     <td className="px-4 py-3">
                       <StatusBadge tone={statusTone(c.status)}>{c.status}</StatusBadge>
                     </td>
+                    <td className="px-4 py-3">
+                      {c.type === "customer" && c.phone && (
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() =>
+                            setLoginContact({ id: c.id, full_name: c.full_name, phone: c.phone })
+                          }
+                        >
+                          <KeyRound className="mr-1 h-3 w-3" /> Create login
+                        </Button>
+                      )}
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -143,7 +163,115 @@ function ContactsPage() {
           </div>
         )}
       </Card>
+
+      <Dialog open={!!loginContact} onOpenChange={(o) => !o && setLoginContact(null)}>
+        {loginContact && (
+          <CreateCustomerLoginDialog contact={loginContact} onDone={() => setLoginContact(null)} />
+        )}
+      </Dialog>
     </div>
+  );
+}
+
+function CreateCustomerLoginDialog({
+  contact,
+  onDone,
+}: {
+  contact: { id: string; full_name: string; phone: string | null };
+  onDone: () => void;
+}) {
+  const [result, setResult] = useState<{
+    phone: string;
+    tempPassword: string;
+    shippingMark: string | null;
+  } | null>(null);
+
+  const mut = useMutation({
+    mutationFn: async () => {
+      const { data: session } = await supabase.auth.getSession();
+      const { data, error } = await supabase.functions.invoke("create-customer", {
+        body: { phone: contact.phone, full_name: contact.full_name },
+        headers: session.session
+          ? { Authorization: `Bearer ${session.session.access_token}` }
+          : undefined,
+      });
+      if (error) throw error;
+      if (data?.error) throw new Error(data.error);
+      return data as { phone: string; tempPassword: string; shippingMark: string | null };
+    },
+    onSuccess: (data) => {
+      toast.success("Login created");
+      setResult(data);
+    },
+    onError: (e) => toast.error(getErrorMessage(e)),
+  });
+
+  if (result) {
+    const message = `Hi ${contact.full_name}, welcome to NDL Ghana! Your shipping mark is ${result.shippingMark ?? "—"}.\n\nLog in to your customer portal with:\nPhone: ${result.phone}\nPassword: ${result.tempPassword}\n\nPlease change your password after your first login. — NDL Global Shipping`;
+    return (
+      <DialogContent className="max-w-md">
+        <DialogHeader>
+          <DialogTitle>Login created</DialogTitle>
+        </DialogHeader>
+        <div className="grid gap-3 text-sm">
+          <div className="rounded-md bg-muted p-3">
+            <div className="text-xs text-muted-foreground">Shipping mark</div>
+            <div className="font-mono font-bold text-brand-navy">{result.shippingMark ?? "—"}</div>
+          </div>
+          <div className="rounded-md bg-muted p-3">
+            <div className="text-xs text-muted-foreground">Phone (login)</div>
+            <div className="font-mono font-bold text-brand-navy">{result.phone}</div>
+          </div>
+          <div className="rounded-md bg-muted p-3">
+            <div className="text-xs text-muted-foreground">Temporary password</div>
+            <div className="font-mono font-bold text-brand-navy">{result.tempPassword}</div>
+          </div>
+          <p className="text-xs text-muted-foreground">
+            Send these details to the customer now — this password won't be shown again.
+          </p>
+        </div>
+        <DialogFooter>
+          <Button
+            className="w-full bg-emerald-600 hover:bg-emerald-700"
+            onClick={() => {
+              if (!openWhatsApp(contact.phone, message))
+                toast.error("No valid phone number on file");
+            }}
+          >
+            <MessageCircle className="mr-2 h-4 w-4" /> Send login info via WhatsApp
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    );
+  }
+
+  return (
+    <DialogContent className="max-w-md">
+      <DialogHeader>
+        <DialogTitle>Create customer login</DialogTitle>
+      </DialogHeader>
+      <div className="grid gap-3 text-sm">
+        <p className="text-muted-foreground">
+          This creates a portal login for{" "}
+          <span className="font-semibold text-brand-navy">{contact.full_name}</span> using their
+          phone number — no email needed. You'll get a temporary password to send them over
+          WhatsApp.
+        </p>
+        <div className="rounded-md bg-muted p-3">
+          <div className="text-xs text-muted-foreground">Phone</div>
+          <div className="font-mono font-semibold text-brand-navy">{contact.phone}</div>
+        </div>
+      </div>
+      <DialogFooter>
+        <Button
+          disabled={mut.isPending}
+          className="bg-brand-orange hover:bg-brand-orange/90"
+          onClick={() => mut.mutate()}
+        >
+          {mut.isPending ? "Creating…" : "Create login"}
+        </Button>
+      </DialogFooter>
+    </DialogContent>
   );
 }
 
