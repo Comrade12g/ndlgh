@@ -452,7 +452,7 @@ function EditPackageDialog({ id, onDone }: { id: string; onDone: () => void }) {
       const { data, error } = await supabase
         .from("packages")
         .select(
-          "id, tracking_code, shipping_mark, warehouse_code, supplier_name, description, pieces, weight_kg, length_cm, width_cm, height_cm, external_tracking, notes, rate_override, status",
+          "id, tracking_code, shipping_mark, warehouse_code, supplier_name, description, pieces, weight_kg, length_cm, width_cm, height_cm, external_tracking, notes, status",
         )
         .eq("id", id)
         .single();
