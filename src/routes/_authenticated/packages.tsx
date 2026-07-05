@@ -523,7 +523,6 @@ function EditPackageDialog({ id, onDone }: { id: string; onDone: () => void }) {
         cbm,
         external_tracking: form.external_tracking || null,
         notes: form.notes || null,
-        rate_override: form.rate_override ? Number(form.rate_override) : null,
         ...(customer_id !== undefined ? { customer_id } : {}),
       };
       const { error } = await supabase.from("packages").update(patch).eq("id", id);
