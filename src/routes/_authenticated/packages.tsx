@@ -473,7 +473,6 @@ function EditPackageDialog({ id, onDone }: { id: string; onDone: () => void }) {
     height_cm: number;
     external_tracking: string;
     notes: string;
-    rate_override: string;
   } | null>(null);
 
   // Hydrate form once when data arrives
