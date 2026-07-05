@@ -48,7 +48,13 @@ export const Route = createFileRoute("/_authenticated")({
       .eq("user_id", data.user.id);
     const userRoles = (roles ?? []).map((r) => r.role);
     const isStaff = userRoles.some((r) => (STAFF_ROLES as readonly string[]).includes(r));
-    if (!isStaff) throw redirect({ to: "/portal" });
+    if (!isStaff) {
+      // A freshly-created staff account (no role assigned yet) should wait
+      // for activation, not land in the customer portal. Only route to the
+      // portal if they actually hold the customer role.
+      if (userRoles.includes("customer")) throw redirect({ to: "/portal" });
+      throw redirect({ to: "/pending-activation" });
+    }
     return { user: data.user, roles: userRoles };
   },
   component: StaffLayout,

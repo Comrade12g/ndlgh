@@ -9,7 +9,9 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as StaffSignupRouteImport } from './routes/staff-signup'
 import { Route as PortalRouteImport } from './routes/portal'
+import { Route as PendingActivationRouteImport } from './routes/pending-activation'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
@@ -27,9 +29,19 @@ import { Route as AuthenticatedSourcingPosRouteImport } from './routes/_authenti
 import { Route as AuthenticatedCrmContactsRouteImport } from './routes/_authenticated/crm.contacts'
 import { Route as AuthenticatedAdminUsersRouteImport } from './routes/_authenticated/admin.users'
 
+const StaffSignupRoute = StaffSignupRouteImport.update({
+  id: '/staff-signup',
+  path: '/staff-signup',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PortalRoute = PortalRouteImport.update({
   id: '/portal',
   path: '/portal',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PendingActivationRoute = PendingActivationRouteImport.update({
+  id: '/pending-activation',
+  path: '/pending-activation',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -118,7 +130,9 @@ const AuthenticatedAdminUsersRoute = AuthenticatedAdminUsersRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/pending-activation': typeof PendingActivationRoute
   '/portal': typeof PortalRoute
+  '/staff-signup': typeof StaffSignupRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/deliveries': typeof AuthenticatedDeliveriesRoute
   '/invoices': typeof AuthenticatedInvoicesRoute
@@ -136,7 +150,9 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/pending-activation': typeof PendingActivationRoute
   '/portal': typeof PortalRoute
+  '/staff-signup': typeof StaffSignupRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/deliveries': typeof AuthenticatedDeliveriesRoute
   '/invoices': typeof AuthenticatedInvoicesRoute
@@ -156,7 +172,9 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/auth': typeof AuthRoute
+  '/pending-activation': typeof PendingActivationRoute
   '/portal': typeof PortalRoute
+  '/staff-signup': typeof StaffSignupRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/deliveries': typeof AuthenticatedDeliveriesRoute
   '/_authenticated/invoices': typeof AuthenticatedInvoicesRoute
@@ -176,7 +194,9 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/auth'
+    | '/pending-activation'
     | '/portal'
+    | '/staff-signup'
     | '/dashboard'
     | '/deliveries'
     | '/invoices'
@@ -194,7 +214,9 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/auth'
+    | '/pending-activation'
     | '/portal'
+    | '/staff-signup'
     | '/dashboard'
     | '/deliveries'
     | '/invoices'
@@ -213,7 +235,9 @@ export interface FileRouteTypes {
     | '/'
     | '/_authenticated'
     | '/auth'
+    | '/pending-activation'
     | '/portal'
+    | '/staff-signup'
     | '/_authenticated/dashboard'
     | '/_authenticated/deliveries'
     | '/_authenticated/invoices'
@@ -233,17 +257,33 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
   AuthRoute: typeof AuthRoute
+  PendingActivationRoute: typeof PendingActivationRoute
   PortalRoute: typeof PortalRoute
+  StaffSignupRoute: typeof StaffSignupRoute
   TrackCodeRoute: typeof TrackCodeRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/staff-signup': {
+      id: '/staff-signup'
+      path: '/staff-signup'
+      fullPath: '/staff-signup'
+      preLoaderRoute: typeof StaffSignupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/portal': {
       id: '/portal'
       path: '/portal'
       fullPath: '/portal'
       preLoaderRoute: typeof PortalRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pending-activation': {
+      id: '/pending-activation'
+      path: '/pending-activation'
+      fullPath: '/pending-activation'
+      preLoaderRoute: typeof PendingActivationRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth': {
@@ -399,7 +439,9 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRoute: AuthenticatedRouteWithChildren,
   AuthRoute: AuthRoute,
+  PendingActivationRoute: PendingActivationRoute,
   PortalRoute: PortalRoute,
+  StaffSignupRoute: StaffSignupRoute,
   TrackCodeRoute: TrackCodeRoute,
 }
 export const routeTree = rootRouteImport
