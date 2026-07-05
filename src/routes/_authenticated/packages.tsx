@@ -236,7 +236,6 @@ function IntakePackageDialog({ onDone }: { onDone: () => void }) {
     height_cm: 0,
     external_tracking: "",
     notes: "",
-    
   });
 
   const { data: warehouses } = useQuery({
