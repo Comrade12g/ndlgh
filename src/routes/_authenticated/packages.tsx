@@ -489,7 +489,6 @@ function EditPackageDialog({ id, onDone }: { id: string; onDone: () => void }) {
       height_cm: Number(pkg.height_cm ?? 0),
       external_tracking: pkg.external_tracking ?? "",
       notes: pkg.notes ?? "",
-      rate_override: pkg.rate_override != null ? String(pkg.rate_override) : "",
     });
   }
 
