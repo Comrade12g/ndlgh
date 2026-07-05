@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, getRouteApi, Link } from "@tanstack/react-router";
 import { Card } from "@/components/ui/card";
 import {
   Package,
@@ -18,6 +18,8 @@ import { supabase } from "@/integrations/supabase/client";
 export const Route = createFileRoute("/_authenticated/dashboard")({
   component: Dashboard,
 });
+
+const authenticatedRoute = getRouteApi("/_authenticated");
 
 function useCounts() {
   return useQuery({
@@ -43,6 +45,9 @@ function useCounts() {
   });
 }
 
+// Mirrors the role restrictions on each destination page (see NAV in
+// _authenticated.tsx) so the dashboard never advertises a portal or figure
+// the viewer isn't actually allowed to open.
 const PORTALS = [
   {
     to: "/crm/contacts",
@@ -51,6 +56,7 @@ const PORTALS = [
     desc: "Leads, contacts, and customer pipeline",
     tone: "text-brand-sky",
     bg: "bg-brand-sky/10",
+    roles: ["admin", "sales", "sales_accountant", "customer_service", "sourcing_agent"],
   },
   {
     to: "/invoices",
@@ -59,6 +65,7 @@ const PORTALS = [
     desc: "Invoices, payments and receivables",
     tone: "text-emerald-700",
     bg: "bg-emerald-500/10",
+    roles: ["admin", "accountant", "sales", "sales_accountant"],
   },
   {
     to: "/support",
@@ -67,6 +74,7 @@ const PORTALS = [
     desc: "Look up any customer or package",
     tone: "text-amber-700",
     bg: "bg-amber-500/10",
+    roles: ["admin", "customer_service"],
   },
   {
     to: "/sourcing/pos",
@@ -75,6 +83,7 @@ const PORTALS = [
     desc: "China desk POs and supplier payments",
     tone: "text-brand-orange",
     bg: "bg-brand-orange/10",
+    roles: ["admin", "sourcing_agent"],
   },
   {
     to: "/packages",
@@ -83,6 +92,7 @@ const PORTALS = [
     desc: "Intake, CBM, and shipment loading",
     tone: "text-brand-navy",
     bg: "bg-brand-navy/10",
+    roles: ["admin", "ops_warehouse", "customer_service"],
   },
   {
     to: "/treasury/accounts",
@@ -91,20 +101,57 @@ const PORTALS = [
     desc: "Multi-country ledger and FX rates",
     tone: "text-emerald-700",
     bg: "bg-emerald-500/10",
+    roles: ["admin", "accountant", "sales_accountant"],
   },
 ] as const;
 
 function Dashboard() {
+  const { roles } = authenticatedRoute.useRouteContext();
+  const has = (allowed: readonly string[]) =>
+    allowed.some((r) => (roles as readonly string[]).includes(r));
+
   const { data } = useCounts();
 
   const STATS = [
-    { icon: Package, label: "Packages in warehouses", value: data?.packages ?? 0 },
-    { icon: Ship, label: "Shipments", value: data?.shipments ?? 0 },
-    { icon: Truck, label: "Deliveries", value: data?.deliveries ?? 0 },
-    { icon: Users, label: "Contacts", value: data?.contacts ?? 0 },
-    { icon: Receipt, label: "Invoices", value: data?.invoices ?? 0 },
-    { icon: TrendingUp, label: "Purchase orders", value: data?.purchaseOrders ?? 0 },
-  ];
+    {
+      icon: Package,
+      label: "Packages in warehouses",
+      value: data?.packages ?? 0,
+      roles: ["admin", "ops_warehouse", "customer_service"],
+    },
+    {
+      icon: Ship,
+      label: "Shipments",
+      value: data?.shipments ?? 0,
+      roles: ["admin", "ops_warehouse", "sales", "sales_accountant", "customer_service"],
+    },
+    {
+      icon: Truck,
+      label: "Deliveries",
+      value: data?.deliveries ?? 0,
+      roles: ["admin", "ops_warehouse", "driver", "customer_service"],
+    },
+    {
+      icon: Users,
+      label: "Contacts",
+      value: data?.contacts ?? 0,
+      roles: ["admin", "sales", "sales_accountant", "customer_service", "sourcing_agent"],
+    },
+    {
+      icon: Receipt,
+      label: "Invoices",
+      value: data?.invoices ?? 0,
+      roles: ["admin", "accountant", "sales", "sales_accountant"],
+    },
+    {
+      icon: TrendingUp,
+      label: "Purchase orders",
+      value: data?.purchaseOrders ?? 0,
+      roles: ["admin", "sourcing_agent", "accountant", "sales_accountant"],
+    },
+  ].filter((s) => has(s.roles));
+
+  const visiblePortals = PORTALS.filter((p) => has(p.roles));
 
   return (
     <div className="p-6 md:p-8">
@@ -114,50 +161,54 @@ function Dashboard() {
         </div>
         <h1 className="font-display text-3xl font-extrabold text-brand-navy">Ops Dashboard</h1>
         <p className="mt-1 text-sm text-muted-foreground">
-          Live status of shipments, sourcing, treasury and deliveries across all NDL hubs.
+          Live status across the areas you have access to.
         </p>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {STATS.map((s) => (
-          <Card key={s.label} className="p-5">
-            <div className="flex items-start justify-between">
-              <div>
-                <div className="text-xs uppercase tracking-wider text-muted-foreground">
-                  {s.label}
+      {STATS.length > 0 && (
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {STATS.map((s) => (
+            <Card key={s.label} className="p-5">
+              <div className="flex items-start justify-between">
+                <div>
+                  <div className="text-xs uppercase tracking-wider text-muted-foreground">
+                    {s.label}
+                  </div>
+                  <div className="mt-2 font-display text-3xl font-extrabold text-brand-navy">
+                    {s.value}
+                  </div>
                 </div>
-                <div className="mt-2 font-display text-3xl font-extrabold text-brand-navy">
-                  {s.value}
+                <div className="rounded-lg bg-brand-orange/10 p-2 text-brand-orange">
+                  <s.icon className="h-5 w-5" />
                 </div>
               </div>
-              <div className="rounded-lg bg-brand-orange/10 p-2 text-brand-orange">
-                <s.icon className="h-5 w-5" />
-              </div>
-            </div>
-          </Card>
-        ))}
-      </div>
-
-      <div className="mt-10">
-        <h2 className="mb-4 font-display text-xl font-extrabold text-brand-navy">Team portals</h2>
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {PORTALS.map((p) => (
-            <Link key={p.to} to={p.to} className="group">
-              <Card className="h-full p-5 transition hover:border-brand-orange/40 hover:shadow-md">
-                <div className={`mb-3 inline-flex rounded-lg ${p.bg} p-2 ${p.tone}`}>
-                  <p.icon className="h-5 w-5" />
-                </div>
-                <div className="font-display text-lg font-bold text-brand-navy">{p.title}</div>
-                <p className="mt-1 text-sm text-muted-foreground">{p.desc}</p>
-                <div className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-brand-orange">
-                  Open portal{" "}
-                  <ArrowRight className="h-3 w-3 transition group-hover:translate-x-0.5" />
-                </div>
-              </Card>
-            </Link>
+            </Card>
           ))}
         </div>
-      </div>
+      )}
+
+      {visiblePortals.length > 0 && (
+        <div className="mt-10">
+          <h2 className="mb-4 font-display text-xl font-extrabold text-brand-navy">Team portals</h2>
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {visiblePortals.map((p) => (
+              <Link key={p.to} to={p.to} className="group">
+                <Card className="h-full p-5 transition hover:border-brand-orange/40 hover:shadow-md">
+                  <div className={`mb-3 inline-flex rounded-lg ${p.bg} p-2 ${p.tone}`}>
+                    <p.icon className="h-5 w-5" />
+                  </div>
+                  <div className="font-display text-lg font-bold text-brand-navy">{p.title}</div>
+                  <p className="mt-1 text-sm text-muted-foreground">{p.desc}</p>
+                  <div className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-brand-orange">
+                    Open portal{" "}
+                    <ArrowRight className="h-3 w-3 transition group-hover:translate-x-0.5" />
+                  </div>
+                </Card>
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

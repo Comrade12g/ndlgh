@@ -47,14 +47,23 @@ function PortalPage() {
     },
   });
 
-  // RLS scopes each of these to the signed-in customer automatically —
-  // no client-side filtering needed.
+  // Explicit customer_id filters below are intentional, not redundant with
+  // RLS: an account that also holds a staff role (e.g. an employee who
+  // still has a leftover 'customer' role, or simply navigates here out of
+  // curiosity) would otherwise see EVERY customer's data, because the
+  // separate "Staff manage X" RLS policies grant staff broad access and
+  // Postgres RLS policies are OR'd together. Filtering here guarantees
+  // this page only ever shows the signed-in user's own records,
+  // regardless of what other roles their account might also hold.
   const { data: myPackages } = useQuery({
     queryKey: ["portal-packages"],
     queryFn: async () => {
+      const { data: u } = await supabase.auth.getUser();
+      if (!u.user) return [];
       const { data } = await supabase
         .from("packages")
         .select("id, tracking_code, description, status, pieces, weight_kg, received_at")
+        .eq("customer_id", u.user.id)
         .order("received_at", { ascending: false })
         .limit(10);
       return data ?? [];
@@ -64,9 +73,24 @@ function PortalPage() {
   const { data: myShipments } = useQuery({
     queryKey: ["portal-shipments"],
     queryFn: async () => {
+      const { data: u } = await supabase.auth.getUser();
+      if (!u.user) return [];
+      const { data: myPkgs } = await supabase
+        .from("packages")
+        .select("id")
+        .eq("customer_id", u.user.id);
+      const pkgIds = (myPkgs ?? []).map((p) => p.id);
+      if (!pkgIds.length) return [];
+      const { data: links } = await supabase
+        .from("shipment_packages")
+        .select("shipment_id")
+        .in("package_id", pkgIds);
+      const shipmentIds = Array.from(new Set((links ?? []).map((l) => l.shipment_id)));
+      if (!shipmentIds.length) return [];
       const { data } = await supabase
         .from("shipments")
         .select("id, code, mode, status, eta, origin_warehouse")
+        .in("id", shipmentIds)
         .order("created_at", { ascending: false })
         .limit(10);
       return data ?? [];
@@ -76,9 +100,12 @@ function PortalPage() {
   const { data: myDeliveries } = useQuery({
     queryKey: ["portal-deliveries"],
     queryFn: async () => {
+      const { data: u } = await supabase.auth.getUser();
+      if (!u.user) return [];
       const { data } = await supabase
         .from("deliveries")
         .select("id, code, city, status, scheduled_for, delivered_at")
+        .eq("customer_id", u.user.id)
         .order("created_at", { ascending: false })
         .limit(10);
       return data ?? [];
@@ -88,9 +115,12 @@ function PortalPage() {
   const { data: myInvoices } = useQuery({
     queryKey: ["portal-invoices"],
     queryFn: async () => {
+      const { data: u } = await supabase.auth.getUser();
+      if (!u.user) return [];
       const { data } = await supabase
         .from("invoices")
         .select("id, number, currency, total, amount_paid, status, due_date")
+        .eq("customer_id", u.user.id)
         .order("issue_date", { ascending: false })
         .limit(10);
       return data ?? [];
