@@ -3,6 +3,8 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { PageHeader, EmptyState, StatusBadge } from "@/components/ops/PageHeader";
 import {
   Select,
@@ -11,9 +13,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { X } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { X, UserPlus } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { getErrorMessage } from "@/lib/errors";
 
 export const Route = createFileRoute("/_authenticated/admin/users")({
   component: AdminUsersPage,
@@ -45,6 +56,7 @@ const ROLE_TONE: Record<string, "orange" | "navy" | "sky" | "green" | "amber" | 
 function AdminUsersPage() {
   const qc = useQueryClient();
   const [pending, setPending] = useState<Record<string, string>>({});
+  const [inviteOpen, setInviteOpen] = useState(false);
 
   const { data, isLoading } = useQuery({
     queryKey: ["users-with-roles"],
@@ -97,6 +109,21 @@ function AdminUsersPage() {
         eyebrow="Admin"
         title="Users & roles"
         description="Assign staff roles: Sales, Accountant, Customer Service, Sourcing Agent, Warehouse Ops, Driver, Admin."
+        actions={
+          <Dialog open={inviteOpen} onOpenChange={setInviteOpen}>
+            <DialogTrigger asChild>
+              <Button className="bg-brand-orange hover:bg-brand-orange/90">
+                <UserPlus className="mr-2 h-4 w-4" /> Invite employee
+              </Button>
+            </DialogTrigger>
+            <InviteStaffDialog
+              onDone={() => {
+                setInviteOpen(false);
+                qc.invalidateQueries({ queryKey: ["users-with-roles"] });
+              }}
+            />
+          </Dialog>
+        }
       />
       <Card className="overflow-hidden">
         {isLoading ? (
@@ -194,5 +221,99 @@ function AdminUsersPage() {
         )}
       </Card>
     </div>
+  );
+}
+
+const INVITE_ROLES = ROLES.filter((r) => r !== "customer");
+
+function InviteStaffDialog({ onDone }: { onDone: () => void }) {
+  const [email, setEmail] = useState("");
+  const [fullName, setFullName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [role, setRole] = useState<string>("");
+
+  const mut = useMutation({
+    mutationFn: async () => {
+      if (!role) throw new Error("Select a role");
+      const { data: session } = await supabase.auth.getSession();
+      const { data, error } = await supabase.functions.invoke("invite-staff", {
+        body: {
+          email,
+          full_name: fullName || null,
+          phone: phone || null,
+          role,
+          redirectTo: `${window.location.origin}/accept-invite`,
+        },
+        headers: session.session
+          ? { Authorization: `Bearer ${session.session.access_token}` }
+          : undefined,
+      });
+      if (error) throw error;
+      if (data?.error) throw new Error(data.error);
+      return data;
+    },
+    onSuccess: () => {
+      toast.success(`Invite sent to ${email}`);
+      onDone();
+    },
+    onError: (e) => toast.error(getErrorMessage(e)),
+  });
+
+  return (
+    <DialogContent className="max-w-md">
+      <DialogHeader>
+        <DialogTitle className="flex items-center gap-2">
+          <UserPlus className="h-5 w-5 text-brand-orange" /> Invite employee
+        </DialogTitle>
+      </DialogHeader>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          mut.mutate();
+        }}
+        className="grid gap-3"
+      >
+        <div className="grid gap-2">
+          <Label>Full name</Label>
+          <Input value={fullName} onChange={(e) => setFullName(e.target.value)} />
+        </div>
+        <div className="grid gap-2">
+          <Label>Work email</Label>
+          <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+        </div>
+        <div className="grid gap-2">
+          <Label>Phone</Label>
+          <Input value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+233 …" />
+        </div>
+        <div className="grid gap-2">
+          <Label>Role</Label>
+          <Select value={role} onValueChange={setRole}>
+            <SelectTrigger>
+              <SelectValue placeholder="Select role…" />
+            </SelectTrigger>
+            <SelectContent>
+              {INVITE_ROLES.map((r) => (
+                <SelectItem key={r} value={r}>
+                  {r.replace(/_/g, " ")}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+        <p className="text-xs text-muted-foreground">
+          They'll get an email with a secure link to set their own password and sign straight into
+          the dashboard with this role already assigned.
+        </p>
+        <DialogFooter>
+          <Button
+            type="submit"
+            disabled={mut.isPending}
+            className="bg-brand-orange hover:bg-brand-orange/90"
+          >
+            {mut.isPending ? "Sending invite…" : "Send invite"}
+          </Button>
+        </DialogFooter>
+      </form>
+    </DialogContent>
   );
 }
