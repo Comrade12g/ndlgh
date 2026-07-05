@@ -498,7 +498,6 @@ export type Database = {
           photos_urls: string[]
           pieces: number
           purchase_order_id: string | null
-          rate_override: number | null
           received_at: string | null
           received_by: string | null
           shipping_mark: string | null
@@ -525,7 +524,6 @@ export type Database = {
           photos_urls?: string[]
           pieces?: number
           purchase_order_id?: string | null
-          rate_override?: number | null
           received_at?: string | null
           received_by?: string | null
           shipping_mark?: string | null
@@ -552,7 +550,6 @@ export type Database = {
           photos_urls?: string[]
           pieces?: number
           purchase_order_id?: string | null
-          rate_override?: number | null
           received_at?: string | null
           received_by?: string | null
           shipping_mark?: string | null
