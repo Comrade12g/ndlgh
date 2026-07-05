@@ -236,7 +236,7 @@ function IntakePackageDialog({ onDone }: { onDone: () => void }) {
     height_cm: 0,
     external_tracking: "",
     notes: "",
-    rate_override: "" as string,
+    
   });
 
   const { data: warehouses } = useQuery({
@@ -281,7 +281,6 @@ function IntakePackageDialog({ onDone }: { onDone: () => void }) {
         cbm,
         external_tracking: form.external_tracking || null,
         notes: form.notes || null,
-        rate_override: form.rate_override ? Number(form.rate_override) : null,
         received_by: u.user?.id,
         status: "received",
       });
@@ -417,28 +416,13 @@ function IntakePackageDialog({ onDone }: { onDone: () => void }) {
           Computed volume: <span className="font-mono font-bold text-brand-navy">{cbm} CBM</span>
         </div>
 
-        <div className="grid grid-cols-2 gap-3">
-          <div className="grid gap-2">
-            <Label>Rate override (per unit)</Label>
-            <Input
-              type="number"
-              step="0.01"
-              placeholder="Leave blank to use rate card"
-              value={form.rate_override}
-              onChange={(e) => setForm({ ...form, rate_override: e.target.value })}
-            />
-            <div className="text-xs text-muted-foreground">
-              Optional. Overrides the auto-invoice line's unit price.
-            </div>
-          </div>
-          <div className="grid gap-2">
-            <Label>Notes</Label>
-            <Textarea
-              rows={2}
-              value={form.notes}
-              onChange={(e) => setForm({ ...form, notes: e.target.value })}
-            />
-          </div>
+        <div className="grid gap-2">
+          <Label>Notes</Label>
+          <Textarea
+            rows={2}
+            value={form.notes}
+            onChange={(e) => setForm({ ...form, notes: e.target.value })}
+          />
         </div>
 
         <DialogFooter>
@@ -468,7 +452,7 @@ function EditPackageDialog({ id, onDone }: { id: string; onDone: () => void }) {
       const { data, error } = await supabase
         .from("packages")
         .select(
-          "id, tracking_code, shipping_mark, warehouse_code, supplier_name, description, pieces, weight_kg, length_cm, width_cm, height_cm, external_tracking, notes, rate_override, status",
+          "id, tracking_code, shipping_mark, warehouse_code, supplier_name, description, pieces, weight_kg, length_cm, width_cm, height_cm, external_tracking, notes, status",
         )
         .eq("id", id)
         .single();
@@ -489,7 +473,6 @@ function EditPackageDialog({ id, onDone }: { id: string; onDone: () => void }) {
     height_cm: number;
     external_tracking: string;
     notes: string;
-    rate_override: string;
   } | null>(null);
 
   // Hydrate form once when data arrives
@@ -506,7 +489,6 @@ function EditPackageDialog({ id, onDone }: { id: string; onDone: () => void }) {
       height_cm: Number(pkg.height_cm ?? 0),
       external_tracking: pkg.external_tracking ?? "",
       notes: pkg.notes ?? "",
-      rate_override: pkg.rate_override != null ? String(pkg.rate_override) : "",
     });
   }
 
@@ -541,7 +523,6 @@ function EditPackageDialog({ id, onDone }: { id: string; onDone: () => void }) {
         cbm,
         external_tracking: form.external_tracking || null,
         notes: form.notes || null,
-        rate_override: form.rate_override ? Number(form.rate_override) : null,
         ...(customer_id !== undefined ? { customer_id } : {}),
       };
       const { error } = await supabase.from("packages").update(patch).eq("id", id);
@@ -681,25 +662,13 @@ function EditPackageDialog({ id, onDone }: { id: string; onDone: () => void }) {
           <div className="rounded-md bg-muted p-3 text-sm">
             Computed volume: <span className="font-mono font-bold text-brand-navy">{cbm} CBM</span>
           </div>
-          <div className="grid grid-cols-2 gap-3">
-            <div className="grid gap-2">
-              <Label>Rate override (per unit)</Label>
-              <Input
-                type="number"
-                step="0.01"
-                placeholder="Leave blank for rate card"
-                value={form.rate_override}
-                onChange={(e) => setForm({ ...form, rate_override: e.target.value })}
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label>Notes</Label>
-              <Textarea
-                rows={2}
-                value={form.notes}
-                onChange={(e) => setForm({ ...form, notes: e.target.value })}
-              />
-            </div>
+          <div className="grid gap-2">
+            <Label>Notes</Label>
+            <Textarea
+              rows={2}
+              value={form.notes}
+              onChange={(e) => setForm({ ...form, notes: e.target.value })}
+            />
           </div>
         </fieldset>
         <DialogFooter>
