@@ -281,7 +281,6 @@ function IntakePackageDialog({ onDone }: { onDone: () => void }) {
         cbm,
         external_tracking: form.external_tracking || null,
         notes: form.notes || null,
-        rate_override: form.rate_override ? Number(form.rate_override) : null,
         received_by: u.user?.id,
         status: "received",
       });
