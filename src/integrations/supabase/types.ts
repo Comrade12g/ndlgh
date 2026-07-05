@@ -66,20 +66,6 @@ export type Database = {
             referencedRelation: "transactions"
             referencedColumns: ["id"]
           },
-          {
-            foreignKeyName: "aml_po_fk"
-            columns: ["purchase_order_id"]
-            isOneToOne: false
-            referencedRelation: "purchase_orders"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "aml_tx_fk"
-            columns: ["transaction_id"]
-            isOneToOne: false
-            referencedRelation: "transactions"
-            referencedColumns: ["id"]
-          },
         ]
       }
       contacts: {
@@ -225,13 +211,6 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "deliveries_customer_fk"
-            columns: ["customer_id"]
-            isOneToOne: false
-            referencedRelation: "contacts"
-            referencedColumns: ["id"]
-          },
-          {
             foreignKeyName: "deliveries_customer_id_fkey"
             columns: ["customer_id"]
             isOneToOne: false
@@ -263,20 +242,6 @@ export type Database = {
           },
           {
             foreignKeyName: "delivery_packages_package_id_fkey"
-            columns: ["package_id"]
-            isOneToOne: false
-            referencedRelation: "packages"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "dp_delivery_fk"
-            columns: ["delivery_id"]
-            isOneToOne: false
-            referencedRelation: "deliveries"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "dp_package_fk"
             columns: ["package_id"]
             isOneToOne: false
             referencedRelation: "packages"
@@ -360,20 +325,6 @@ export type Database = {
             referencedRelation: "packages"
             referencedColumns: ["id"]
           },
-          {
-            foreignKeyName: "items_invoice_fk"
-            columns: ["invoice_id"]
-            isOneToOne: false
-            referencedRelation: "invoices"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "items_package_fk"
-            columns: ["package_id"]
-            isOneToOne: false
-            referencedRelation: "packages"
-            referencedColumns: ["id"]
-          },
         ]
       }
       invoices: {
@@ -439,13 +390,6 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "invoices_customer_fk"
-            columns: ["customer_id"]
-            isOneToOne: false
-            referencedRelation: "contacts"
-            referencedColumns: ["id"]
-          },
-          {
             foreignKeyName: "invoices_customer_id_fkey"
             columns: ["customer_id"]
             isOneToOne: false
@@ -453,24 +397,10 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "invoices_delivery_fk"
-            columns: ["delivery_id"]
-            isOneToOne: false
-            referencedRelation: "deliveries"
-            referencedColumns: ["id"]
-          },
-          {
             foreignKeyName: "invoices_delivery_id_fkey"
             columns: ["delivery_id"]
             isOneToOne: false
             referencedRelation: "deliveries"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "invoices_shipment_fk"
-            columns: ["shipment_id"]
-            isOneToOne: false
-            referencedRelation: "shipments"
             referencedColumns: ["id"]
           },
           {
@@ -570,13 +500,6 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "packages_po_fk"
-            columns: ["purchase_order_id"]
-            isOneToOne: false
-            referencedRelation: "purchase_orders"
-            referencedColumns: ["id"]
-          },
-          {
             foreignKeyName: "packages_purchase_order_id_fkey"
             columns: ["purchase_order_id"]
             isOneToOne: false
@@ -585,13 +508,6 @@ export type Database = {
           },
           {
             foreignKeyName: "packages_warehouse_code_fkey"
-            columns: ["warehouse_code"]
-            isOneToOne: false
-            referencedRelation: "warehouses"
-            referencedColumns: ["code"]
-          },
-          {
-            foreignKeyName: "packages_warehouse_fk"
             columns: ["warehouse_code"]
             isOneToOne: false
             referencedRelation: "warehouses"
@@ -641,24 +557,10 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "payments_customer_fk"
-            columns: ["customer_id"]
-            isOneToOne: false
-            referencedRelation: "contacts"
-            referencedColumns: ["id"]
-          },
-          {
             foreignKeyName: "payments_customer_id_fkey"
             columns: ["customer_id"]
             isOneToOne: false
             referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "payments_invoice_fk"
-            columns: ["invoice_id"]
-            isOneToOne: false
-            referencedRelation: "invoices"
             referencedColumns: ["id"]
           },
           {
@@ -766,27 +668,6 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "po_customer_fk"
-            columns: ["customer_id"]
-            isOneToOne: false
-            referencedRelation: "contacts"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "po_sr_fk"
-            columns: ["sourcing_request_id"]
-            isOneToOne: false
-            referencedRelation: "sourcing_requests"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "po_supplier_fk"
-            columns: ["supplier_id"]
-            isOneToOne: false
-            referencedRelation: "suppliers"
-            referencedColumns: ["id"]
-          },
-          {
             foreignKeyName: "purchase_orders_customer_id_fkey"
             columns: ["customer_id"]
             isOneToOne: false
@@ -857,13 +738,6 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "rates_dest_fk"
-            columns: ["destination_code"]
-            isOneToOne: false
-            referencedRelation: "warehouses"
-            referencedColumns: ["code"]
-          },
-          {
             foreignKeyName: "rates_destination_code_fkey"
             columns: ["destination_code"]
             isOneToOne: false
@@ -872,13 +746,6 @@ export type Database = {
           },
           {
             foreignKeyName: "rates_origin_code_fkey"
-            columns: ["origin_code"]
-            isOneToOne: false
-            referencedRelation: "warehouses"
-            referencedColumns: ["code"]
-          },
-          {
-            foreignKeyName: "rates_origin_fk"
             columns: ["origin_code"]
             isOneToOne: false
             referencedRelation: "warehouses"
@@ -912,20 +779,6 @@ export type Database = {
           },
           {
             foreignKeyName: "shipment_packages_shipment_id_fkey"
-            columns: ["shipment_id"]
-            isOneToOne: false
-            referencedRelation: "shipments"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "sp_package_fk"
-            columns: ["package_id"]
-            isOneToOne: false
-            referencedRelation: "packages"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "sp_shipment_fk"
             columns: ["shipment_id"]
             isOneToOne: false
             referencedRelation: "shipments"
@@ -1074,13 +927,6 @@ export type Database = {
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
-          {
-            foreignKeyName: "sr_customer_fk"
-            columns: ["customer_id"]
-            isOneToOne: false
-            referencedRelation: "contacts"
-            referencedColumns: ["id"]
-          },
         ]
       }
       suppliers: {
@@ -1220,41 +1066,6 @@ export type Database = {
           },
           {
             foreignKeyName: "transactions_supplier_id_fkey"
-            columns: ["supplier_id"]
-            isOneToOne: false
-            referencedRelation: "suppliers"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "tx_customer_fk"
-            columns: ["customer_id"]
-            isOneToOne: false
-            referencedRelation: "contacts"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "tx_invoice_fk"
-            columns: ["invoice_id"]
-            isOneToOne: false
-            referencedRelation: "invoices"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "tx_payment_fk"
-            columns: ["payment_id"]
-            isOneToOne: false
-            referencedRelation: "payments"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "tx_po_fk"
-            columns: ["purchase_order_id"]
-            isOneToOne: false
-            referencedRelation: "purchase_orders"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "tx_supplier_fk"
             columns: ["supplier_id"]
             isOneToOne: false
             referencedRelation: "suppliers"
