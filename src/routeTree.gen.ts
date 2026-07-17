@@ -30,6 +30,7 @@ import { Route as AuthenticatedTreasuryAccountsRouteImport } from './routes/_aut
 import { Route as AuthenticatedSourcingPosRouteImport } from './routes/_authenticated/sourcing.pos'
 import { Route as AuthenticatedCrmContactsRouteImport } from './routes/_authenticated/crm.contacts'
 import { Route as AuthenticatedAdminUsersRouteImport } from './routes/_authenticated/admin.users'
+import { Route as ApiPublicHooksPollShipmentEtaRouteImport } from './routes/api/public/hooks/poll-shipment-eta'
 
 const StaffSignupRoute = StaffSignupRouteImport.update({
   id: '/staff-signup',
@@ -138,6 +139,12 @@ const AuthenticatedAdminUsersRoute = AuthenticatedAdminUsersRouteImport.update({
   path: '/admin/users',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const ApiPublicHooksPollShipmentEtaRoute =
+  ApiPublicHooksPollShipmentEtaRouteImport.update({
+    id: '/api/public/hooks/poll-shipment-eta',
+    path: '/api/public/hooks/poll-shipment-eta',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -160,6 +167,7 @@ export interface FileRoutesByFullPath {
   '/crm/contacts': typeof AuthenticatedCrmContactsRoute
   '/sourcing/pos': typeof AuthenticatedSourcingPosRoute
   '/treasury/accounts': typeof AuthenticatedTreasuryAccountsRoute
+  '/api/public/hooks/poll-shipment-eta': typeof ApiPublicHooksPollShipmentEtaRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -182,6 +190,7 @@ export interface FileRoutesByTo {
   '/crm/contacts': typeof AuthenticatedCrmContactsRoute
   '/sourcing/pos': typeof AuthenticatedSourcingPosRoute
   '/treasury/accounts': typeof AuthenticatedTreasuryAccountsRoute
+  '/api/public/hooks/poll-shipment-eta': typeof ApiPublicHooksPollShipmentEtaRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -206,6 +215,7 @@ export interface FileRoutesById {
   '/_authenticated/crm/contacts': typeof AuthenticatedCrmContactsRoute
   '/_authenticated/sourcing/pos': typeof AuthenticatedSourcingPosRoute
   '/_authenticated/treasury/accounts': typeof AuthenticatedTreasuryAccountsRoute
+  '/api/public/hooks/poll-shipment-eta': typeof ApiPublicHooksPollShipmentEtaRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -230,6 +240,7 @@ export interface FileRouteTypes {
     | '/crm/contacts'
     | '/sourcing/pos'
     | '/treasury/accounts'
+    | '/api/public/hooks/poll-shipment-eta'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -252,6 +263,7 @@ export interface FileRouteTypes {
     | '/crm/contacts'
     | '/sourcing/pos'
     | '/treasury/accounts'
+    | '/api/public/hooks/poll-shipment-eta'
   id:
     | '__root__'
     | '/'
@@ -275,6 +287,7 @@ export interface FileRouteTypes {
     | '/_authenticated/crm/contacts'
     | '/_authenticated/sourcing/pos'
     | '/_authenticated/treasury/accounts'
+    | '/api/public/hooks/poll-shipment-eta'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -286,6 +299,7 @@ export interface RootRouteChildren {
   PortalRoute: typeof PortalRoute
   StaffSignupRoute: typeof StaffSignupRoute
   TrackCodeRoute: typeof TrackCodeRoute
+  ApiPublicHooksPollShipmentEtaRoute: typeof ApiPublicHooksPollShipmentEtaRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -437,6 +451,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminUsersRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/api/public/hooks/poll-shipment-eta': {
+      id: '/api/public/hooks/poll-shipment-eta'
+      path: '/api/public/hooks/poll-shipment-eta'
+      fullPath: '/api/public/hooks/poll-shipment-eta'
+      preLoaderRoute: typeof ApiPublicHooksPollShipmentEtaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -485,6 +506,7 @@ const rootRouteChildren: RootRouteChildren = {
   PortalRoute: PortalRoute,
   StaffSignupRoute: StaffSignupRoute,
   TrackCodeRoute: TrackCodeRoute,
+  ApiPublicHooksPollShipmentEtaRoute: ApiPublicHooksPollShipmentEtaRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
