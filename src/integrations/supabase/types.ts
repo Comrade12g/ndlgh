@@ -753,6 +753,33 @@ export type Database = {
           },
         ]
       }
+      shipment_milestones: {
+        Row: {
+          carrier: string
+          carrier_status_code: string
+          created_at: string
+          description: string | null
+          id: string
+          standard_milestone: Database["public"]["Enums"]["shipment_milestone"]
+        }
+        Insert: {
+          carrier: string
+          carrier_status_code: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          standard_milestone: Database["public"]["Enums"]["shipment_milestone"]
+        }
+        Update: {
+          carrier?: string
+          carrier_status_code?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          standard_milestone?: Database["public"]["Enums"]["shipment_milestone"]
+        }
+        Relationships: []
+      }
       shipment_packages: {
         Row: {
           added_at: string
@@ -791,19 +818,28 @@ export type Database = {
           actual_arrival: string | null
           actual_departure: string | null
           bol_no: string | null
+          booking_no: string | null
+          carrier: string | null
           code: string
           container_no: string | null
           created_at: string
           created_by: string | null
+          current_milestone: Database["public"]["Enums"]["shipment_milestone"]
           destination_warehouse: string | null
           eta: string | null
+          eta_last_changed_at: string | null
           etd: string | null
           freight_cost: number | null
           freight_currency: string | null
           id: string
+          last_checked_at: string | null
           mode: Database["public"]["Enums"]["shipment_mode"]
+          ndl_reference: string | null
           notes: string | null
           origin_warehouse: string | null
+          original_eta: string | null
+          port_of_discharge: string | null
+          port_of_loading: string | null
           status: Database["public"]["Enums"]["shipment_status"]
           total_cbm: number
           total_weight_kg: number
@@ -814,19 +850,28 @@ export type Database = {
           actual_arrival?: string | null
           actual_departure?: string | null
           bol_no?: string | null
+          booking_no?: string | null
+          carrier?: string | null
           code?: string
           container_no?: string | null
           created_at?: string
           created_by?: string | null
+          current_milestone?: Database["public"]["Enums"]["shipment_milestone"]
           destination_warehouse?: string | null
           eta?: string | null
+          eta_last_changed_at?: string | null
           etd?: string | null
           freight_cost?: number | null
           freight_currency?: string | null
           id?: string
+          last_checked_at?: string | null
           mode: Database["public"]["Enums"]["shipment_mode"]
+          ndl_reference?: string | null
           notes?: string | null
           origin_warehouse?: string | null
+          original_eta?: string | null
+          port_of_discharge?: string | null
+          port_of_loading?: string | null
           status?: Database["public"]["Enums"]["shipment_status"]
           total_cbm?: number
           total_weight_kg?: number
@@ -837,19 +882,28 @@ export type Database = {
           actual_arrival?: string | null
           actual_departure?: string | null
           bol_no?: string | null
+          booking_no?: string | null
+          carrier?: string | null
           code?: string
           container_no?: string | null
           created_at?: string
           created_by?: string | null
+          current_milestone?: Database["public"]["Enums"]["shipment_milestone"]
           destination_warehouse?: string | null
           eta?: string | null
+          eta_last_changed_at?: string | null
           etd?: string | null
           freight_cost?: number | null
           freight_currency?: string | null
           id?: string
+          last_checked_at?: string | null
           mode?: Database["public"]["Enums"]["shipment_mode"]
+          ndl_reference?: string | null
           notes?: string | null
           origin_warehouse?: string | null
+          original_eta?: string | null
+          port_of_discharge?: string | null
+          port_of_loading?: string | null
           status?: Database["public"]["Enums"]["shipment_status"]
           total_cbm?: number
           total_weight_kg?: number
@@ -1131,7 +1185,20 @@ export type Database = {
         Args: { _shipment_id: string }
         Returns: string
       }
+      generate_ndl_cn_ref: { Args: never; Returns: string }
       generate_shipping_mark: { Args: never; Returns: string }
+      get_my_ocean_shipments: {
+        Args: never
+        Returns: {
+          current_eta: string
+          current_milestone: Database["public"]["Enums"]["shipment_milestone"]
+          destination_city: string
+          eta_last_changed_at: string
+          eta_recently_changed: boolean
+          ndl_reference: string
+          origin_city: string
+        }[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -1199,6 +1266,14 @@ export type Database = {
         | "shipped"
         | "received"
         | "cancelled"
+      shipment_milestone:
+        | "picked_up"
+        | "departed_origin"
+        | "in_transit"
+        | "arrived_tema"
+        | "customs_clearance"
+        | "out_for_delivery"
+        | "delivered"
       shipment_mode: "sea_lcl" | "sea_fcl" | "air" | "intercity"
       shipment_status:
         | "planning"
@@ -1404,6 +1479,15 @@ export const Constants = {
         "shipped",
         "received",
         "cancelled",
+      ],
+      shipment_milestone: [
+        "picked_up",
+        "departed_origin",
+        "in_transit",
+        "arrived_tema",
+        "customs_clearance",
+        "out_for_delivery",
+        "delivered",
       ],
       shipment_mode: ["sea_lcl", "sea_fcl", "air", "intercity"],
       shipment_status: [
