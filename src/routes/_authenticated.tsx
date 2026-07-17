@@ -22,6 +22,7 @@ import {
   LogOut,
   Headphones,
   Tags,
+  Radar,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
@@ -101,6 +102,12 @@ const NAV: NavItem[] = [
     label: "Shipments",
     icon: Ship,
     roles: ["admin", "ops_warehouse", "sales", "sales_accountant", "customer_service"],
+  },
+  {
+    to: "/tracking",
+    label: "ETA Tracking",
+    icon: Radar,
+    roles: ["admin", "ops_warehouse", "customer_service", "sourcing_agent"],
   },
   {
     to: "/deliveries",

@@ -7,8 +7,9 @@ import { LogoLockup } from "@/components/brand/Logo";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { StatusBadge, statusTone } from "@/components/ops/PageHeader";
-import { LogOut, Package, PackageSearch, MapPin, Copy, Receipt } from "lucide-react";
+import { LogOut, Package, PackageSearch, MapPin, Copy, Receipt, Radar } from "lucide-react";
 import { toast } from "sonner";
+import { CustomerTrackingCard, type CustomerShipment } from "@/components/tracking/CustomerTrackingCard";
 
 export const Route = createFileRoute("/portal")({
   ssr: false,
@@ -109,6 +110,15 @@ function PortalPage() {
         .order("created_at", { ascending: false })
         .limit(10);
       return data ?? [];
+    },
+  });
+
+  const { data: myTracking } = useQuery({
+    queryKey: ["portal-tracking"],
+    queryFn: async () => {
+      const { data, error } = await supabase.rpc("get_my_ocean_shipments");
+      if (error) throw error;
+      return (data ?? []) as CustomerShipment[];
     },
   });
 
@@ -219,6 +229,24 @@ function PortalPage() {
               ))}
           </div>
         </section>
+
+        {/* Live tracking */}
+        {!!myTracking?.length && (
+          <section className="mt-10">
+            <div className="mb-4 flex items-center gap-2">
+              <Radar className="h-5 w-5 text-brand-orange" />
+              <h2 className="font-display text-xl font-bold text-brand-navy">
+                Live tracking
+              </h2>
+            </div>
+            <div className="grid gap-4">
+              {myTracking.map((s) => (
+                <CustomerTrackingCard key={s.ndl_reference} s={s} />
+              ))}
+            </div>
+          </section>
+        )}
+
 
         {/* My packages / shipments / deliveries / invoices */}
         <section className="mt-10 grid gap-4 md:grid-cols-2">

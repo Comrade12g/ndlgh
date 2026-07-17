@@ -177,6 +177,10 @@ function NewShipmentDialog({ onDone }: { onDone: () => void }) {
     container_no: "",
     bol_no: "",
     vessel_or_flight: "",
+    carrier: "",
+    booking_no: "",
+    port_of_loading: "",
+    port_of_discharge: "",
     etd: "",
     eta: "",
   });
@@ -197,6 +201,10 @@ function NewShipmentDialog({ onDone }: { onDone: () => void }) {
         container_no: form.container_no || null,
         bol_no: form.bol_no || null,
         vessel_or_flight: form.vessel_or_flight || null,
+        carrier: form.carrier || null,
+        booking_no: form.booking_no || null,
+        port_of_loading: form.port_of_loading || null,
+        port_of_discharge: form.port_of_discharge || null,
         created_by: u.user?.id,
       });
       if (error) throw error;
@@ -299,6 +307,41 @@ function NewShipmentDialog({ onDone }: { onDone: () => void }) {
             value={form.vessel_or_flight}
             onChange={(e) => setForm({ ...form, vessel_or_flight: e.target.value })}
           />
+        </div>
+        <div className="grid grid-cols-2 gap-3">
+          <div className="grid gap-2">
+            <Label>Carrier</Label>
+            <Input
+              placeholder="PIL / MSC / Maersk"
+              value={form.carrier}
+              onChange={(e) => setForm({ ...form, carrier: e.target.value })}
+            />
+          </div>
+          <div className="grid gap-2">
+            <Label>Booking no.</Label>
+            <Input
+              value={form.booking_no}
+              onChange={(e) => setForm({ ...form, booking_no: e.target.value })}
+            />
+          </div>
+        </div>
+        <div className="grid grid-cols-2 gap-3">
+          <div className="grid gap-2">
+            <Label>Port of loading</Label>
+            <Input
+              placeholder="Shanghai"
+              value={form.port_of_loading}
+              onChange={(e) => setForm({ ...form, port_of_loading: e.target.value })}
+            />
+          </div>
+          <div className="grid gap-2">
+            <Label>Port of discharge</Label>
+            <Input
+              placeholder="Tema"
+              value={form.port_of_discharge}
+              onChange={(e) => setForm({ ...form, port_of_discharge: e.target.value })}
+            />
+          </div>
         </div>
         <div className="grid grid-cols-2 gap-3">
           <div className="grid gap-2">
