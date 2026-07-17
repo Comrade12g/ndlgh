@@ -194,3 +194,18 @@
   .animate-dash, .animate-bob, .animate-waves { animation: none; }
 }
 
+
+/* Split-flap board */
+@keyframes flap-in {
+  0%   { transform: rotateX(90deg); opacity: 0; }
+  60%  { transform: rotateX(-8deg); opacity: 1; }
+  100% { transform: rotateX(0deg); opacity: 1; }
+}
+.flap-cell {
+  display: inline-block;
+  transform-origin: 50% 0;
+  animation: flap-in 380ms cubic-bezier(.2,.7,.2,1) both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .flap-cell { animation: none; }
+}
