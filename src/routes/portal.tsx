@@ -113,6 +113,15 @@ function PortalPage() {
     },
   });
 
+  const { data: myTracking } = useQuery({
+    queryKey: ["portal-tracking"],
+    queryFn: async () => {
+      const { data, error } = await supabase.rpc("get_my_ocean_shipments");
+      if (error) throw error;
+      return (data ?? []) as CustomerShipment[];
+    },
+  });
+
   const { data: myInvoices } = useQuery({
     queryKey: ["portal-invoices"],
     queryFn: async () => {
