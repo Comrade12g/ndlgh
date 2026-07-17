@@ -310,6 +310,41 @@ function NewShipmentDialog({ onDone }: { onDone: () => void }) {
         </div>
         <div className="grid grid-cols-2 gap-3">
           <div className="grid gap-2">
+            <Label>Carrier</Label>
+            <Input
+              placeholder="PIL / MSC / Maersk"
+              value={form.carrier}
+              onChange={(e) => setForm({ ...form, carrier: e.target.value })}
+            />
+          </div>
+          <div className="grid gap-2">
+            <Label>Booking no.</Label>
+            <Input
+              value={form.booking_no}
+              onChange={(e) => setForm({ ...form, booking_no: e.target.value })}
+            />
+          </div>
+        </div>
+        <div className="grid grid-cols-2 gap-3">
+          <div className="grid gap-2">
+            <Label>Port of loading</Label>
+            <Input
+              placeholder="Shanghai"
+              value={form.port_of_loading}
+              onChange={(e) => setForm({ ...form, port_of_loading: e.target.value })}
+            />
+          </div>
+          <div className="grid gap-2">
+            <Label>Port of discharge</Label>
+            <Input
+              placeholder="Tema"
+              value={form.port_of_discharge}
+              onChange={(e) => setForm({ ...form, port_of_discharge: e.target.value })}
+            />
+          </div>
+        </div>
+        <div className="grid grid-cols-2 gap-3">
+          <div className="grid gap-2">
             <Label>ETD</Label>
             <Input
               type="date"
