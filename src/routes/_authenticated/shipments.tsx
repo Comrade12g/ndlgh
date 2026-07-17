@@ -201,6 +201,10 @@ function NewShipmentDialog({ onDone }: { onDone: () => void }) {
         container_no: form.container_no || null,
         bol_no: form.bol_no || null,
         vessel_or_flight: form.vessel_or_flight || null,
+        carrier: form.carrier || null,
+        booking_no: form.booking_no || null,
+        port_of_loading: form.port_of_loading || null,
+        port_of_discharge: form.port_of_discharge || null,
         created_by: u.user?.id,
       });
       if (error) throw error;
