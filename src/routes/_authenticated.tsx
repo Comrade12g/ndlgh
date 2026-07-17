@@ -104,6 +104,12 @@ const NAV: NavItem[] = [
     roles: ["admin", "ops_warehouse", "sales", "sales_accountant", "customer_service"],
   },
   {
+    to: "/tracking",
+    label: "ETA Tracking",
+    icon: Radar,
+    roles: ["admin", "ops_warehouse", "customer_service", "sourcing_agent"],
+  },
+  {
     to: "/deliveries",
     label: "Deliveries",
     icon: Truck,
