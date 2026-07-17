@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/select";
 import { PageHeader } from "@/components/ops/PageHeader";
 import { milestoneLabel } from "@/components/tracking/MilestoneTimeline";
-import { Radar, RefreshCw } from "lucide-react";
+import { RefreshCw } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/tracking")({
@@ -96,9 +96,9 @@ function TrackingBoard() {
   return (
     <div className="space-y-4">
       <PageHeader
-        icon={Radar}
+        eyebrow="Internal"
         title="ETA Tracking Board"
-        subtitle="Internal — live carrier ETAs for ocean freight to Tema"
+        description="Live carrier ETAs for ocean freight to Tema"
         actions={
           <Button variant="outline" size="sm" onClick={() => refetch()} disabled={isFetching}>
             <RefreshCw className={cn("mr-2 h-4 w-4", isFetching && "animate-spin")} /> Refresh
