@@ -177,6 +177,10 @@ function NewShipmentDialog({ onDone }: { onDone: () => void }) {
     container_no: "",
     bol_no: "",
     vessel_or_flight: "",
+    carrier: "",
+    booking_no: "",
+    port_of_loading: "",
+    port_of_discharge: "",
     etd: "",
     eta: "",
   });
