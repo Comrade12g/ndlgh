@@ -230,6 +230,24 @@ function PortalPage() {
           </div>
         </section>
 
+        {/* Live tracking */}
+        {!!myTracking?.length && (
+          <section className="mt-10">
+            <div className="mb-4 flex items-center gap-2">
+              <Radar className="h-5 w-5 text-brand-orange" />
+              <h2 className="font-display text-xl font-bold text-brand-navy">
+                Live tracking
+              </h2>
+            </div>
+            <div className="grid gap-4">
+              {myTracking.map((s) => (
+                <CustomerTrackingCard key={s.ndl_reference} s={s} />
+              ))}
+            </div>
+          </section>
+        )}
+
+
         {/* My packages / shipments / deliveries / invoices */}
         <section className="mt-10 grid gap-4 md:grid-cols-2">
           <Card className="p-5">
