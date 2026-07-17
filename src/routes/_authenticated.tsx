@@ -22,6 +22,7 @@ import {
   LogOut,
   Headphones,
   Tags,
+  Radar,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
