@@ -207,13 +207,13 @@ function HeroBackdrop() {
 
       <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
         <div className="absolute top-[62%] left-0 w-full animate-sail-right">
-          <Ship className="h-8 w-8 text-white/80 animate-bob" strokeWidth={1.5} />
+          <Ship className="h-9 w-9 text-white animate-bob drop-shadow-lg" strokeWidth={1.8} />
         </div>
         <div className="absolute top-[78%] left-0 w-full animate-sail-left" style={{ animationDelay: "-15s" }}>
-          <Container className="h-7 w-7 text-brand-orange/90 animate-bob" strokeWidth={1.5} />
+          <Container className="h-8 w-8 text-brand-orange animate-bob drop-shadow-lg" strokeWidth={1.8} />
         </div>
         <div className="absolute top-[18%] left-0 w-full animate-fly">
-          <Plane className="h-6 w-6 text-white/70" strokeWidth={1.5} />
+          <Plane className="h-7 w-7 text-white drop-shadow-lg" strokeWidth={1.8} />
         </div>
       </div>
     </>
