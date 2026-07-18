@@ -555,7 +555,7 @@ function Landing() {
 
       {/* CTA */}
       <section className="relative overflow-hidden py-24">
-        <div className="absolute inset-0 -z-10 bg-gradient-to-br from-brand-navy via-[#0d3a75] to-brand-sky" />
+        <div className="absolute inset-0 -z-10 bg-[linear-gradient(135deg,#0F2A52_0%,#12356b_50%,#1B4E8F_100%)]" />
         <div className="absolute -right-20 -top-20 -z-10 h-96 w-96 rounded-full bg-brand-orange/30 blur-3xl animate-blob" />
         <div className="absolute -left-20 -bottom-20 -z-10 h-96 w-96 rounded-full bg-brand-sky/50 blur-3xl animate-blob" style={{ animationDelay: "-5s" }} />
 
