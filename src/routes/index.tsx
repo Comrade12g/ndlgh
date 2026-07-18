@@ -123,8 +123,9 @@ function Nav() {
 function HeroBackdrop() {
   return (
     <>
-      <div className="absolute inset-0 -z-10 bg-gradient-to-br from-brand-navy via-[#0d3a75] to-brand-sky/80" />
-      <div className="absolute -right-40 top-10 -z-10 h-[500px] w-[500px] rounded-full bg-brand-orange/25 blur-3xl animate-blob" />
+      <div className="absolute inset-0 -z-10 bg-[linear-gradient(135deg,#0F2A52_0%,#123566_45%,#1B4E8F_75%,#2E86DE_100%)]" />
+      <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top_right,rgba(247,148,29,0.25),transparent_55%),radial-gradient(ellipse_at_bottom_left,rgba(46,134,222,0.35),transparent_60%)]" />
+      <div className="absolute -right-40 top-10 -z-10 h-[500px] w-[500px] rounded-full bg-brand-orange/30 blur-3xl animate-blob" />
       <div
         className="absolute -left-40 bottom-0 -z-10 h-[420px] w-[420px] rounded-full bg-brand-sky/40 blur-3xl animate-blob"
         style={{ animationDelay: "-6s" }}
