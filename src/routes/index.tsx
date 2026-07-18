@@ -123,8 +123,9 @@ function Nav() {
 function HeroBackdrop() {
   return (
     <>
-      <div className="absolute inset-0 -z-10 bg-gradient-to-br from-brand-navy via-[#0d3a75] to-brand-sky/80" />
-      <div className="absolute -right-40 top-10 -z-10 h-[500px] w-[500px] rounded-full bg-brand-orange/25 blur-3xl animate-blob" />
+      <div className="absolute inset-0 -z-10 bg-[linear-gradient(135deg,#0F2A52_0%,#123566_45%,#1B4E8F_75%,#2E86DE_100%)]" />
+      <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top_right,rgba(247,148,29,0.25),transparent_55%),radial-gradient(ellipse_at_bottom_left,rgba(46,134,222,0.35),transparent_60%)]" />
+      <div className="absolute -right-40 top-10 -z-10 h-[500px] w-[500px] rounded-full bg-brand-orange/30 blur-3xl animate-blob" />
       <div
         className="absolute -left-40 bottom-0 -z-10 h-[420px] w-[420px] rounded-full bg-brand-sky/40 blur-3xl animate-blob"
         style={{ animationDelay: "-6s" }}
@@ -206,13 +207,13 @@ function HeroBackdrop() {
 
       <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
         <div className="absolute top-[62%] left-0 w-full animate-sail-right">
-          <Ship className="h-8 w-8 text-white/80 animate-bob" strokeWidth={1.5} />
+          <Ship className="h-9 w-9 text-white animate-bob drop-shadow-lg" strokeWidth={1.8} />
         </div>
         <div className="absolute top-[78%] left-0 w-full animate-sail-left" style={{ animationDelay: "-15s" }}>
-          <Container className="h-7 w-7 text-brand-orange/90 animate-bob" strokeWidth={1.5} />
+          <Container className="h-8 w-8 text-brand-orange animate-bob drop-shadow-lg" strokeWidth={1.8} />
         </div>
         <div className="absolute top-[18%] left-0 w-full animate-fly">
-          <Plane className="h-6 w-6 text-white/70" strokeWidth={1.5} />
+          <Plane className="h-7 w-7 text-white drop-shadow-lg" strokeWidth={1.8} />
         </div>
       </div>
     </>
@@ -455,16 +456,19 @@ function Landing() {
       </section>
 
       {/* PLATFORM FEATURES */}
-      <section id="features" className="relative bg-brand-navy/[0.03] py-24">
+      <section id="features" className="relative overflow-hidden py-24">
+        <div className="absolute inset-0 -z-10 bg-[linear-gradient(135deg,#0F2A52_0%,#153b7a_100%)]" />
+        <div className="absolute -right-32 top-10 -z-10 h-96 w-96 rounded-full bg-brand-orange/20 blur-3xl" />
+        <div className="absolute -left-32 bottom-10 -z-10 h-96 w-96 rounded-full bg-brand-sky/30 blur-3xl" />
         <div className="mx-auto max-w-7xl px-4">
           <Reveal className="mx-auto max-w-2xl text-center">
             <div className="text-xs font-semibold uppercase tracking-widest text-brand-orange">
               One platform, every step
             </div>
-            <h2 className="mt-2 font-display text-3xl font-extrabold text-brand-navy md:text-4xl">
+            <h2 className="mt-2 font-display text-3xl font-extrabold text-white md:text-4xl">
               Sourcing, shipping and payments in a single portal
             </h2>
-            <p className="mt-3 text-muted-foreground">
+            <p className="mt-3 text-white/80">
               Built for e-commerce sellers, importers and 3PL agencies moving goods into Ghana.
             </p>
           </Reveal>
@@ -477,12 +481,12 @@ function Landing() {
               { icon: Globe2, title: "International Payments", desc: "Send and receive supplier payments across China, UK and Dubai." },
             ].map((f, i) => (
               <Reveal key={f.title} delay={i * 110}>
-                <div className="lift group h-full rounded-2xl border bg-card p-6">
-                  <div className="mb-4 inline-flex items-center justify-center rounded-xl bg-gradient-to-br from-brand-orange to-brand-sky p-3 text-white shadow-lg shadow-brand-orange/20">
+                <div className="lift group h-full rounded-2xl border border-white/10 bg-white/[0.06] p-6 backdrop-blur-sm hover:border-brand-orange/60 hover:bg-white/[0.10]">
+                  <div className="mb-4 inline-flex items-center justify-center rounded-xl bg-gradient-to-br from-brand-orange to-brand-sky p-3 text-white shadow-lg shadow-brand-orange/30">
                     <f.icon className="h-6 w-6" />
                   </div>
-                  <h3 className="font-display text-lg font-bold text-brand-navy">{f.title}</h3>
-                  <p className="mt-2 text-sm text-muted-foreground">{f.desc}</p>
+                  <h3 className="font-display text-lg font-bold text-white">{f.title}</h3>
+                  <p className="mt-2 text-sm text-white/75">{f.desc}</p>
                   <div className="mt-4 flex items-center gap-1 text-sm font-semibold text-brand-orange opacity-0 transition-opacity group-hover:opacity-100">
                     Learn more <ArrowRight className="h-4 w-4" />
                   </div>
@@ -551,7 +555,7 @@ function Landing() {
 
       {/* CTA */}
       <section className="relative overflow-hidden py-24">
-        <div className="absolute inset-0 -z-10 bg-gradient-to-br from-brand-navy via-[#0d3a75] to-brand-sky" />
+        <div className="absolute inset-0 -z-10 bg-[linear-gradient(135deg,#0F2A52_0%,#12356b_50%,#1B4E8F_100%)]" />
         <div className="absolute -right-20 -top-20 -z-10 h-96 w-96 rounded-full bg-brand-orange/30 blur-3xl animate-blob" />
         <div className="absolute -left-20 -bottom-20 -z-10 h-96 w-96 rounded-full bg-brand-sky/50 blur-3xl animate-blob" style={{ animationDelay: "-5s" }} />
 

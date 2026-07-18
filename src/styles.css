@@ -66,18 +66,18 @@
 :root {
   --radius: 0.75rem;
 
-  /* Brand */
-  --brand-orange: oklch(0.72 0.17 55);        /* #F58220 */
-  --brand-navy: oklch(0.28 0.09 260);         /* #0A2E5C */
-  --brand-sky: oklch(0.62 0.15 245);          /* #1E7FD1 */
+  /* Brand — pushed to vibrant, saturated values */
+  --brand-orange: oklch(0.735 0.205 52);      /* #F7941D vibrant */
+  --brand-navy: oklch(0.235 0.10 262);        /* #0F2A52 deep */
+  --brand-sky: oklch(0.60 0.17 250);          /* #2E86DE mid-blue */
 
-  /* Surfaces */
-  --background: oklch(0.955 0.012 250);       /* warm tinted canvas */
-  --foreground: oklch(0.20 0.05 260);
-  --card: oklch(0.985 0.006 250);             /* off-white cards with navy tint */
-  --card-foreground: oklch(0.20 0.05 260);
-  --popover: oklch(0.985 0.006 250);
-  --popover-foreground: oklch(0.20 0.05 260);
+  /* Surfaces — warm neutral canvas, crisp white cards */
+  --background: oklch(0.975 0.008 250);       /* warm off-white canvas */
+  --foreground: oklch(0.18 0.06 262);         /* deep navy text */
+  --card: oklch(1 0 0);                       /* pure white cards for crisp contrast */
+  --card-foreground: oklch(0.18 0.06 262);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.18 0.06 262);
 
   /* Primary = brand orange (CTAs) */
   --primary: var(--brand-orange);
@@ -87,8 +87,8 @@
   --secondary: oklch(0.92 0.025 250);
   --secondary-foreground: var(--brand-navy);
 
-  --muted: oklch(0.925 0.018 250);
-  --muted-foreground: oklch(0.34 0.045 260);
+  --muted: oklch(0.93 0.02 250);
+  --muted-foreground: oklch(0.30 0.05 262);   /* darker for readability */
 
   --accent: oklch(0.91 0.035 245);
   --accent-foreground: var(--brand-navy);
@@ -97,7 +97,7 @@
   --destructive: oklch(0.58 0.22 27);
   --destructive-foreground: oklch(1 0 0);
 
-  --border: oklch(0.86 0.02 250);
+  --border: oklch(0.84 0.025 250);
   --input: oklch(0.88 0.018 250);
   --ring: var(--brand-orange);
 
