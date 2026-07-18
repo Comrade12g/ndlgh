@@ -456,16 +456,19 @@ function Landing() {
       </section>
 
       {/* PLATFORM FEATURES */}
-      <section id="features" className="relative bg-brand-navy/[0.03] py-24">
+      <section id="features" className="relative overflow-hidden py-24">
+        <div className="absolute inset-0 -z-10 bg-[linear-gradient(135deg,#0F2A52_0%,#153b7a_100%)]" />
+        <div className="absolute -right-32 top-10 -z-10 h-96 w-96 rounded-full bg-brand-orange/20 blur-3xl" />
+        <div className="absolute -left-32 bottom-10 -z-10 h-96 w-96 rounded-full bg-brand-sky/30 blur-3xl" />
         <div className="mx-auto max-w-7xl px-4">
           <Reveal className="mx-auto max-w-2xl text-center">
             <div className="text-xs font-semibold uppercase tracking-widest text-brand-orange">
               One platform, every step
             </div>
-            <h2 className="mt-2 font-display text-3xl font-extrabold text-brand-navy md:text-4xl">
+            <h2 className="mt-2 font-display text-3xl font-extrabold text-white md:text-4xl">
               Sourcing, shipping and payments in a single portal
             </h2>
-            <p className="mt-3 text-muted-foreground">
+            <p className="mt-3 text-white/80">
               Built for e-commerce sellers, importers and 3PL agencies moving goods into Ghana.
             </p>
           </Reveal>
@@ -478,12 +481,12 @@ function Landing() {
               { icon: Globe2, title: "International Payments", desc: "Send and receive supplier payments across China, UK and Dubai." },
             ].map((f, i) => (
               <Reveal key={f.title} delay={i * 110}>
-                <div className="lift group h-full rounded-2xl border bg-card p-6">
-                  <div className="mb-4 inline-flex items-center justify-center rounded-xl bg-gradient-to-br from-brand-orange to-brand-sky p-3 text-white shadow-lg shadow-brand-orange/20">
+                <div className="lift group h-full rounded-2xl border border-white/10 bg-white/[0.06] p-6 backdrop-blur-sm hover:border-brand-orange/60 hover:bg-white/[0.10]">
+                  <div className="mb-4 inline-flex items-center justify-center rounded-xl bg-gradient-to-br from-brand-orange to-brand-sky p-3 text-white shadow-lg shadow-brand-orange/30">
                     <f.icon className="h-6 w-6" />
                   </div>
-                  <h3 className="font-display text-lg font-bold text-brand-navy">{f.title}</h3>
-                  <p className="mt-2 text-sm text-muted-foreground">{f.desc}</p>
+                  <h3 className="font-display text-lg font-bold text-white">{f.title}</h3>
+                  <p className="mt-2 text-sm text-white/75">{f.desc}</p>
                   <div className="mt-4 flex items-center gap-1 text-sm font-semibold text-brand-orange opacity-0 transition-opacity group-hover:opacity-100">
                     Learn more <ArrowRight className="h-4 w-4" />
                   </div>
