@@ -37,7 +37,7 @@ function Reveal({
   children: ReactNode;
   delay?: number;
   className?: string;
-  as?: keyof JSX.IntrinsicElements;
+  as?: keyof React.JSX.IntrinsicElements;
 }) {
   const ref = useReveal<HTMLElement>();
   const Comp = Tag as any;
