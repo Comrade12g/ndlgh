@@ -177,9 +177,9 @@ function LoginHome() {
         </svg>
 
         {/* content */}
-        <Link to="/" className="relative z-10 inline-flex">
-          <LogoLockup className="[&_span]:text-white" />
-        </Link>
+        <div className="relative z-10 inline-flex text-white">
+          <LogoLockup />
+        </div>
 
         <div className="relative z-10 max-w-md">
           <h1 className="font-display text-4xl font-extrabold leading-tight md:text-5xl">
