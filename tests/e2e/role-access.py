@@ -56,13 +56,16 @@ async def main() -> int:
             f"window.localStorage.setItem({json.dumps(storage_key)}, {json.dumps(session_json)})"
         )
 
-        # Discover caller's roles via the app's own Supabase client (RLS-safe).
+        # Land on an authenticated route so the client hydrates the session,
+        # then read the caller's roles via the app's own supabase client.
+        await page.goto(f"{BASE}/dashboard", wait_until="networkidle")
+        await page.wait_for_timeout(1500)
         roles_json = await page.evaluate(
             """async () => {
-                const { supabase } = await import('/src/integrations/supabase/client.ts');
-                const u = await supabase.auth.getUser();
+                const mod = await import('/src/integrations/supabase/client.ts');
+                const u = await mod.supabase.auth.getUser();
                 if (!u.data.user) return [];
-                const r = await supabase.from('user_roles').select('role').eq('user_id', u.data.user.id);
+                const r = await mod.supabase.from('user_roles').select('role').eq('user_id', u.data.user.id);
                 return (r.data ?? []).map(x => x.role);
             }"""
         )
