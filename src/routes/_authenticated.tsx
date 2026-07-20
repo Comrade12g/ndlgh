@@ -76,7 +76,7 @@ export const Route = createFileRoute("/_authenticated")({
       throw redirect({ to: "/pending-activation" });
     }
     const gate = ROUTE_ROLES.find((r) => location.pathname.startsWith(r.prefix));
-    if (gate && !gate.roles.some((r) => userRoles.includes(r))) {
+    if (gate && !gate.roles.some((r) => (userRoles as readonly string[]).includes(r))) {
       throw redirect({ to: "/dashboard" });
     }
     return { user: data.user, roles: userRoles };
