@@ -73,7 +73,7 @@ async def main() -> int:
         for path, allowed in ROUTE_ROLES.items():
             should_allow = bool(my_roles & allowed)
             await page.goto(f"{BASE}{path}", wait_until="networkidle")
-            await page.wait_for_timeout(400)
+            await page.wait_for_timeout(1500)
             final = page.url.replace(BASE, "") or "/"
             landed_here = final.startswith(path)
             ok = landed_here if should_allow else (not landed_here)
