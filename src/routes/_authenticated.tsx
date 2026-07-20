@@ -38,9 +38,28 @@ const STAFF_ROLES = [
   "driver",
 ] as const;
 
+// Per-route role gate. Any route path whose prefix matches an entry here
+// requires at least one of the listed roles. Direct URL access by users
+// without a matching role is redirected to /dashboard (always allowed for
+// any staff role). Keep in sync with NAV below.
+const ROUTE_ROLES: Array<{ prefix: string; roles: readonly string[] }> = [
+  { prefix: "/admin", roles: ["admin"] },
+  { prefix: "/crm", roles: ["admin", "sales", "sales_accountant", "customer_service", "sourcing_agent"] },
+  { prefix: "/support", roles: ["admin", "customer_service"] },
+  { prefix: "/sourcing", roles: ["admin", "sourcing_agent"] },
+  { prefix: "/treasury", roles: ["admin", "accountant", "sales_accountant"] },
+  { prefix: "/packages", roles: ["admin", "ops_warehouse", "customer_service"] },
+  { prefix: "/shipments", roles: ["admin", "ops_warehouse", "sales", "sales_accountant", "customer_service"] },
+  { prefix: "/tracking", roles: ["admin", "ops_warehouse", "customer_service", "sourcing_agent"] },
+  { prefix: "/deliveries", roles: ["admin", "ops_warehouse", "driver", "customer_service"] },
+  { prefix: "/invoices", roles: ["admin", "accountant", "sales", "sales_accountant"] },
+  { prefix: "/rates", roles: ["admin", "accountant", "sales", "sales_accountant"] },
+  { prefix: "/reports", roles: ["admin", "accountant", "sales_accountant"] },
+];
+
 export const Route = createFileRoute("/_authenticated")({
   ssr: false,
-  beforeLoad: async () => {
+  beforeLoad: async ({ location }) => {
     const { data, error } = await supabase.auth.getUser();
     if (error || !data.user) throw redirect({ to: "/auth", search: { mode: "signin" } });
     const { data: roles } = await supabase
@@ -55,6 +74,10 @@ export const Route = createFileRoute("/_authenticated")({
       // portal if they actually hold the customer role.
       if (userRoles.includes("customer")) throw redirect({ to: "/portal" });
       throw redirect({ to: "/pending-activation" });
+    }
+    const gate = ROUTE_ROLES.find((r) => location.pathname.startsWith(r.prefix));
+    if (gate && !gate.roles.some((r) => userRoles.includes(r))) {
+      throw redirect({ to: "/dashboard" });
     }
     return { user: data.user, roles: userRoles };
   },
