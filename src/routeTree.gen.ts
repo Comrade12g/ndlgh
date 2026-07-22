@@ -12,7 +12,9 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as StaffSignupRouteImport } from './routes/staff-signup'
 import { Route as PortalRouteImport } from './routes/portal'
 import { Route as PendingActivationRouteImport } from './routes/pending-activation'
+import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AccountRouteImport } from './routes/account'
 import { Route as AcceptInviteRouteImport } from './routes/accept-invite'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
@@ -47,9 +49,19 @@ const PendingActivationRoute = PendingActivationRouteImport.update({
   path: '/pending-activation',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
+  id: '/forgot-password',
+  path: '/forgot-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AccountRoute = AccountRouteImport.update({
+  id: '/account',
+  path: '/account',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AcceptInviteRoute = AcceptInviteRouteImport.update({
@@ -149,7 +161,9 @@ const ApiPublicHooksPollShipmentEtaRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/accept-invite': typeof AcceptInviteRoute
+  '/account': typeof AccountRoute
   '/auth': typeof AuthRoute
+  '/forgot-password': typeof ForgotPasswordRoute
   '/pending-activation': typeof PendingActivationRoute
   '/portal': typeof PortalRoute
   '/staff-signup': typeof StaffSignupRoute
@@ -172,7 +186,9 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/accept-invite': typeof AcceptInviteRoute
+  '/account': typeof AccountRoute
   '/auth': typeof AuthRoute
+  '/forgot-password': typeof ForgotPasswordRoute
   '/pending-activation': typeof PendingActivationRoute
   '/portal': typeof PortalRoute
   '/staff-signup': typeof StaffSignupRoute
@@ -197,7 +213,9 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/accept-invite': typeof AcceptInviteRoute
+  '/account': typeof AccountRoute
   '/auth': typeof AuthRoute
+  '/forgot-password': typeof ForgotPasswordRoute
   '/pending-activation': typeof PendingActivationRoute
   '/portal': typeof PortalRoute
   '/staff-signup': typeof StaffSignupRoute
@@ -222,7 +240,9 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/accept-invite'
+    | '/account'
     | '/auth'
+    | '/forgot-password'
     | '/pending-activation'
     | '/portal'
     | '/staff-signup'
@@ -245,7 +265,9 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/accept-invite'
+    | '/account'
     | '/auth'
+    | '/forgot-password'
     | '/pending-activation'
     | '/portal'
     | '/staff-signup'
@@ -269,7 +291,9 @@ export interface FileRouteTypes {
     | '/'
     | '/_authenticated'
     | '/accept-invite'
+    | '/account'
     | '/auth'
+    | '/forgot-password'
     | '/pending-activation'
     | '/portal'
     | '/staff-signup'
@@ -294,7 +318,9 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
   AcceptInviteRoute: typeof AcceptInviteRoute
+  AccountRoute: typeof AccountRoute
   AuthRoute: typeof AuthRoute
+  ForgotPasswordRoute: typeof ForgotPasswordRoute
   PendingActivationRoute: typeof PendingActivationRoute
   PortalRoute: typeof PortalRoute
   StaffSignupRoute: typeof StaffSignupRoute
@@ -325,11 +351,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PendingActivationRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/forgot-password': {
+      id: '/forgot-password'
+      path: '/forgot-password'
+      fullPath: '/forgot-password'
+      preLoaderRoute: typeof ForgotPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/auth': {
       id: '/auth'
       path: '/auth'
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/account': {
+      id: '/account'
+      path: '/account'
+      fullPath: '/account'
+      preLoaderRoute: typeof AccountRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/accept-invite': {
@@ -501,7 +541,9 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRoute: AuthenticatedRouteWithChildren,
   AcceptInviteRoute: AcceptInviteRoute,
+  AccountRoute: AccountRoute,
   AuthRoute: AuthRoute,
+  ForgotPasswordRoute: ForgotPasswordRoute,
   PendingActivationRoute: PendingActivationRoute,
   PortalRoute: PortalRoute,
   StaffSignupRoute: StaffSignupRoute,
