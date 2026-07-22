@@ -9,7 +9,7 @@ import { LogoLockup } from "@/components/brand/Logo";
 import { toast } from "sonner";
 import { getErrorMessage } from "@/lib/errors";
 import { openWhatsApp } from "@/lib/whatsapp";
-import { toE164Gh } from "@/lib/phone";
+import { toE164Gh, phoneToSyntheticEmail } from "@/lib/phone";
 import { ArrowLeft, MessageCircle } from "lucide-react";
 
 // NDL Ghana's customer-facing WhatsApp business number
