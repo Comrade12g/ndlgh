@@ -9,7 +9,7 @@ import { LogoLockup } from "@/components/brand/Logo";
 import { toast } from "sonner";
 import { getErrorMessage } from "@/lib/errors";
 import { openWhatsApp } from "@/lib/whatsapp";
-import { toE164Gh } from "@/lib/phone";
+import { toE164Gh, phoneToSyntheticEmail } from "@/lib/phone";
 import { ArrowLeft, MessageCircle } from "lucide-react";
 
 // NDL Ghana's customer-facing WhatsApp business number
@@ -69,7 +69,10 @@ function AuthPage() {
       } else {
         const e164 = toE164Gh(identifier);
         if (!e164) throw new Error("Enter a valid phone number");
-        const { error } = await supabase.auth.signInWithPassword({ phone: e164, password });
+        const { error } = await supabase.auth.signInWithPassword({
+          email: phoneToSyntheticEmail(e164),
+          password,
+        });
         if (error) throw error;
       }
       toast.success("Welcome back.");

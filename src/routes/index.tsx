@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { LogoLockup } from "@/components/brand/Logo";
 import { toast } from "sonner";
 import { getErrorMessage } from "@/lib/errors";
-import { toE164Gh } from "@/lib/phone";
+import { toE164Gh, phoneToSyntheticEmail } from "@/lib/phone";
 import { openWhatsApp } from "@/lib/whatsapp";
 import { Ship, Plane, MessageCircle, PackageSearch } from "lucide-react";
 
@@ -68,7 +68,10 @@ function LoginHome() {
       } else {
         const e164 = toE164Gh(identifier);
         if (!e164) throw new Error("Enter a valid phone number");
-        const { error } = await supabase.auth.signInWithPassword({ phone: e164, password });
+        const { error } = await supabase.auth.signInWithPassword({
+          email: phoneToSyntheticEmail(e164),
+          password,
+        });
         if (error) throw error;
       }
       toast.success("Welcome back.");
