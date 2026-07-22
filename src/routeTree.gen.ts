@@ -13,11 +13,11 @@ import { Route as StaffSignupRouteImport } from './routes/staff-signup'
 import { Route as PortalRouteImport } from './routes/portal'
 import { Route as PendingActivationRouteImport } from './routes/pending-activation'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AccountRouteImport } from './routes/account'
 import { Route as AcceptInviteRouteImport } from './routes/accept-invite'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as TrackCodeRouteImport } from './routes/track.$code'
-import { Route as PortalSettingsRouteImport } from './routes/portal.settings'
 import { Route as AuthenticatedTrackingRouteImport } from './routes/_authenticated/tracking'
 import { Route as AuthenticatedSupportRouteImport } from './routes/_authenticated/support'
 import { Route as AuthenticatedShipmentsRouteImport } from './routes/_authenticated/shipments'
@@ -53,6 +53,11 @@ const AuthRoute = AuthRouteImport.update({
   path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AccountRoute = AccountRouteImport.update({
+  id: '/account',
+  path: '/account',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AcceptInviteRoute = AcceptInviteRouteImport.update({
   id: '/accept-invite',
   path: '/accept-invite',
@@ -71,11 +76,6 @@ const TrackCodeRoute = TrackCodeRouteImport.update({
   id: '/track/$code',
   path: '/track/$code',
   getParentRoute: () => rootRouteImport,
-} as any)
-const PortalSettingsRoute = PortalSettingsRouteImport.update({
-  id: '/settings',
-  path: '/settings',
-  getParentRoute: () => PortalRoute,
 } as any)
 const AuthenticatedTrackingRoute = AuthenticatedTrackingRouteImport.update({
   id: '/tracking',
@@ -155,9 +155,10 @@ const ApiPublicHooksPollShipmentEtaRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/accept-invite': typeof AcceptInviteRoute
+  '/account': typeof AccountRoute
   '/auth': typeof AuthRoute
   '/pending-activation': typeof PendingActivationRoute
-  '/portal': typeof PortalRouteWithChildren
+  '/portal': typeof PortalRoute
   '/staff-signup': typeof StaffSignupRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/deliveries': typeof AuthenticatedDeliveriesRoute
@@ -168,7 +169,6 @@ export interface FileRoutesByFullPath {
   '/shipments': typeof AuthenticatedShipmentsRoute
   '/support': typeof AuthenticatedSupportRoute
   '/tracking': typeof AuthenticatedTrackingRoute
-  '/portal/settings': typeof PortalSettingsRoute
   '/track/$code': typeof TrackCodeRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
   '/crm/contacts': typeof AuthenticatedCrmContactsRoute
@@ -179,9 +179,10 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/accept-invite': typeof AcceptInviteRoute
+  '/account': typeof AccountRoute
   '/auth': typeof AuthRoute
   '/pending-activation': typeof PendingActivationRoute
-  '/portal': typeof PortalRouteWithChildren
+  '/portal': typeof PortalRoute
   '/staff-signup': typeof StaffSignupRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/deliveries': typeof AuthenticatedDeliveriesRoute
@@ -192,7 +193,6 @@ export interface FileRoutesByTo {
   '/shipments': typeof AuthenticatedShipmentsRoute
   '/support': typeof AuthenticatedSupportRoute
   '/tracking': typeof AuthenticatedTrackingRoute
-  '/portal/settings': typeof PortalSettingsRoute
   '/track/$code': typeof TrackCodeRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
   '/crm/contacts': typeof AuthenticatedCrmContactsRoute
@@ -205,9 +205,10 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/accept-invite': typeof AcceptInviteRoute
+  '/account': typeof AccountRoute
   '/auth': typeof AuthRoute
   '/pending-activation': typeof PendingActivationRoute
-  '/portal': typeof PortalRouteWithChildren
+  '/portal': typeof PortalRoute
   '/staff-signup': typeof StaffSignupRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/deliveries': typeof AuthenticatedDeliveriesRoute
@@ -218,7 +219,6 @@ export interface FileRoutesById {
   '/_authenticated/shipments': typeof AuthenticatedShipmentsRoute
   '/_authenticated/support': typeof AuthenticatedSupportRoute
   '/_authenticated/tracking': typeof AuthenticatedTrackingRoute
-  '/portal/settings': typeof PortalSettingsRoute
   '/track/$code': typeof TrackCodeRoute
   '/_authenticated/admin/users': typeof AuthenticatedAdminUsersRoute
   '/_authenticated/crm/contacts': typeof AuthenticatedCrmContactsRoute
@@ -231,6 +231,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/accept-invite'
+    | '/account'
     | '/auth'
     | '/pending-activation'
     | '/portal'
@@ -244,7 +245,6 @@ export interface FileRouteTypes {
     | '/shipments'
     | '/support'
     | '/tracking'
-    | '/portal/settings'
     | '/track/$code'
     | '/admin/users'
     | '/crm/contacts'
@@ -255,6 +255,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/accept-invite'
+    | '/account'
     | '/auth'
     | '/pending-activation'
     | '/portal'
@@ -268,7 +269,6 @@ export interface FileRouteTypes {
     | '/shipments'
     | '/support'
     | '/tracking'
-    | '/portal/settings'
     | '/track/$code'
     | '/admin/users'
     | '/crm/contacts'
@@ -280,6 +280,7 @@ export interface FileRouteTypes {
     | '/'
     | '/_authenticated'
     | '/accept-invite'
+    | '/account'
     | '/auth'
     | '/pending-activation'
     | '/portal'
@@ -293,7 +294,6 @@ export interface FileRouteTypes {
     | '/_authenticated/shipments'
     | '/_authenticated/support'
     | '/_authenticated/tracking'
-    | '/portal/settings'
     | '/track/$code'
     | '/_authenticated/admin/users'
     | '/_authenticated/crm/contacts'
@@ -306,9 +306,10 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
   AcceptInviteRoute: typeof AcceptInviteRoute
+  AccountRoute: typeof AccountRoute
   AuthRoute: typeof AuthRoute
   PendingActivationRoute: typeof PendingActivationRoute
-  PortalRoute: typeof PortalRouteWithChildren
+  PortalRoute: typeof PortalRoute
   StaffSignupRoute: typeof StaffSignupRoute
   TrackCodeRoute: typeof TrackCodeRoute
   ApiPublicHooksPollShipmentEtaRoute: typeof ApiPublicHooksPollShipmentEtaRoute
@@ -344,6 +345,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/account': {
+      id: '/account'
+      path: '/account'
+      fullPath: '/account'
+      preLoaderRoute: typeof AccountRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/accept-invite': {
       id: '/accept-invite'
       path: '/accept-invite'
@@ -371,13 +379,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/track/$code'
       preLoaderRoute: typeof TrackCodeRouteImport
       parentRoute: typeof rootRouteImport
-    }
-    '/portal/settings': {
-      id: '/portal/settings'
-      path: '/settings'
-      fullPath: '/portal/settings'
-      preLoaderRoute: typeof PortalSettingsRouteImport
-      parentRoute: typeof PortalRoute
     }
     '/_authenticated/tracking': {
       id: '/_authenticated/tracking'
@@ -516,24 +517,14 @@ const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
   AuthenticatedRouteChildren,
 )
 
-interface PortalRouteChildren {
-  PortalSettingsRoute: typeof PortalSettingsRoute
-}
-
-const PortalRouteChildren: PortalRouteChildren = {
-  PortalSettingsRoute: PortalSettingsRoute,
-}
-
-const PortalRouteWithChildren =
-  PortalRoute._addFileChildren(PortalRouteChildren)
-
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRoute: AuthenticatedRouteWithChildren,
   AcceptInviteRoute: AcceptInviteRoute,
+  AccountRoute: AccountRoute,
   AuthRoute: AuthRoute,
   PendingActivationRoute: PendingActivationRoute,
-  PortalRoute: PortalRouteWithChildren,
+  PortalRoute: PortalRoute,
   StaffSignupRoute: StaffSignupRoute,
   TrackCodeRoute: TrackCodeRoute,
   ApiPublicHooksPollShipmentEtaRoute: ApiPublicHooksPollShipmentEtaRoute,

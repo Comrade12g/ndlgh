@@ -15,7 +15,7 @@ import { toast } from "sonner";
 import { getErrorMessage } from "@/lib/errors";
 
 // Not under /_authenticated because that layout is staff-only.
-export const Route = createFileRoute("/portal/settings")({
+export const Route = createFileRoute("/account")({
   ssr: false,
   beforeLoad: async () => {
     const { data } = await supabase.auth.getUser();
