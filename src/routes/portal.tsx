@@ -7,7 +7,7 @@ import { LogoLockup } from "@/components/brand/Logo";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { StatusBadge, statusTone } from "@/components/ops/PageHeader";
-import { LogOut, Package, PackageSearch, MapPin, Copy, Receipt, Radar } from "lucide-react";
+import { LogOut, Package, PackageSearch, MapPin, Copy, Receipt, Radar, Settings } from "lucide-react";
 import { toast } from "sonner";
 import { CustomerTrackingCard, type CustomerShipment } from "@/components/tracking/CustomerTrackingCard";
 

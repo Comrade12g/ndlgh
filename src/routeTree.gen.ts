@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as StaffSignupRouteImport } from './routes/staff-signup'
 import { Route as PortalRouteImport } from './routes/portal'
 import { Route as PendingActivationRouteImport } from './routes/pending-activation'
+import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AccountRouteImport } from './routes/account'
 import { Route as AcceptInviteRouteImport } from './routes/accept-invite'
@@ -46,6 +47,11 @@ const PortalRoute = PortalRouteImport.update({
 const PendingActivationRoute = PendingActivationRouteImport.update({
   id: '/pending-activation',
   path: '/pending-activation',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
+  id: '/forgot-password',
+  path: '/forgot-password',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -157,6 +163,7 @@ export interface FileRoutesByFullPath {
   '/accept-invite': typeof AcceptInviteRoute
   '/account': typeof AccountRoute
   '/auth': typeof AuthRoute
+  '/forgot-password': typeof ForgotPasswordRoute
   '/pending-activation': typeof PendingActivationRoute
   '/portal': typeof PortalRoute
   '/staff-signup': typeof StaffSignupRoute
@@ -181,6 +188,7 @@ export interface FileRoutesByTo {
   '/accept-invite': typeof AcceptInviteRoute
   '/account': typeof AccountRoute
   '/auth': typeof AuthRoute
+  '/forgot-password': typeof ForgotPasswordRoute
   '/pending-activation': typeof PendingActivationRoute
   '/portal': typeof PortalRoute
   '/staff-signup': typeof StaffSignupRoute
@@ -207,6 +215,7 @@ export interface FileRoutesById {
   '/accept-invite': typeof AcceptInviteRoute
   '/account': typeof AccountRoute
   '/auth': typeof AuthRoute
+  '/forgot-password': typeof ForgotPasswordRoute
   '/pending-activation': typeof PendingActivationRoute
   '/portal': typeof PortalRoute
   '/staff-signup': typeof StaffSignupRoute
@@ -233,6 +242,7 @@ export interface FileRouteTypes {
     | '/accept-invite'
     | '/account'
     | '/auth'
+    | '/forgot-password'
     | '/pending-activation'
     | '/portal'
     | '/staff-signup'
@@ -257,6 +267,7 @@ export interface FileRouteTypes {
     | '/accept-invite'
     | '/account'
     | '/auth'
+    | '/forgot-password'
     | '/pending-activation'
     | '/portal'
     | '/staff-signup'
@@ -282,6 +293,7 @@ export interface FileRouteTypes {
     | '/accept-invite'
     | '/account'
     | '/auth'
+    | '/forgot-password'
     | '/pending-activation'
     | '/portal'
     | '/staff-signup'
@@ -308,6 +320,7 @@ export interface RootRouteChildren {
   AcceptInviteRoute: typeof AcceptInviteRoute
   AccountRoute: typeof AccountRoute
   AuthRoute: typeof AuthRoute
+  ForgotPasswordRoute: typeof ForgotPasswordRoute
   PendingActivationRoute: typeof PendingActivationRoute
   PortalRoute: typeof PortalRoute
   StaffSignupRoute: typeof StaffSignupRoute
@@ -336,6 +349,13 @@ declare module '@tanstack/react-router' {
       path: '/pending-activation'
       fullPath: '/pending-activation'
       preLoaderRoute: typeof PendingActivationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/forgot-password': {
+      id: '/forgot-password'
+      path: '/forgot-password'
+      fullPath: '/forgot-password'
+      preLoaderRoute: typeof ForgotPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth': {
@@ -523,6 +543,7 @@ const rootRouteChildren: RootRouteChildren = {
   AcceptInviteRoute: AcceptInviteRoute,
   AccountRoute: AccountRoute,
   AuthRoute: AuthRoute,
+  ForgotPasswordRoute: ForgotPasswordRoute,
   PendingActivationRoute: PendingActivationRoute,
   PortalRoute: PortalRoute,
   StaffSignupRoute: StaffSignupRoute,
