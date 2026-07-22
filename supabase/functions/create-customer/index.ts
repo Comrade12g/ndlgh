@@ -77,11 +77,15 @@ Deno.serve(async (req: Request) => {
 
     const tempPassword = generateTempPassword();
 
+    const syntheticEmail = `${e164.replace(/[^\d]/g, "")}@customers.ndlgh.local`;
+
     const { data: created, error: createError } = await adminClient.auth.admin.createUser({
+      email: syntheticEmail,
       phone: e164,
       password: tempPassword,
+      email_confirm: true,
       phone_confirm: true,
-      user_metadata: { full_name: full_name ?? null },
+      user_metadata: { full_name: full_name ?? null, phone: e164 },
     });
     if (createError) {
       if (
