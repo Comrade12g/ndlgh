@@ -69,7 +69,10 @@ function AuthPage() {
       } else {
         const e164 = toE164Gh(identifier);
         if (!e164) throw new Error("Enter a valid phone number");
-        const { error } = await supabase.auth.signInWithPassword({ phone: e164, password });
+        const { error } = await supabase.auth.signInWithPassword({
+          email: phoneToSyntheticEmail(e164),
+          password,
+        });
         if (error) throw error;
       }
       toast.success("Welcome back.");
