@@ -163,6 +163,11 @@ function PortalPage() {
                 <div className="font-mono text-xs text-brand-orange">{profile.shipping_mark}</div>
               )}
             </div>
+            <Button variant="outline" size="sm" asChild>
+              <Link to="/account">
+                <Settings className="mr-2 h-4 w-4" /> Settings
+              </Link>
+            </Button>
             <Button variant="outline" size="sm" onClick={signOut}>
               <LogOut className="mr-2 h-4 w-4" /> Sign out
             </Button>
