@@ -208,6 +208,14 @@ function AuthPage() {
                 >
                   {loading ? "Please wait…" : "Sign in"}
                 </Button>
+                <div className="text-right">
+                  <Link
+                    to="/forgot-password"
+                    className="text-xs font-medium text-brand-navy hover:text-brand-orange"
+                  >
+                    Forgot password?
+                  </Link>
+                </div>
               </form>
 
               <p className="mt-6 text-center text-sm text-muted-foreground">
