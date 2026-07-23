@@ -23,9 +23,12 @@ import {
   Headphones,
   Tags,
   Radar,
+  MoreVertical,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
 import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 
 const STAFF_ROLES = [
   "admin",
@@ -201,60 +204,91 @@ function StaffLayout() {
     navigate({ to: "/auth", search: { mode: "signin" }, replace: true });
   }
 
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  const SidebarBody = ({ onNavigate }: { onNavigate?: () => void }) => (
+    <>
+      <div className="border-b border-sidebar-border p-5">
+        <Link to="/dashboard" className="flex items-center gap-3" onClick={onNavigate}>
+          <div className="rounded-lg bg-white p-1.5">
+            <img src={logoAsset.url} alt="NDL" className="h-7 w-7" />
+          </div>
+          <div>
+            <div className="font-display text-base font-extrabold">
+              NDL <span className="text-brand-orange">GHANA</span>
+            </div>
+            <div className="text-[10px] uppercase tracking-wider text-white/60">Ops Console</div>
+          </div>
+        </Link>
+      </div>
+      <nav className="flex-1 space-y-1 overflow-y-auto p-3">
+        {visible.map((item) => {
+          const active = pathname.startsWith(item.to.split("/").slice(0, 2).join("/"));
+          return (
+            <Link
+              key={item.to}
+              to={item.to}
+              onClick={onNavigate}
+              className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
+                active
+                  ? "bg-sidebar-primary text-sidebar-primary-foreground"
+                  : "text-sidebar-foreground/80 hover:bg-sidebar-accent hover:text-sidebar-foreground"
+              }`}
+            >
+              <item.icon className="h-4 w-4" />
+              {item.label}
+            </Link>
+          );
+        })}
+      </nav>
+      <div className="border-t border-sidebar-border p-4">
+        <div className="mb-3 text-xs">
+          <div className="font-semibold text-white">
+            {profile?.full_name ?? profile?.email ?? "Staff"}
+          </div>
+          <div className="text-white/60">{primaryRole}</div>
+        </div>
+        <Button
+          size="sm"
+          variant="outline"
+          className="w-full border-white/20 bg-transparent text-white hover:bg-white/10"
+          onClick={signOut}
+        >
+          <LogOut className="mr-2 h-4 w-4" /> Sign out
+        </Button>
+      </div>
+    </>
+  );
+
   return (
     <div className="flex min-h-screen bg-background">
       <aside className="hidden w-64 shrink-0 flex-col bg-sidebar text-sidebar-foreground md:flex">
-        <div className="border-b border-sidebar-border p-5">
-          <Link to="/dashboard" className="flex items-center gap-3">
-            <div className="rounded-lg bg-white p-1.5">
-              <img src={logoAsset.url} alt="NDL" className="h-7 w-7" />
-            </div>
-            <div>
-              <div className="font-display text-base font-extrabold">
-                NDL <span className="text-brand-orange">GHANA</span>
-              </div>
-              <div className="text-[10px] uppercase tracking-wider text-white/60">Ops Console</div>
-            </div>
-          </Link>
-        </div>
-        <nav className="flex-1 space-y-1 p-3">
-          {visible.map((item) => {
-            const active = pathname.startsWith(item.to.split("/").slice(0, 2).join("/"));
-            return (
-              <Link
-                key={item.to}
-                to={item.to}
-                className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
-                  active
-                    ? "bg-sidebar-primary text-sidebar-primary-foreground"
-                    : "text-sidebar-foreground/80 hover:bg-sidebar-accent hover:text-sidebar-foreground"
-                }`}
-              >
-                <item.icon className="h-4 w-4" />
-                {item.label}
-              </Link>
-            );
-          })}
-        </nav>
-        <div className="border-t border-sidebar-border p-4">
-          <div className="mb-3 text-xs">
-            <div className="font-semibold text-white">
-              {profile?.full_name ?? profile?.email ?? "Staff"}
-            </div>
-            <div className="text-white/60">{primaryRole}</div>
-          </div>
-          <Button
-            size="sm"
-            variant="outline"
-            className="w-full border-white/20 bg-transparent text-white hover:bg-white/10"
-            onClick={signOut}
-          >
-            <LogOut className="mr-2 h-4 w-4" /> Sign out
-          </Button>
-        </div>
+        <SidebarBody />
       </aside>
 
       <main className="flex-1 overflow-x-hidden">
+        <header className="sticky top-0 z-30 flex items-center justify-between border-b bg-background/90 px-3 py-2 backdrop-blur md:hidden">
+          <Link to="/dashboard" className="flex items-center gap-2">
+            <img src={logoAsset.url} alt="NDL" className="h-7 w-7" />
+            <span className="font-display text-sm font-extrabold">
+              NDL <span className="text-brand-orange">GHANA</span>
+            </span>
+          </Link>
+          <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
+            <SheetTrigger asChild>
+              <Button variant="ghost" size="icon" aria-label="Open menu">
+                <MoreVertical className="h-5 w-5" />
+              </Button>
+            </SheetTrigger>
+            <SheetContent
+              side="left"
+              className="flex w-72 flex-col bg-sidebar p-0 text-sidebar-foreground [&>button]:text-white"
+            >
+              <SheetTitle className="sr-only">Navigation</SheetTitle>
+              <SidebarBody onNavigate={() => setMobileOpen(false)} />
+            </SheetContent>
+          </Sheet>
+        </header>
         <Outlet />
       </main>
     </div>
