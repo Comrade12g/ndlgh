@@ -18,12 +18,10 @@ export const requestCustomerPasswordReset = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     const e164 = toE164Gh(data.phone);
     if (!e164) throw new Error("Enter a valid phone number");
-    const email = phoneToSyntheticEmail(e164);
-
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    // Best-effort: look up by synthetic email; if not found, still return ok
-    // so we don't leak account existence.
-    const { data: list } = await supabaseAdmin.auth.admin.listUsers({ page: 1, perPage: 200 });
-    const exists = !!list?.users?.find((u) => u.email === email);
-    return { ok: true, phone: e164, exists };
+    // Deliberately do NOT reveal whether the account exists. The response is
+    // identical for known and unknown numbers so this public endpoint cannot
+    // be used to enumerate registered customers. Reset is handled human-in-
+    // the-loop via WhatsApp on the client.
+    void phoneToSyntheticEmail(e164);
+    return { ok: true, phone: e164 };
   });
