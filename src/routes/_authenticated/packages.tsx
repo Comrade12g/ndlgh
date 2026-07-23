@@ -28,6 +28,7 @@ import { Plus, Search, Package as PackageIcon, MessageCircle, Copy, Pencil } fro
 import { toast } from "sonner";
 import { getErrorMessage } from "@/lib/errors";
 import { ensureContactShadow } from "@/lib/ensureContactShadow";
+import { sanitizePostgrestTerm } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/packages")({
   component: PackagesPage,
