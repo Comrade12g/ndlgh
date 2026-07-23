@@ -10,8 +10,13 @@ import { LogoLockup } from "@/components/brand/Logo";
 import { toast } from "sonner";
 import { getErrorMessage } from "@/lib/errors";
 import { openWhatsApp } from "@/lib/whatsapp";
+import {
+  friendlySignInError,
+  SUPPORT_WHATSAPP_NUMBER,
+  SUPPORT_WHATSAPP_MESSAGE,
+} from "@/lib/auth-errors";
 import { toE164Gh, phoneToSyntheticEmail } from "@/lib/phone";
-import { ArrowLeft, MessageCircle } from "lucide-react";
+import { AlertCircle, ArrowLeft, MessageCircle } from "lucide-react";
 
 // NDL Ghana's customer-facing WhatsApp business number
 const SIGNUP_WHATSAPP_NUMBER = "+233500229352";
