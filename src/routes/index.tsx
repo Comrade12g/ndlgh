@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label";
 import { LogoLockup } from "@/components/brand/Logo";
 import { toast } from "sonner";
 import { getErrorMessage } from "@/lib/errors";
-import { toE164Gh, phoneToSyntheticEmail } from "@/lib/phone";
+import { toE164Gh, phoneToSyntheticEmail, phoneToStaffSyntheticEmail } from "@/lib/phone";
 import { openWhatsApp } from "@/lib/whatsapp";
 import {
   friendlySignInError,
