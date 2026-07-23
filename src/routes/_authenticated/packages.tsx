@@ -253,6 +253,7 @@ function IntakePackageDialog({ onDone }: { onDone: () => void }) {
     mutationFn: async () => {
       // Look up customer by shipping_mark
       let customer_id: string | null = null;
+      let customer: { id: string; full_name: string | null; phone: string | null } | null = null;
       if (form.shipping_mark) {
         const { data } = await supabase
           .from("profiles")
@@ -260,41 +261,56 @@ function IntakePackageDialog({ onDone }: { onDone: () => void }) {
           .eq("shipping_mark", form.shipping_mark.trim().toUpperCase())
           .maybeSingle();
         customer_id = data?.id ?? null;
-        // Workaround for a live-DB bug: customer_id FKs on several tables
-        // wrongly point at contacts instead of profiles. Ensuring a
-        // matching contacts row exists prevents the auto-invoice trigger
-        // (which fires right after this insert) from failing. Safe to
-        // remove once the DB constraint is fixed.
+        customer = data ?? null;
         if (customer_id) await ensureContactShadow(customer_id, data?.full_name, data?.phone);
       }
       const cbm = (form.length_cm * form.width_cm * form.height_cm) / 1_000_000;
       const { data: u } = await supabase.auth.getUser();
-      const { error } = await supabase.from("packages").insert({
-        customer_id,
-        shipping_mark: form.shipping_mark.trim().toUpperCase() || null,
-        warehouse_code: form.warehouse_code,
-        supplier_name: form.supplier_name || null,
-        description: form.description || null,
-        pieces: form.pieces,
-        weight_kg: form.weight_kg,
-        length_cm: form.length_cm || null,
-        width_cm: form.width_cm || null,
-        height_cm: form.height_cm || null,
-        cbm,
-        external_tracking: form.external_tracking || null,
-        notes: form.notes || null,
-        received_by: u.user?.id,
-        status: "received",
-      });
+      const { data: inserted, error } = await supabase
+        .from("packages")
+        .insert({
+          customer_id,
+          shipping_mark: form.shipping_mark.trim().toUpperCase() || null,
+          warehouse_code: form.warehouse_code,
+          supplier_name: form.supplier_name || null,
+          description: form.description || null,
+          pieces: form.pieces,
+          weight_kg: form.weight_kg,
+          length_cm: form.length_cm || null,
+          width_cm: form.width_cm || null,
+          height_cm: form.height_cm || null,
+          cbm,
+          external_tracking: form.external_tracking || null,
+          notes: form.notes || null,
+          received_by: u.user?.id,
+          status: "received",
+        })
+        .select("id, tracking_code")
+        .single();
       if (error) throw error;
-      return { matched: !!customer_id };
+      return { matched: !!customer_id, customer, package: inserted, warehouse: form.warehouse_code };
     },
-    onSuccess: (res) => {
+    onSuccess: async (res) => {
       toast.success(
         res.matched
-          ? "Package intaken and matched to customer"
+          ? "Package intaken, invoice line created, and matched to customer"
           : "Package intaken (unmatched — no customer with that mark)",
       );
+      // Auto-trigger WhatsApp notification for the customer
+      if (res.matched && res.customer && res.package) {
+        const msg = waTemplates.packageReceived(
+          res.customer.full_name ?? "there",
+          res.package.tracking_code,
+          res.warehouse,
+        );
+        await notifyCustomer({
+          customerId: res.customer.id,
+          phone: res.customer.phone,
+          event: "package_received",
+          message: msg,
+          packageId: res.package.id,
+        });
+      }
       onDone();
     },
     onError: (e) => toast.error(getErrorMessage(e)),
