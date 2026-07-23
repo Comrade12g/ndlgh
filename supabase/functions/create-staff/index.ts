@@ -1,12 +1,9 @@
-// Supabase Edge Function: create-customer
+// Supabase Edge Function: create-staff
 //
-// Lets staff create a customer's portal login using just their phone
-// number — no email, no self-service sign-up. Generates a temporary
-// password and returns it (along with the assigned shipping mark) so
-// staff can send it to the customer over WhatsApp themselves.
-//
-// SUPABASE_URL, SUPABASE_ANON_KEY, and SUPABASE_SERVICE_ROLE_KEY are
-// automatically available in every Edge Function's environment.
+// Admin-only staff onboarding. Mirrors create-customer: creates an auth
+// account keyed by the employee's phone number (via a synthetic staff
+// email), assigns their staff role, and returns a temporary password the
+// admin can share. First sign-in will force them to change it.
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
@@ -15,12 +12,15 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-const STAFF_ROLES_ALLOWED = [
+const STAFF_ROLES = [
   "admin",
+  "ops_warehouse",
   "sales",
-  "customer_service",
-  "sales_accountant",
   "accountant",
+  "customer_service",
+  "sourcing_agent",
+  "driver",
+  "sales_accountant",
 ];
 
 function normalizeToE164(raw: string): string | null {
@@ -40,9 +40,7 @@ function generateTempPassword(): string {
 }
 
 Deno.serve(async (req: Request) => {
-  if (req.method === "OPTIONS") {
-    return new Response(null, { headers: corsHeaders });
-  }
+  if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
     const authHeader = req.headers.get("Authorization");
@@ -64,20 +62,19 @@ Deno.serve(async (req: Request) => {
       .from("user_roles")
       .select("role")
       .eq("user_id", callerData.user.id);
-    const isAllowed = (callerRoles ?? []).some((r: { role: string }) =>
-      STAFF_ROLES_ALLOWED.includes(r.role),
-    );
-    if (!isAllowed) throw new Error("You don't have permission to create customer accounts");
+    const isAdmin = (callerRoles ?? []).some((r: { role: string }) => r.role === "admin");
+    if (!isAdmin) throw new Error("Only admins can add employees");
 
-    const { phone, full_name } = await req.json();
+    const { phone, full_name, role } = await req.json();
     if (!phone || typeof phone !== "string") throw new Error("Phone number is required");
+    if (!role || !STAFF_ROLES.includes(role)) throw new Error("A valid staff role is required");
 
     const e164 = normalizeToE164(phone);
     if (!e164) throw new Error("Couldn't understand that phone number");
 
+    const digits = e164.replace(/[^\d]/g, "");
+    const syntheticEmail = `${digits}@staff.ndlgh.local`;
     const tempPassword = generateTempPassword();
-
-    const syntheticEmail = `${e164.replace(/[^\d]/g, "")}@customers.ndlgh.local`;
 
     let userId: string | null = null;
     let reused = false;
@@ -88,7 +85,7 @@ Deno.serve(async (req: Request) => {
       password: tempPassword,
       email_confirm: true,
       phone_confirm: true,
-      user_metadata: { full_name: full_name ?? null, phone: e164 },
+      user_metadata: { full_name: full_name ?? null, phone: e164, account_type: "staff" },
     });
 
     if (createError) {
@@ -98,69 +95,47 @@ Deno.serve(async (req: Request) => {
         msg.includes("already exists") ||
         msg.includes("duplicate") ||
         msg.includes("phone");
-
       if (!isDuplicate) throw createError;
 
-      // Find the existing account (by synthetic email or phone) and reset its password
-      const { data: byEmail } = await adminClient
-        .from("auth.users" as never)
-        .select("id")
-        .maybeSingle()
-        .then(() => ({ data: null as { id: string } | null }))
-        .catch(() => ({ data: null }));
+      const { data: list } = await adminClient.auth.admin.listUsers({ page: 1, perPage: 200 });
+      const match = list?.users.find(
+        (u) => u.email === syntheticEmail || u.phone === e164 || u.phone === digits,
+      );
+      if (!match) throw new Error("An employee with this phone number already has an account");
 
-      // Fall back to listing users and matching — admin API has no direct getByEmail
-      let existingId: string | null = byEmail?.id ?? null;
-      if (!existingId) {
-        const { data: list } = await adminClient.auth.admin.listUsers({ page: 1, perPage: 200 });
-        const match = list?.users.find(
-          (u) => u.email === syntheticEmail || u.phone === e164 || u.phone === e164.replace(/^\+/, ""),
-        );
-        existingId = match?.id ?? null;
-      }
-
-      if (!existingId) {
-        throw new Error("A customer with this phone number already has an account");
-      }
-
-      const { error: updateError } = await adminClient.auth.admin.updateUserById(existingId, {
+      const { error: updateError } = await adminClient.auth.admin.updateUserById(match.id, {
         password: tempPassword,
         email: syntheticEmail,
         phone: e164,
         email_confirm: true,
         phone_confirm: true,
-        user_metadata: { full_name: full_name ?? null, phone: e164 },
+        user_metadata: { full_name: full_name ?? null, phone: e164, account_type: "staff" },
       });
       if (updateError) throw updateError;
-      userId = existingId;
+      userId = match.id;
       reused = true;
     } else {
       if (!created.user) throw new Error("Account creation succeeded but no user was returned");
       userId = created.user.id;
     }
 
-    // Mark the account so first login forces a password change.
+    // Upsert profile fields (trigger creates the row on new signups)
     await adminClient
       .from("profiles")
-      .update({ must_change_password: true })
-      .eq("id", userId!);
+      .upsert(
+        { id: userId!, full_name: full_name ?? null, phone: e164, must_change_password: true },
+        { onConflict: "id" },
+      );
 
-    // Fetch the auto-generated shipping mark from their profile
-    const { data: profile } = await adminClient
-      .from("profiles")
-      .select("shipping_mark")
-      .eq("id", userId!)
-      .maybeSingle();
+    // Ensure the staff role is assigned; strip any accidental 'customer' role.
+    await adminClient.from("user_roles").delete().eq("user_id", userId!).eq("role", "customer");
+    const { error: roleError } = await adminClient
+      .from("user_roles")
+      .upsert({ user_id: userId!, role }, { onConflict: "user_id,role" });
+    if (roleError) throw roleError;
 
     return new Response(
-      JSON.stringify({
-        success: true,
-        userId,
-        phone: e164,
-        tempPassword,
-        shippingMark: profile?.shipping_mark ?? null,
-        reused,
-      }),
+      JSON.stringify({ success: true, userId, phone: e164, tempPassword, reused }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } },
     );
   } catch (err) {

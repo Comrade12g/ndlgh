@@ -16,6 +16,12 @@ export const Route = createFileRoute("/portal")({
   beforeLoad: async () => {
     const { data } = await supabase.auth.getUser();
     if (!data.user) throw redirect({ to: "/auth", search: { mode: "signin" } });
+    const { data: prof } = await supabase
+      .from("profiles")
+      .select("must_change_password")
+      .eq("id", data.user.id)
+      .maybeSingle();
+    if (prof?.must_change_password) throw redirect({ to: "/change-password" });
     return { user: data.user };
   },
   component: PortalPage,

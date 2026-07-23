@@ -578,6 +578,7 @@ export type Database = {
           default_origin: string | null
           full_name: string | null
           id: string
+          must_change_password: boolean
           phone: string | null
           shipping_mark: string
           updated_at: string
@@ -587,6 +588,7 @@ export type Database = {
           default_origin?: string | null
           full_name?: string | null
           id: string
+          must_change_password?: boolean
           phone?: string | null
           shipping_mark?: string
           updated_at?: string
@@ -596,6 +598,7 @@ export type Database = {
           default_origin?: string | null
           full_name?: string | null
           id?: string
+          must_change_password?: boolean
           phone?: string | null
           shipping_mark?: string
           updated_at?: string

@@ -227,43 +227,91 @@ function AdminUsersPage() {
 const INVITE_ROLES = ROLES.filter((r) => r !== "customer");
 
 function InviteStaffDialog({ onDone }: { onDone: () => void }) {
-  const [email, setEmail] = useState("");
   const [fullName, setFullName] = useState("");
   const [phone, setPhone] = useState("");
   const [role, setRole] = useState<string>("");
+  const [result, setResult] = useState<{ phone: string; tempPassword: string; reused: boolean } | null>(
+    null,
+  );
 
   const mut = useMutation({
     mutationFn: async () => {
       if (!role) throw new Error("Select a role");
+      if (!phone.trim()) throw new Error("Phone number is required");
       const { data: session } = await supabase.auth.getSession();
-      const { data, error } = await supabase.functions.invoke("invite-staff", {
-        body: {
-          email,
-          full_name: fullName || null,
-          phone: phone || null,
-          role,
-          redirectTo: `${window.location.origin}/accept-invite`,
-        },
+      const { data, error } = await supabase.functions.invoke("create-staff", {
+        body: { phone, full_name: fullName || null, role },
         headers: session.session
           ? { Authorization: `Bearer ${session.session.access_token}` }
           : undefined,
       });
       if (error) throw error;
       if (data?.error) throw new Error(data.error);
-      return data;
+      return data as { phone: string; tempPassword: string; reused: boolean };
     },
-    onSuccess: () => {
-      toast.success(`Invite sent to ${email}`);
-      onDone();
+    onSuccess: (data) => {
+      setResult(data);
+      toast.success(
+        data.reused ? "Employee password reset" : `Employee added: ${data.phone}`,
+      );
     },
     onError: (e) => toast.error(getErrorMessage(e)),
   });
+
+  function copyCreds() {
+    if (!result) return;
+    const text = `NDL staff login\nPhone: ${result.phone}\nTemporary password: ${result.tempPassword}\nSign in at ${window.location.origin}/auth — you'll be asked to set a new password.`;
+    navigator.clipboard.writeText(text).then(() => toast.success("Credentials copied"));
+  }
+
+  function close() {
+    setResult(null);
+    setFullName("");
+    setPhone("");
+    setRole("");
+    onDone();
+  }
+
+  if (result) {
+    return (
+      <DialogContent className="max-w-md">
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2">
+            <UserPlus className="h-5 w-5 text-brand-orange" />
+            {result.reused ? "Employee password reset" : "Employee added"}
+          </DialogTitle>
+        </DialogHeader>
+        <div className="space-y-3">
+          <p className="text-sm text-muted-foreground">
+            Share these credentials with the employee over WhatsApp. They'll be asked to set a new
+            password on first sign-in.
+          </p>
+          <div className="rounded-lg border bg-muted/40 p-3 font-mono text-sm">
+            <div>
+              <span className="text-muted-foreground">Phone:</span> {result.phone}
+            </div>
+            <div>
+              <span className="text-muted-foreground">Temp password:</span> {result.tempPassword}
+            </div>
+          </div>
+          <DialogFooter className="gap-2">
+            <Button variant="outline" onClick={copyCreds}>
+              Copy
+            </Button>
+            <Button onClick={close} className="bg-brand-orange hover:bg-brand-orange/90">
+              Done
+            </Button>
+          </DialogFooter>
+        </div>
+      </DialogContent>
+    );
+  }
 
   return (
     <DialogContent className="max-w-md">
       <DialogHeader>
         <DialogTitle className="flex items-center gap-2">
-          <UserPlus className="h-5 w-5 text-brand-orange" /> Invite employee
+          <UserPlus className="h-5 w-5 text-brand-orange" /> Add employee
         </DialogTitle>
       </DialogHeader>
       <form
@@ -278,12 +326,13 @@ function InviteStaffDialog({ onDone }: { onDone: () => void }) {
           <Input value={fullName} onChange={(e) => setFullName(e.target.value)} />
         </div>
         <div className="grid gap-2">
-          <Label>Work email</Label>
-          <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-        </div>
-        <div className="grid gap-2">
           <Label>Phone</Label>
-          <Input value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+233 …" />
+          <Input
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+            placeholder="+233 …"
+            required
+          />
         </div>
         <div className="grid gap-2">
           <Label>Role</Label>
@@ -301,8 +350,8 @@ function InviteStaffDialog({ onDone }: { onDone: () => void }) {
           </Select>
         </div>
         <p className="text-xs text-muted-foreground">
-          They'll get an email with a secure link to set their own password and sign straight into
-          the dashboard with this role already assigned.
+          A temporary password is generated. Share it with the employee — they'll be asked to set
+          their own on first sign-in.
         </p>
         <DialogFooter>
           <Button
@@ -310,7 +359,7 @@ function InviteStaffDialog({ onDone }: { onDone: () => void }) {
             disabled={mut.isPending}
             className="bg-brand-orange hover:bg-brand-orange/90"
           >
-            {mut.isPending ? "Sending invite…" : "Send invite"}
+            {mut.isPending ? "Creating…" : "Create employee"}
           </Button>
         </DialogFooter>
       </form>
