@@ -98,10 +98,21 @@ Deno.serve(async (req: Request) => {
       if (!isDuplicate) throw createError;
 
       const { data: list } = await adminClient.auth.admin.listUsers({ page: 1, perPage: 200 });
-      const match = list?.users.find(
-        (u) => u.email === syntheticEmail || u.phone === e164 || u.phone === digits,
-      );
-      if (!match) throw new Error("An employee with this phone number already has an account");
+      // Only reuse an account whose synthetic email is already in the staff
+      // domain. Matching by phone across domains would hijack a customer
+      // account that happens to share the phone number.
+      const match = list?.users.find((u) => u.email === syntheticEmail);
+      if (!match) {
+        const phoneMatch = list?.users.find(
+          (u) => u.phone === e164 || u.phone === digits,
+        );
+        if (phoneMatch) {
+          throw new Error(
+            "This phone number is already registered to a customer account. Ask the customer to use a different number, or remove that customer account first.",
+          );
+        }
+        throw new Error("An employee with this phone number already has an account");
+      }
 
       const { error: updateError } = await adminClient.auth.admin.updateUserById(match.id, {
         password: tempPassword,
@@ -114,6 +125,7 @@ Deno.serve(async (req: Request) => {
       if (updateError) throw updateError;
       userId = match.id;
       reused = true;
+
     } else {
       if (!created.user) throw new Error("Account creation succeeded but no user was returned");
       userId = created.user.id;
