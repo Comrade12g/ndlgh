@@ -698,7 +698,8 @@ function AddPackagesDialog({
         .order("received_at", { ascending: false })
         .limit(300);
       if (originWarehouse) q = q.eq("warehouse_code", originWarehouse);
-      if (search) q = q.or(`tracking_code.ilike.%${search}%,shipping_mark.ilike.%${search}%`);
+      const term = sanitizePostgrestTerm(search);
+      if (term) q = q.or(`tracking_code.ilike.%${term}%,shipping_mark.ilike.%${term}%`);
       const { data, error } = await q;
       if (error) throw error;
       return (data ?? []).filter((p) => !linkedIds.has(p.id));
