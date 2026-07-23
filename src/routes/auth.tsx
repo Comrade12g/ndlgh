@@ -15,7 +15,7 @@ import {
   SUPPORT_WHATSAPP_NUMBER,
   SUPPORT_WHATSAPP_MESSAGE,
 } from "@/lib/auth-errors";
-import { toE164Gh, phoneToSyntheticEmail } from "@/lib/phone";
+import { toE164Gh, phoneToSyntheticEmail, phoneToStaffSyntheticEmail } from "@/lib/phone";
 import { AlertCircle, ArrowLeft, MessageCircle } from "lucide-react";
 
 // NDL Ghana's customer-facing WhatsApp business number
