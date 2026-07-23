@@ -259,10 +259,20 @@ function InviteStaffDialog({ onDone }: { onDone: () => void }) {
     onError: (e) => toast.error(getErrorMessage(e)),
   });
 
+  function credsMessage() {
+    if (!result) return "";
+    return waTemplates.staffCredentials(fullName, result.phone, result.tempPassword, role);
+  }
+
   function copyCreds() {
     if (!result) return;
-    const text = `NDL staff login\nPhone: ${result.phone}\nTemporary password: ${result.tempPassword}\nSign in at ${window.location.origin}/auth — you'll be asked to set a new password.`;
-    navigator.clipboard.writeText(text).then(() => toast.success("Credentials copied"));
+    navigator.clipboard.writeText(credsMessage()).then(() => toast.success("Credentials copied"));
+  }
+
+  function sendViaWhatsApp() {
+    if (!result) return;
+    if (!openWhatsApp(result.phone, credsMessage()))
+      toast.error("Couldn't open WhatsApp — phone number invalid");
   }
 
   function close() {
