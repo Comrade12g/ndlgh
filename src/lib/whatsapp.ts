@@ -50,21 +50,31 @@ export async function copyToClipboard(text: string): Promise<boolean> {
 
 const SIGNOFF = "— NDL Global Shipping";
 
+/** Returns the app origin at call time. Falls back to the production URL during SSR. */
+function appOrigin(): string {
+  if (typeof window !== "undefined" && window.location?.origin) return window.location.origin;
+  return "https://ndlgh.susuboxgh.com";
+}
+
+const portalLink = () => `${appOrigin()}/portal`;
+const trackLink = (code: string) => `${appOrigin()}/track/${encodeURIComponent(code)}`;
+const authLink = () => `${appOrigin()}/auth`;
+
 export const waTemplates = {
   packageReceived: (name: string, trackingCode: string, warehouse: string) =>
-    `Hi ${name}, good news — your package (${trackingCode}) has been received at our ${warehouse} warehouse and is being processed. We'll update you when it ships. ${SIGNOFF}`,
+    `Hi ${name}, good news — your package (${trackingCode}) has been received at our ${warehouse} warehouse and is being processed. Track it here: ${trackLink(trackingCode)}\n\nView all your shipments: ${portalLink()}\n${SIGNOFF}`,
 
   deliveryScheduled: (name: string, code: string, city: string, date: string | null) =>
-    `Hi ${name}, your delivery ${code} to ${city} has been scheduled${date ? ` for ${date}` : ""}. We'll let you know when it's out for delivery. ${SIGNOFF}`,
+    `Hi ${name}, your delivery ${code} to ${city} has been scheduled${date ? ` for ${date}` : ""}. We'll let you know when it's out for delivery.\n\nTrack: ${trackLink(code)}\n${SIGNOFF}`,
 
   deliveryOutForDelivery: (name: string, code: string) =>
-    `Hi ${name}, your delivery ${code} is out for delivery today! Please have someone available to receive it. ${SIGNOFF}`,
+    `Hi ${name}, your delivery ${code} is out for delivery today! Please have someone available to receive it.\n\nTrack: ${trackLink(code)}\n${SIGNOFF}`,
 
   deliveryDelivered: (name: string, code: string) =>
-    `Hi ${name}, your delivery ${code} has been delivered. Thank you for shipping with NDL! ${SIGNOFF}`,
+    `Hi ${name}, your delivery ${code} has been delivered. Thank you for shipping with NDL!\n\nView receipt: ${portalLink()}\n${SIGNOFF}`,
 
   deliveryFailed: (name: string, code: string) =>
-    `Hi ${name}, we attempted delivery ${code} but couldn't complete it. Please reply here to reschedule. ${SIGNOFF}`,
+    `Hi ${name}, we attempted delivery ${code} but couldn't complete it. Please reply here to reschedule.\n\nDetails: ${trackLink(code)}\n${SIGNOFF}`,
 
   invoiceIssued: (
     name: string,
@@ -73,7 +83,7 @@ export const waTemplates = {
     total: number,
     dueDate: string | null,
   ) =>
-    `Hi ${name}, invoice ${number} for ${currency} ${total.toFixed(2)} has been issued${dueDate ? `, due ${dueDate}` : ""}. Reply here for payment details (MoMo/bank). ${SIGNOFF}`,
+    `Hi ${name}, invoice ${number} for ${currency} ${total.toFixed(2)} has been issued${dueDate ? `, due ${dueDate}` : ""}. Reply here for payment details (MoMo/bank).\n\nView invoice: ${portalLink()}\n${SIGNOFF}`,
 
   paymentReceived: (
     name: string,
@@ -86,5 +96,8 @@ export const waTemplates = {
       outstanding > 0
         ? `Remaining balance: ${currency} ${outstanding.toFixed(2)}.`
         : "Invoice fully paid — thank you!"
-    } ${SIGNOFF}`,
+    }\n\nView statement: ${portalLink()}\n${SIGNOFF}`,
+
+  staffCredentials: (name: string, phone: string, tempPassword: string, role: string) =>
+    `Hi ${name || "there"}, welcome to the NDL team! Your ${role.replace(/_/g, " ")} account is ready.\n\nPhone: ${phone}\nTemporary password: ${tempPassword}\n\nSign in here: ${authLink()}\nYou'll be asked to set your own password on first sign-in.\n${SIGNOFF}`,
 };

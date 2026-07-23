@@ -21,7 +21,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { X, UserPlus } from "lucide-react";
+import { X, UserPlus, MessageCircle } from "lucide-react";
+import { waTemplates, openWhatsApp } from "@/lib/whatsapp";
 import { useState } from "react";
 import { toast } from "sonner";
 import { getErrorMessage } from "@/lib/errors";
@@ -258,10 +259,20 @@ function InviteStaffDialog({ onDone }: { onDone: () => void }) {
     onError: (e) => toast.error(getErrorMessage(e)),
   });
 
+  function credsMessage() {
+    if (!result) return "";
+    return waTemplates.staffCredentials(fullName, result.phone, result.tempPassword, role);
+  }
+
   function copyCreds() {
     if (!result) return;
-    const text = `NDL staff login\nPhone: ${result.phone}\nTemporary password: ${result.tempPassword}\nSign in at ${window.location.origin}/auth — you'll be asked to set a new password.`;
-    navigator.clipboard.writeText(text).then(() => toast.success("Credentials copied"));
+    navigator.clipboard.writeText(credsMessage()).then(() => toast.success("Credentials copied"));
+  }
+
+  function sendViaWhatsApp() {
+    if (!result) return;
+    if (!openWhatsApp(result.phone, credsMessage()))
+      toast.error("Couldn't open WhatsApp — phone number invalid");
   }
 
   function close() {
@@ -294,13 +305,21 @@ function InviteStaffDialog({ onDone }: { onDone: () => void }) {
               <span className="text-muted-foreground">Temp password:</span> {result.tempPassword}
             </div>
           </div>
-          <DialogFooter className="gap-2">
+          <DialogFooter className="gap-2 sm:justify-between">
             <Button variant="outline" onClick={copyCreds}>
-              Copy
+              Copy message
             </Button>
-            <Button onClick={close} className="bg-brand-orange hover:bg-brand-orange/90">
-              Done
-            </Button>
+            <div className="flex gap-2">
+              <Button
+                onClick={sendViaWhatsApp}
+                className="bg-emerald-600 hover:bg-emerald-700 text-white"
+              >
+                <MessageCircle className="mr-2 h-4 w-4" /> Send via WhatsApp
+              </Button>
+              <Button onClick={close} variant="ghost">
+                Done
+              </Button>
+            </div>
           </DialogFooter>
         </div>
       </DialogContent>
