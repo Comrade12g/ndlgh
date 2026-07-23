@@ -8,6 +8,7 @@ import { updateCustomerPhone, changeMyPassword } from "@/lib/customer-account.fu
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/ui/password-input";
 import { Label } from "@/components/ui/label";
 import { LogoLockup } from "@/components/brand/Logo";
 import { ArrowLeft } from "lucide-react";
