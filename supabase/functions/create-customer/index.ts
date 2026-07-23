@@ -79,6 +79,9 @@ Deno.serve(async (req: Request) => {
 
     const syntheticEmail = `${e164.replace(/[^\d]/g, "")}@customers.ndlgh.local`;
 
+    let userId: string | null = null;
+    let reused = false;
+
     const { data: created, error: createError } = await adminClient.auth.admin.createUser({
       email: syntheticEmail,
       phone: e164,
@@ -87,31 +90,70 @@ Deno.serve(async (req: Request) => {
       phone_confirm: true,
       user_metadata: { full_name: full_name ?? null, phone: e164 },
     });
+
     if (createError) {
-      if (
-        createError.message?.toLowerCase().includes("already been registered") ||
-        createError.message?.toLowerCase().includes("already exists")
-      ) {
+      const msg = createError.message?.toLowerCase() ?? "";
+      const isDuplicate =
+        msg.includes("already been registered") ||
+        msg.includes("already exists") ||
+        msg.includes("duplicate") ||
+        msg.includes("phone");
+
+      if (!isDuplicate) throw createError;
+
+      // Find the existing account (by synthetic email or phone) and reset its password
+      const { data: byEmail } = await adminClient
+        .from("auth.users" as never)
+        .select("id")
+        .maybeSingle()
+        .then(() => ({ data: null as { id: string } | null }))
+        .catch(() => ({ data: null }));
+
+      // Fall back to listing users and matching — admin API has no direct getByEmail
+      let existingId: string | null = byEmail?.id ?? null;
+      if (!existingId) {
+        const { data: list } = await adminClient.auth.admin.listUsers({ page: 1, perPage: 200 });
+        const match = list?.users.find(
+          (u) => u.email === syntheticEmail || u.phone === e164 || u.phone === e164.replace(/^\+/, ""),
+        );
+        existingId = match?.id ?? null;
+      }
+
+      if (!existingId) {
         throw new Error("A customer with this phone number already has an account");
       }
-      throw createError;
-    }
-    if (!created.user) throw new Error("Account creation succeeded but no user was returned");
 
-    // Fetch the auto-generated shipping mark from their new profile
+      const { error: updateError } = await adminClient.auth.admin.updateUserById(existingId, {
+        password: tempPassword,
+        email: syntheticEmail,
+        phone: e164,
+        email_confirm: true,
+        phone_confirm: true,
+        user_metadata: { full_name: full_name ?? null, phone: e164 },
+      });
+      if (updateError) throw updateError;
+      userId = existingId;
+      reused = true;
+    } else {
+      if (!created.user) throw new Error("Account creation succeeded but no user was returned");
+      userId = created.user.id;
+    }
+
+    // Fetch the auto-generated shipping mark from their profile
     const { data: profile } = await adminClient
       .from("profiles")
       .select("shipping_mark")
-      .eq("id", created.user.id)
+      .eq("id", userId!)
       .maybeSingle();
 
     return new Response(
       JSON.stringify({
         success: true,
-        userId: created.user.id,
+        userId,
         phone: e164,
         tempPassword,
         shippingMark: profile?.shipping_mark ?? null,
+        reused,
       }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } },
     );
