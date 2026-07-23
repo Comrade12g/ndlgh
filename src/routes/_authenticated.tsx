@@ -23,9 +23,13 @@ import {
   Headphones,
   Tags,
   Radar,
+  MoreVertical,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 
 const STAFF_ROLES = [
   "admin",
