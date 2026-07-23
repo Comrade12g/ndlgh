@@ -6,6 +6,7 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { PageHeader, EmptyState, StatusBadge, statusTone } from "@/components/ops/PageHeader";
 import { Search } from "lucide-react";
+import { sanitizePostgrestTerm } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/support")({
   component: SupportPage,
@@ -13,7 +14,7 @@ export const Route = createFileRoute("/_authenticated/support")({
 
 function SupportPage() {
   const [q, setQ] = useState("");
-  const term = q.trim();
+  const term = sanitizePostgrestTerm(q);
 
   const { data: customers } = useQuery({
     queryKey: ["cs-customer-search", term],

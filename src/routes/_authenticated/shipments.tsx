@@ -26,6 +26,7 @@ import { PageHeader, EmptyState, StatusBadge, statusTone } from "@/components/op
 import { Plus, Ship, PackagePlus, Trash2, Search, Pencil, FileText } from "lucide-react";
 import { toast } from "sonner";
 import { getErrorMessage } from "@/lib/errors";
+import { sanitizePostgrestTerm } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/shipments")({
   component: ShipmentsPage,
@@ -697,7 +698,8 @@ function AddPackagesDialog({
         .order("received_at", { ascending: false })
         .limit(300);
       if (originWarehouse) q = q.eq("warehouse_code", originWarehouse);
-      if (search) q = q.or(`tracking_code.ilike.%${search}%,shipping_mark.ilike.%${search}%`);
+      const term = sanitizePostgrestTerm(search);
+      if (term) q = q.or(`tracking_code.ilike.%${term}%,shipping_mark.ilike.%${term}%`);
       const { data, error } = await q;
       if (error) throw error;
       return (data ?? []).filter((p) => !linkedIds.has(p.id));
