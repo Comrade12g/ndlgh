@@ -27,6 +27,8 @@ import { Plus, Ship, PackagePlus, Trash2, Search, Pencil, FileText } from "lucid
 import { toast } from "sonner";
 import { getErrorMessage } from "@/lib/errors";
 import { sanitizePostgrestTerm } from "@/lib/utils";
+import { notifyCustomer, type NotificationEvent } from "@/lib/notifications";
+import { waTemplates } from "@/lib/whatsapp";
 
 export const Route = createFileRoute("/_authenticated/shipments")({
   component: ShipmentsPage,
@@ -481,10 +483,66 @@ function ShipmentDetailDialog({ id, onChanged }: { id: string; onChanged: () => 
             loadedPackages.map((p) => p.id),
           );
       }
+      return { next };
     },
-    onSuccess: () => {
+    onSuccess: async ({ next }) => {
       toast.success("Shipment updated");
       invalidateAll();
+
+      // Notify affected customers of key milestones
+      const templateFor: Record<string, keyof typeof waTemplates | undefined> = {
+        departed: "shipmentDeparted",
+        arrived: "shipmentArrived",
+        cleared: "shipmentCleared",
+      };
+      const eventFor: Record<string, NotificationEvent | undefined> = {
+        departed: "shipment_departed",
+        arrived: "shipment_arrived",
+        cleared: "shipment_cleared",
+      };
+      const tplKey = templateFor[next];
+      const evt = eventFor[next];
+      if (!tplKey || !evt || !loadedPackages?.length) return;
+
+      // Fetch shipment ref + eta once, and each package's customer contact info
+      const [{ data: ship }, { data: pkgs }] = await Promise.all([
+        supabase.from("shipments").select("ndl_reference, eta").eq("id", id).maybeSingle(),
+        supabase
+          .from("packages")
+          .select("id, customer_id, profiles:customer_id(full_name, phone)")
+          .in("id", loadedPackages.map((p) => p.id))
+          .not("customer_id", "is", null),
+      ]);
+      const ref = ship?.ndl_reference ?? "";
+      if (!ref) return;
+      const seen = new Set<string>();
+      for (const p of (pkgs ?? []) as Array<{
+        id: string;
+        customer_id: string | null;
+        profiles: { full_name: string | null; phone: string | null } | null;
+      }>) {
+        if (!p.customer_id || seen.has(p.customer_id)) continue;
+        seen.add(p.customer_id);
+        const name = p.profiles?.full_name ?? "there";
+        const msg =
+          tplKey === "shipmentDeparted"
+            ? waTemplates.shipmentDeparted(name, ref, ship?.eta ?? null)
+            : tplKey === "shipmentArrived"
+              ? waTemplates.shipmentArrived(name, ref)
+              : waTemplates.shipmentCleared(name, ref);
+        // Log all, but only open WhatsApp for the first (avoid popup storm)
+        await notifyCustomer({
+          customerId: p.customer_id,
+          phone: p.profiles?.phone ?? null,
+          event: evt,
+          message: msg,
+          shipmentId: id,
+          autoOpen: seen.size === 1,
+        });
+      }
+      if (seen.size > 1) {
+        toast.info(`Logged ${seen.size} customer notifications — open the Support desk to send the rest.`);
+      }
     },
     onError: (e) => toast.error(getErrorMessage(e)),
   });

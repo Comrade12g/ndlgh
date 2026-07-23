@@ -136,6 +136,93 @@ export type Database = {
           },
         ]
       }
+      customer_notifications: {
+        Row: {
+          channel: string
+          created_at: string
+          customer_id: string | null
+          delivery_id: string | null
+          event_type: string
+          id: string
+          invoice_id: string | null
+          message: string
+          package_id: string | null
+          phone: string | null
+          shipment_id: string | null
+          status: string
+          triggered_by: string | null
+          updated_at: string
+        }
+        Insert: {
+          channel?: string
+          created_at?: string
+          customer_id?: string | null
+          delivery_id?: string | null
+          event_type: string
+          id?: string
+          invoice_id?: string | null
+          message: string
+          package_id?: string | null
+          phone?: string | null
+          shipment_id?: string | null
+          status?: string
+          triggered_by?: string | null
+          updated_at?: string
+        }
+        Update: {
+          channel?: string
+          created_at?: string
+          customer_id?: string | null
+          delivery_id?: string | null
+          event_type?: string
+          id?: string
+          invoice_id?: string | null
+          message?: string
+          package_id?: string | null
+          phone?: string | null
+          shipment_id?: string | null
+          status?: string
+          triggered_by?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "customer_notifications_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "customer_notifications_delivery_id_fkey"
+            columns: ["delivery_id"]
+            isOneToOne: false
+            referencedRelation: "deliveries"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "customer_notifications_invoice_id_fkey"
+            columns: ["invoice_id"]
+            isOneToOne: false
+            referencedRelation: "invoices"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "customer_notifications_package_id_fkey"
+            columns: ["package_id"]
+            isOneToOne: false
+            referencedRelation: "packages"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "customer_notifications_shipment_id_fkey"
+            columns: ["shipment_id"]
+            isOneToOne: false
+            referencedRelation: "shipments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       deliveries: {
         Row: {
           address_line1: string

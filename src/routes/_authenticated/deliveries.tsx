@@ -28,6 +28,7 @@ import { Plus, Truck, MessageCircle, PackagePlus, Trash2, Copy } from "lucide-re
 import { toast } from "sonner";
 import { getErrorMessage } from "@/lib/errors";
 import { ensureContactShadow } from "@/lib/ensureContactShadow";
+import { notifyCustomer, type NotificationEvent } from "@/lib/notifications";
 
 export const Route = createFileRoute("/_authenticated/deliveries")({
   component: DeliveriesPage,
@@ -551,10 +552,36 @@ function DeliveryDetailDialog({ id, onChanged }: { id: string; onChanged: () => 
           await supabase.from("packages").update({ status: "ready_delivery" }).in("id", packageIds);
         }
       }
+      return { status: patch.status };
     },
-    onSuccess: () => {
+    onSuccess: async ({ status }) => {
       toast.success("Delivery updated");
       invalidateAll();
+      if (!status || !delivery?.customer_id) return;
+      const evtMap: Record<string, { evt: NotificationEvent; tpl: (n: string) => string } | undefined> = {
+        out_for_delivery: {
+          evt: "delivery_out_for_delivery",
+          tpl: (n) => waTemplates.deliveryOutForDelivery(n, delivery.code),
+        },
+        delivered: {
+          evt: "delivery_delivered",
+          tpl: (n) => waTemplates.deliveryDelivered(n, delivery.code),
+        },
+        failed: {
+          evt: "delivery_failed",
+          tpl: (n) => waTemplates.deliveryFailed(n, delivery.code),
+        },
+      };
+      const entry = evtMap[status];
+      if (!entry) return;
+      const name = delivery.recipient_name ?? "there";
+      await notifyCustomer({
+        customerId: delivery.customer_id,
+        phone: delivery.recipient_phone ?? null,
+        event: entry.evt,
+        message: entry.tpl(name),
+        deliveryId: id,
+      });
     },
     onError: (e) => toast.error(getErrorMessage(e)),
   });

@@ -64,6 +64,15 @@ export const waTemplates = {
   packageReceived: (name: string, trackingCode: string, warehouse: string) =>
     `Hi ${name}, good news — your package (${trackingCode}) has been received at our ${warehouse} warehouse and is being processed. Track it here: ${trackLink(trackingCode)}\n\nView all your shipments: ${portalLink()}\n${SIGNOFF}`,
 
+  shipmentDeparted: (name: string, ref: string, eta: string | null) =>
+    `Hi ${name}, your shipment ${ref} has departed origin and is now in transit${eta ? ` — ETA ${eta}` : ""}. Track: ${trackLink(ref)}\n${SIGNOFF}`,
+
+  shipmentArrived: (name: string, ref: string) =>
+    `Hi ${name}, your shipment ${ref} has arrived at Tema Port. Customs clearance is next. Track: ${trackLink(ref)}\n${SIGNOFF}`,
+
+  shipmentCleared: (name: string, ref: string) =>
+    `Hi ${name}, your shipment ${ref} has cleared customs. We'll schedule delivery shortly. Track: ${trackLink(ref)}\n${SIGNOFF}`,
+
   deliveryScheduled: (name: string, code: string, city: string, date: string | null) =>
     `Hi ${name}, your delivery ${code} to ${city} has been scheduled${date ? ` for ${date}` : ""}. We'll let you know when it's out for delivery.\n\nTrack: ${trackLink(code)}\n${SIGNOFF}`,
 
