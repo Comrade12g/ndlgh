@@ -24,6 +24,7 @@ import {
 } from "@/components/ui/select";
 import { PageHeader, EmptyState, StatusBadge, statusTone } from "@/components/ops/PageHeader";
 import { openWhatsApp } from "@/lib/whatsapp";
+import { recordInviteWhatsapp } from "@/lib/invite-audit";
 import { Plus, Search, Mail, Phone, KeyRound, MessageCircle } from "lucide-react";
 import { toast } from "sonner";
 import { getErrorMessage } from "@/lib/errors";
@@ -184,6 +185,7 @@ function CreateCustomerLoginDialog({
     phone: string;
     tempPassword: string;
     shippingMark: string | null;
+    auditId: string | null;
   } | null>(null);
 
   const mut = useMutation({
@@ -197,7 +199,7 @@ function CreateCustomerLoginDialog({
       });
       if (error) throw error;
       if (data?.error) throw new Error(data.error);
-      return data as { phone: string; tempPassword: string; shippingMark: string | null };
+      return data as { phone: string; tempPassword: string; shippingMark: string | null; auditId: string | null };
     },
     onSuccess: (data) => {
       toast.success("Login created");
@@ -234,8 +236,13 @@ function CreateCustomerLoginDialog({
           <Button
             className="w-full bg-emerald-600 hover:bg-emerald-700"
             onClick={() => {
-              if (!openWhatsApp(contact.phone, message))
+              const ok = openWhatsApp(contact.phone, message);
+              if (!ok) {
                 toast.error("No valid phone number on file");
+                void recordInviteWhatsapp(result.auditId, "failed", "Invalid phone number");
+              } else {
+                void recordInviteWhatsapp(result.auditId, "initiated");
+              }
             }}
           >
             <MessageCircle className="mr-2 h-4 w-4" /> Send login info via WhatsApp

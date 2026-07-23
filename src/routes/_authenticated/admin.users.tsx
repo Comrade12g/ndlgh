@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/dialog";
 import { X, UserPlus, MessageCircle } from "lucide-react";
 import { waTemplates, openWhatsApp } from "@/lib/whatsapp";
+import { recordInviteWhatsapp } from "@/lib/invite-audit";
 import { useState } from "react";
 import { toast } from "sonner";
 import { getErrorMessage } from "@/lib/errors";
@@ -231,7 +232,7 @@ function InviteStaffDialog({ onDone }: { onDone: () => void }) {
   const [fullName, setFullName] = useState("");
   const [phone, setPhone] = useState("");
   const [role, setRole] = useState<string>("");
-  const [result, setResult] = useState<{ phone: string; tempPassword: string; reused: boolean } | null>(
+  const [result, setResult] = useState<{ phone: string; tempPassword: string; reused: boolean; auditId: string | null } | null>(
     null,
   );
 
@@ -248,7 +249,7 @@ function InviteStaffDialog({ onDone }: { onDone: () => void }) {
       });
       if (error) throw error;
       if (data?.error) throw new Error(data.error);
-      return data as { phone: string; tempPassword: string; reused: boolean };
+      return data as { phone: string; tempPassword: string; reused: boolean; auditId: string | null };
     },
     onSuccess: (data) => {
       setResult(data);
@@ -271,8 +272,13 @@ function InviteStaffDialog({ onDone }: { onDone: () => void }) {
 
   function sendViaWhatsApp() {
     if (!result) return;
-    if (!openWhatsApp(result.phone, credsMessage()))
+    const ok = openWhatsApp(result.phone, credsMessage());
+    if (!ok) {
       toast.error("Couldn't open WhatsApp — phone number invalid");
+      void recordInviteWhatsapp(result.auditId, "failed", "Invalid phone number");
+    } else {
+      void recordInviteWhatsapp(result.auditId, "initiated");
+    }
   }
 
   function close() {

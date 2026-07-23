@@ -163,6 +163,7 @@ const NAV: NavItem[] = [
     roles: ["admin", "accountant", "sales_accountant"],
   },
   { to: "/admin/users", label: "Admin", icon: Settings, roles: ["admin"] },
+  { to: "/admin/audit", label: "Invite log", icon: Settings, roles: ["admin"] },
 ];
 
 function StaffLayout() {
