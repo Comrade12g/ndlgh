@@ -53,7 +53,6 @@ function AuditLogPage() {
   return (
     <div className="space-y-6">
       <PageHeader
-        icon={ShieldCheck}
         title="Invite audit log"
         description="Who sent each customer or employee invite, when, and whether WhatsApp/email delivery succeeded."
       />
