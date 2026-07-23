@@ -27,6 +27,8 @@ import { Plus, Ship, PackagePlus, Trash2, Search, Pencil, FileText } from "lucid
 import { toast } from "sonner";
 import { getErrorMessage } from "@/lib/errors";
 import { sanitizePostgrestTerm } from "@/lib/utils";
+import { notifyCustomer, type NotificationEvent } from "@/lib/notifications";
+import { waTemplates } from "@/lib/whatsapp";
 
 export const Route = createFileRoute("/_authenticated/shipments")({
   component: ShipmentsPage,
