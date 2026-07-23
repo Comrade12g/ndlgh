@@ -67,6 +67,7 @@ function AuthPage() {
   async function handleSignIn(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
+    setSignInError(null);
     try {
       const isEmail = identifier.includes("@");
       if (isEmail) {
@@ -87,7 +88,7 @@ function AuthPage() {
       toast.success("Welcome back.");
       await routeAfterSignIn(navigate);
     } catch (err) {
-      toast.error(getErrorMessage(err));
+      setSignInError(friendlySignInError(err));
     } finally {
       setLoading(false);
     }
