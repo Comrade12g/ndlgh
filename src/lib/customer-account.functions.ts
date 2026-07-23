@@ -75,5 +75,9 @@ export const changeMyPassword = createServerFn({ method: "POST" })
       password: data.newPassword,
     });
     if (error) throw new Error(error.message);
+    await supabaseAdmin
+      .from("profiles")
+      .update({ must_change_password: false })
+      .eq("id", context.userId);
     return { ok: true };
   });
