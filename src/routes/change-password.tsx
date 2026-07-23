@@ -46,17 +46,22 @@ function ChangePasswordPage() {
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
-    if (newPassword !== confirmPassword) {
+    const cleanCurrentPassword = currentPassword.trim();
+    const cleanNewPassword = newPassword.trim();
+    const cleanConfirmPassword = confirmPassword.trim();
+    if (cleanNewPassword !== cleanConfirmPassword) {
       toast.error("Passwords don't match");
       return;
     }
-    if (newPassword === currentPassword) {
+    if (cleanNewPassword === cleanCurrentPassword) {
       toast.error("Choose a new password different from the temporary one");
       return;
     }
     setSaving(true);
     try {
-      await changePassword({ data: { currentPassword, newPassword } });
+      await changePassword({
+        data: { currentPassword: cleanCurrentPassword, newPassword: cleanNewPassword },
+      });
       toast.success("Password updated. Welcome to NDL.");
       const { data } = await supabase.auth.getUser();
       const { data: roles } = await supabase

@@ -65,6 +65,7 @@ function LoginHome() {
 
   async function handleSignIn(e: React.FormEvent) {
     e.preventDefault();
+    const cleanPassword = password.trim();
     setLoading(true);
     setSignInError(null);
     try {
@@ -72,7 +73,7 @@ function LoginHome() {
       if (isEmail) {
         const { error } = await supabase.auth.signInWithPassword({
           email: identifier.trim(),
-          password,
+          password: cleanPassword,
         });
         if (error) throw error;
       } else {
@@ -80,14 +81,14 @@ function LoginHome() {
         if (!e164) throw new Error("Enter a valid phone number");
         let { error } = await supabase.auth.signInWithPassword({
           email: phoneToSyntheticEmail(e164),
-          password,
+          password: cleanPassword,
         });
         if (error) {
           const retry = await supabase.auth.signInWithPassword({
             email: phoneToStaffSyntheticEmail(e164),
-            password,
+            password: cleanPassword,
           });
-          if (retry.error) throw error;
+          if (retry.error) throw retry.error;
         }
       }
       toast.success("Welcome back.");
