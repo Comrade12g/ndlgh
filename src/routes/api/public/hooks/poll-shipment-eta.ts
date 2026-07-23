@@ -103,5 +103,5 @@ export const Route = createFileRoute("/api/public/hooks/poll-shipment-eta")({
       },
     },
   },
-} as Parameters<typeof createFileRoute<"/api/public/hooks/poll-shipment-eta">>[0]);
+} as never);
 
