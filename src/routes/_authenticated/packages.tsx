@@ -50,7 +50,8 @@ function PackagesPage() {
         )
         .order("received_at", { ascending: false })
         .limit(200);
-      if (search) q = q.or(`shipping_mark.ilike.%${search}%,tracking_code.ilike.%${search}%`);
+      const term = sanitizePostgrestTerm(search);
+      if (term) q = q.or(`shipping_mark.ilike.%${term}%,tracking_code.ilike.%${term}%`);
       const { data, error } = await q;
       if (error) throw error;
       const rows = data ?? [];
