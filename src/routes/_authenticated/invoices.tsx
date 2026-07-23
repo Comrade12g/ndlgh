@@ -763,12 +763,27 @@ function InvoiceDetailDialog({ id, onChanged }: { id: string; onChanged: () => v
         phone: invoice.customer?.phone ?? null,
         shippingMark: invoice.customer?.shipping_mark ?? null,
       },
-      items: (items ?? []).map((i) => ({
-        description: i.description,
-        qty: Number(i.qty),
-        unitPrice: Number(i.unit_price),
-        amount: Number(i.amount),
-      })),
+      items: (items ?? []).map((i) => {
+        const pkg = (i as { packages?: null | { tracking_code: string; external_tracking: string | null; description: string | null; weight_kg: number | null; cbm: number | null; pieces: number | null; notes: string | null } }).packages ?? null;
+        return {
+          description: i.description,
+          qty: Number(i.qty),
+          unitPrice: Number(i.unit_price),
+          amount: Number(i.amount),
+          package: pkg
+            ? {
+                trackingCode: pkg.tracking_code,
+                externalTracking: pkg.external_tracking,
+                description: pkg.description,
+                weightKg: pkg.weight_kg == null ? null : Number(pkg.weight_kg),
+                cbm: pkg.cbm == null ? null : Number(pkg.cbm),
+                pieces: pkg.pieces == null ? null : Number(pkg.pieces),
+                notes: pkg.notes,
+              }
+            : null,
+        };
+      }),
+
       payments: (payments ?? []).map((p) => ({
         date: new Date(p.received_at).toLocaleDateString(),
         method: p.method,
