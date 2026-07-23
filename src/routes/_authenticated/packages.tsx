@@ -29,6 +29,7 @@ import { toast } from "sonner";
 import { getErrorMessage } from "@/lib/errors";
 import { ensureContactShadow } from "@/lib/ensureContactShadow";
 import { sanitizePostgrestTerm } from "@/lib/utils";
+import { notifyCustomer } from "@/lib/notifications";
 
 export const Route = createFileRoute("/_authenticated/packages")({
   component: PackagesPage,
