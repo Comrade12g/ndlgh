@@ -187,7 +187,39 @@ function AuthPage() {
                 </div>
               </div>
 
+              {signInError ? (
+                <div
+                  role="alert"
+                  className="mb-4 rounded-lg border border-destructive/30 bg-destructive/5 p-4"
+                >
+                  <div className="flex gap-3">
+                    <AlertCircle className="mt-0.5 h-5 w-5 flex-shrink-0 text-destructive" />
+                    <div className="flex-1">
+                      <p className="text-sm font-semibold text-destructive">
+                        {signInError.title}
+                      </p>
+                      <p className="mt-1 text-sm text-muted-foreground">
+                        {signInError.description}
+                      </p>
+                      {signInError.showHelp ? (
+                        <button
+                          type="button"
+                          onClick={() =>
+                            openWhatsApp(SUPPORT_WHATSAPP_NUMBER, SUPPORT_WHATSAPP_MESSAGE)
+                          }
+                          className="mt-3 inline-flex items-center gap-1.5 text-sm font-medium text-emerald-700 hover:text-emerald-800 hover:underline"
+                        >
+                          <MessageCircle className="h-4 w-4" />
+                          Need help signing in? Message us on WhatsApp
+                        </button>
+                      ) : null}
+                    </div>
+                  </div>
+                </div>
+              ) : null}
+
               <form onSubmit={handleSignIn} className="space-y-4">
+
                 <div>
                   <Label htmlFor="identifier">Phone number (customers) or email (staff)</Label>
                   <Input
