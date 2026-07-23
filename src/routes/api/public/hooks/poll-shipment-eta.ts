@@ -1,5 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { createClient } from "@supabase/supabase-js";
+// Pulls in the `server` route-option augmentation from start-client-core.
+import type {} from "@tanstack/react-start";
+
 
 /**
  * Ocean freight ETA poll stub.
