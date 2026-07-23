@@ -24,6 +24,7 @@ import {
 } from "@/components/ui/select";
 import { PageHeader, EmptyState, StatusBadge, statusTone } from "@/components/ops/PageHeader";
 import { openWhatsApp, waTemplates, copyToClipboard } from "@/lib/whatsapp";
+import { notifyCustomer } from "@/lib/notifications";
 import { downloadInvoicePdf } from "@/lib/invoicePdf";
 import { Plus, Trash2, Search, Receipt, MessageCircle, Copy, Download } from "lucide-react";
 import { toast } from "sonner";
