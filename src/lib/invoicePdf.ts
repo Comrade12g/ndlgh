@@ -1,6 +1,16 @@
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
 
+type InvoicePdfPackage = {
+  trackingCode: string;
+  externalTracking: string | null;
+  description: string | null;
+  weightKg: number | null;
+  cbm: number | null;
+  pieces: number | null;
+  notes: string | null;
+};
+
 type InvoicePdfData = {
   number: string;
   currency: string;
@@ -13,9 +23,16 @@ type InvoicePdfData = {
   dueDate: string | null;
   notes: string | null;
   customer: { fullName: string | null; phone: string | null; shippingMark: string | null };
-  items: { description: string; qty: number; unitPrice: number; amount: number }[];
+  items: {
+    description: string;
+    qty: number;
+    unitPrice: number;
+    amount: number;
+    package?: InvoicePdfPackage | null;
+  }[];
   payments: { date: string; method: string; amount: number; reference: string | null }[];
 };
+
 
 const BRAND_NAVY = "#1A1A2E";
 const BRAND_ORANGE = "#F97316";
@@ -81,9 +98,71 @@ export function downloadInvoicePdf(data: InvoicePdfData): string {
     columnStyles: { 1: { halign: "right" }, 2: { halign: "right" }, 3: { halign: "right" } },
   });
 
+  // Packing list (per package: weights, CBM, tracking, description, notes)
+  const packingRows = data.items
+    .filter((i) => i.package)
+    .map((i) => {
+      const p = i.package!;
+      const desc = [p.description, p.notes ? `Notes: ${p.notes}` : null]
+        .filter(Boolean)
+        .join(" — ");
+      return [
+        p.trackingCode,
+        p.externalTracking ?? "—",
+        desc || "—",
+        p.pieces != null ? String(p.pieces) : "—",
+        p.weightKg != null ? p.weightKg.toFixed(2) : "—",
+        p.cbm != null ? p.cbm.toFixed(3) : "—",
+      ];
+    });
+
+  if (packingRows.length) {
+    const packingStart =
+      (doc as unknown as { lastAutoTable: { finalY: number } }).lastAutoTable.finalY + 24;
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(10);
+    doc.setTextColor(BRAND_NAVY);
+    doc.text("Packing list", margin, packingStart);
+    autoTable(doc, {
+      startY: packingStart + 8,
+      margin: { left: margin, right: margin },
+      head: [["NDL tracking", "Carrier tracking", "Item description / notes", "Pcs", "Weight (kg)", "CBM"]],
+      body: packingRows,
+      headStyles: { fillColor: [240, 240, 240], textColor: [26, 26, 46], fontStyle: "bold" },
+      styles: { fontSize: 8, cellPadding: 5 },
+      columnStyles: {
+        3: { halign: "right" },
+        4: { halign: "right" },
+        5: { halign: "right" },
+      },
+    });
+
+    // Packing list totals (weight + CBM)
+    const totalWeight = data.items.reduce(
+      (sum, i) => sum + (i.package?.weightKg ?? 0),
+      0,
+    );
+    const totalCbm = data.items.reduce((sum, i) => sum + (i.package?.cbm ?? 0), 0);
+    const totalPieces = data.items.reduce(
+      (sum, i) => sum + (i.package?.pieces ?? 0),
+      0,
+    );
+    const packingEnd =
+      (doc as unknown as { lastAutoTable: { finalY: number } }).lastAutoTable.finalY + 14;
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(9);
+    doc.setTextColor("#333333");
+    doc.text(
+      `Totals — Pieces: ${totalPieces}   Weight: ${totalWeight.toFixed(2)} kg   Volume: ${totalCbm.toFixed(3)} CBM`,
+      margin,
+      packingEnd,
+    );
+  }
+
   // Totals block
   const afterTable =
-    (doc as unknown as { lastAutoTable: { finalY: number } }).lastAutoTable.finalY + 20;
+    (doc as unknown as { lastAutoTable: { finalY: number } }).lastAutoTable.finalY + 40;
+
   const totalsX = pageWidth - margin - 180;
   doc.setFontSize(10);
   doc.setTextColor("#333333");
