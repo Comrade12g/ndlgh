@@ -709,12 +709,15 @@ function InvoiceDetailDialog({ id, onChanged }: { id: string; onChanged: () => v
     queryFn: async () => {
       const { data, error } = await supabase
         .from("invoice_items")
-        .select("id, description, qty, unit_price, amount")
+        .select(
+          "id, description, qty, unit_price, amount, package_id, packages(tracking_code, external_tracking, description, weight_kg, cbm, pieces, notes)",
+        )
         .eq("invoice_id", id);
       if (error) throw error;
       return data ?? [];
     },
   });
+
 
   const { data: payments } = useQuery({
     queryKey: ["invoice-payments", id],
