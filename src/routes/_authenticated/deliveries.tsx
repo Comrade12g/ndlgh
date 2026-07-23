@@ -28,6 +28,7 @@ import { Plus, Truck, MessageCircle, PackagePlus, Trash2, Copy } from "lucide-re
 import { toast } from "sonner";
 import { getErrorMessage } from "@/lib/errors";
 import { ensureContactShadow } from "@/lib/ensureContactShadow";
+import { notifyCustomer, type NotificationEvent } from "@/lib/notifications";
 
 export const Route = createFileRoute("/_authenticated/deliveries")({
   component: DeliveriesPage,
