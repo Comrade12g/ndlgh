@@ -49,11 +49,8 @@ async function fetchCarrierUpdate(
   };
 }
 
-// Cast options to `any` — the `server` route-option field is contributed via
-// module augmentation from `@tanstack/start-client-core`, but the resolved
-// versions of `router-core` and `start-client-core` in the lockfile are
-// slightly out of sync, so the augmentation doesn't merge in this file.
 export const Route = createFileRoute("/api/public/hooks/poll-shipment-eta")({
+
   server: {
     handlers: {
       POST: async () => {
@@ -103,5 +100,5 @@ export const Route = createFileRoute("/api/public/hooks/poll-shipment-eta")({
       },
     },
   },
-} as never);
+});
 
