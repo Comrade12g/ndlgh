@@ -8,6 +8,7 @@ import { updateCustomerPhone, changeMyPassword } from "@/lib/customer-account.fu
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/ui/password-input";
 import { Label } from "@/components/ui/label";
 import { LogoLockup } from "@/components/brand/Logo";
 import { ArrowLeft } from "lucide-react";
@@ -170,9 +171,8 @@ function SettingsPage() {
             </div>
             <div>
               <Label htmlFor="cur-pw">Current password</Label>
-              <Input
+              <PasswordInput
                 id="cur-pw"
-                type="password"
                 value={currentPassword}
                 onChange={(e) => setCurrentPassword(e.target.value)}
                 required
@@ -181,9 +181,8 @@ function SettingsPage() {
             </div>
             <div>
               <Label htmlFor="new-pw">New password</Label>
-              <Input
+              <PasswordInput
                 id="new-pw"
-                type="password"
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
                 minLength={6}
@@ -193,9 +192,8 @@ function SettingsPage() {
             </div>
             <div>
               <Label htmlFor="cf-pw">Confirm new password</Label>
-              <Input
+              <PasswordInput
                 id="cf-pw"
-                type="password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 minLength={6}
