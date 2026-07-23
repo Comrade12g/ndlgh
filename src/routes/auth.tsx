@@ -15,7 +15,7 @@ import {
   SUPPORT_WHATSAPP_NUMBER,
   SUPPORT_WHATSAPP_MESSAGE,
 } from "@/lib/auth-errors";
-import { toE164Gh, phoneToSyntheticEmail } from "@/lib/phone";
+import { toE164Gh, phoneToSyntheticEmail, phoneToStaffSyntheticEmail } from "@/lib/phone";
 import { AlertCircle, ArrowLeft, MessageCircle } from "lucide-react";
 
 // NDL Ghana's customer-facing WhatsApp business number
@@ -79,11 +79,18 @@ function AuthPage() {
       } else {
         const e164 = toE164Gh(identifier);
         if (!e164) throw new Error("Enter a valid phone number");
-        const { error } = await supabase.auth.signInWithPassword({
+        // Customers use @customers.*, staff use @staff.*. Try customer first, then staff.
+        let { error } = await supabase.auth.signInWithPassword({
           email: phoneToSyntheticEmail(e164),
           password,
         });
-        if (error) throw error;
+        if (error) {
+          const retry = await supabase.auth.signInWithPassword({
+            email: phoneToStaffSyntheticEmail(e164),
+            password,
+          });
+          if (retry.error) throw error;
+        }
       }
       toast.success("Welcome back.");
       await routeAfterSignIn(navigate);
