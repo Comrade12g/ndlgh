@@ -139,20 +139,21 @@ Deno.serve(async (req: Request) => {
       userId = created.user.id;
     }
 
-    // Fetch the auto-generated shipping mark from their new profile
+    // Fetch the auto-generated shipping mark from their profile
     const { data: profile } = await adminClient
       .from("profiles")
       .select("shipping_mark")
-      .eq("id", created.user.id)
+      .eq("id", userId!)
       .maybeSingle();
 
     return new Response(
       JSON.stringify({
         success: true,
-        userId: created.user.id,
+        userId,
         phone: e164,
         tempPassword,
         shippingMark: profile?.shipping_mark ?? null,
+        reused,
       }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } },
     );
