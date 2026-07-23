@@ -276,6 +276,72 @@ export type Database = {
         }
         Relationships: []
       }
+      invite_audit_log: {
+        Row: {
+          created_at: string
+          email: string | null
+          email_error: string | null
+          email_sent_at: string | null
+          email_status: string
+          id: string
+          invite_type: string
+          invited_by: string | null
+          invited_by_name: string | null
+          notes: string | null
+          phone: string | null
+          reused: boolean
+          role: string | null
+          target_name: string | null
+          target_user_id: string | null
+          updated_at: string
+          whatsapp_error: string | null
+          whatsapp_sent_at: string | null
+          whatsapp_status: string
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          email_error?: string | null
+          email_sent_at?: string | null
+          email_status?: string
+          id?: string
+          invite_type: string
+          invited_by?: string | null
+          invited_by_name?: string | null
+          notes?: string | null
+          phone?: string | null
+          reused?: boolean
+          role?: string | null
+          target_name?: string | null
+          target_user_id?: string | null
+          updated_at?: string
+          whatsapp_error?: string | null
+          whatsapp_sent_at?: string | null
+          whatsapp_status?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          email_error?: string | null
+          email_sent_at?: string | null
+          email_status?: string
+          id?: string
+          invite_type?: string
+          invited_by?: string | null
+          invited_by_name?: string | null
+          notes?: string | null
+          phone?: string | null
+          reused?: boolean
+          role?: string | null
+          target_name?: string | null
+          target_user_id?: string | null
+          updated_at?: string
+          whatsapp_error?: string | null
+          whatsapp_sent_at?: string | null
+          whatsapp_status?: string
+        }
+        Relationships: []
+      }
       invoice_items: {
         Row: {
           amount: number
