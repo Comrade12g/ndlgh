@@ -14,7 +14,7 @@ export const Route = createFileRoute("/_authenticated/support")({
 
 function SupportPage() {
   const [q, setQ] = useState("");
-  const term = q.trim();
+  const term = sanitizePostgrestTerm(q);
 
   const { data: customers } = useQuery({
     queryKey: ["cs-customer-search", term],
