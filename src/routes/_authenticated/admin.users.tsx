@@ -21,7 +21,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { X, UserPlus } from "lucide-react";
+import { X, UserPlus, MessageCircle } from "lucide-react";
+import { waTemplates, openWhatsApp } from "@/lib/whatsapp";
 import { useState } from "react";
 import { toast } from "sonner";
 import { getErrorMessage } from "@/lib/errors";
