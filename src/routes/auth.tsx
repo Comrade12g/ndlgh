@@ -10,8 +10,13 @@ import { LogoLockup } from "@/components/brand/Logo";
 import { toast } from "sonner";
 import { getErrorMessage } from "@/lib/errors";
 import { openWhatsApp } from "@/lib/whatsapp";
+import {
+  friendlySignInError,
+  SUPPORT_WHATSAPP_NUMBER,
+  SUPPORT_WHATSAPP_MESSAGE,
+} from "@/lib/auth-errors";
 import { toE164Gh, phoneToSyntheticEmail } from "@/lib/phone";
-import { ArrowLeft, MessageCircle } from "lucide-react";
+import { AlertCircle, ArrowLeft, MessageCircle } from "lucide-react";
 
 // NDL Ghana's customer-facing WhatsApp business number
 const SIGNUP_WHATSAPP_NUMBER = "+233500229352";
@@ -49,6 +54,9 @@ function AuthPage() {
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [signInError, setSignInError] = useState<
+    { title: string; description: string; showHelp: boolean } | null
+  >(null);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
@@ -59,6 +67,7 @@ function AuthPage() {
   async function handleSignIn(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
+    setSignInError(null);
     try {
       const isEmail = identifier.includes("@");
       if (isEmail) {
@@ -79,7 +88,7 @@ function AuthPage() {
       toast.success("Welcome back.");
       await routeAfterSignIn(navigate);
     } catch (err) {
-      toast.error(getErrorMessage(err));
+      setSignInError(friendlySignInError(err));
     } finally {
       setLoading(false);
     }
@@ -178,7 +187,39 @@ function AuthPage() {
                 </div>
               </div>
 
+              {signInError ? (
+                <div
+                  role="alert"
+                  className="mb-4 rounded-lg border border-destructive/30 bg-destructive/5 p-4"
+                >
+                  <div className="flex gap-3">
+                    <AlertCircle className="mt-0.5 h-5 w-5 flex-shrink-0 text-destructive" />
+                    <div className="flex-1">
+                      <p className="text-sm font-semibold text-destructive">
+                        {signInError.title}
+                      </p>
+                      <p className="mt-1 text-sm text-muted-foreground">
+                        {signInError.description}
+                      </p>
+                      {signInError.showHelp ? (
+                        <button
+                          type="button"
+                          onClick={() =>
+                            openWhatsApp(SUPPORT_WHATSAPP_NUMBER, SUPPORT_WHATSAPP_MESSAGE)
+                          }
+                          className="mt-3 inline-flex items-center gap-1.5 text-sm font-medium text-emerald-700 hover:text-emerald-800 hover:underline"
+                        >
+                          <MessageCircle className="h-4 w-4" />
+                          Need help signing in? Message us on WhatsApp
+                        </button>
+                      ) : null}
+                    </div>
+                  </div>
+                </div>
+              ) : null}
+
               <form onSubmit={handleSignIn} className="space-y-4">
+
                 <div>
                   <Label htmlFor="identifier">Phone number (customers) or email (staff)</Label>
                   <Input
