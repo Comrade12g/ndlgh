@@ -18,3 +18,9 @@ export function phoneToSyntheticEmail(e164: string): string {
   const digits = e164.replace(/[^\d]/g, "");
   return `${digits}@customers.ndlgh.local`;
 }
+
+/** Staff accounts (created via create-staff) use a different synthetic email domain. */
+export function phoneToStaffSyntheticEmail(e164: string): string {
+  const digits = e164.replace(/[^\d]/g, "");
+  return `${digits}@staff.ndlgh.local`;
+}
