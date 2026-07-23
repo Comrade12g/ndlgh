@@ -139,6 +139,12 @@ Deno.serve(async (req: Request) => {
       userId = created.user.id;
     }
 
+    // Mark the account so first login forces a password change.
+    await adminClient
+      .from("profiles")
+      .update({ must_change_password: true })
+      .eq("id", userId!);
+
     // Fetch the auto-generated shipping mark from their profile
     const { data: profile } = await adminClient
       .from("profiles")
