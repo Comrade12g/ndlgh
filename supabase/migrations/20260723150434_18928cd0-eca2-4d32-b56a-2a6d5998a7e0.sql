@@ -1,0 +1,2 @@
+DROP POLICY IF EXISTS "Authenticated can read milestone map" ON public.shipment_milestones;
+CREATE POLICY "Staff can read milestone map" ON public.shipment_milestones FOR SELECT TO authenticated USING (public.is_staff(auth.uid()));
