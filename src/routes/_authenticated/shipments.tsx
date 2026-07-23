@@ -26,6 +26,7 @@ import { PageHeader, EmptyState, StatusBadge, statusTone } from "@/components/op
 import { Plus, Ship, PackagePlus, Trash2, Search, Pencil, FileText } from "lucide-react";
 import { toast } from "sonner";
 import { getErrorMessage } from "@/lib/errors";
+import { sanitizePostgrestTerm } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/shipments")({
   component: ShipmentsPage,
