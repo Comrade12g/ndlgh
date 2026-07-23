@@ -101,29 +101,24 @@ Deno.serve(async (req: Request) => {
 
       if (!isDuplicate) throw createError;
 
-      // Find the existing account (by synthetic email or phone) and reset its password
-      const { data: byEmail } = await adminClient
-        .from("auth.users" as never)
-        .select("id")
-        .maybeSingle()
-        .then(() => ({ data: null as { id: string } | null }))
-        .catch(() => ({ data: null }));
-
-      // Fall back to listing users and matching — admin API has no direct getByEmail
-      let existingId: string | null = byEmail?.id ?? null;
-      if (!existingId) {
-        const { data: list } = await adminClient.auth.admin.listUsers({ page: 1, perPage: 200 });
-        const match = list?.users.find(
-          (u) => u.email === syntheticEmail || u.phone === e164 || u.phone === e164.replace(/^\+/, ""),
+      // Only reuse an account whose synthetic email is already in the
+      // customer domain. Matching by phone across domains would hijack a
+      // staff account that happens to share the phone number.
+      const { data: list } = await adminClient.auth.admin.listUsers({ page: 1, perPage: 200 });
+      const match = list?.users.find((u) => u.email === syntheticEmail);
+      if (!match) {
+        const phoneMatch = list?.users.find(
+          (u) => u.phone === e164 || u.phone === e164.replace(/^\+/, ""),
         );
-        existingId = match?.id ?? null;
-      }
-
-      if (!existingId) {
+        if (phoneMatch) {
+          throw new Error(
+            "This phone number is already registered to an employee account. Use a different number.",
+          );
+        }
         throw new Error("A customer with this phone number already has an account");
       }
 
-      const { error: updateError } = await adminClient.auth.admin.updateUserById(existingId, {
+      const { error: updateError } = await adminClient.auth.admin.updateUserById(match.id, {
         password: tempPassword,
         email: syntheticEmail,
         phone: e164,
@@ -132,8 +127,9 @@ Deno.serve(async (req: Request) => {
         user_metadata: { full_name: full_name ?? null, phone: e164 },
       });
       if (updateError) throw updateError;
-      userId = existingId;
+      userId = match.id;
       reused = true;
+
     } else {
       if (!created.user) throw new Error("Account creation succeeded but no user was returned");
       userId = created.user.id;
