@@ -134,8 +134,29 @@ Deno.serve(async (req: Request) => {
       .upsert({ user_id: userId!, role }, { onConflict: "user_id,role" });
     if (roleError) throw roleError;
 
+    const { data: inviterProfile } = await adminClient
+      .from("profiles")
+      .select("full_name")
+      .eq("id", callerData.user.id)
+      .maybeSingle();
+
+    const { data: auditRow } = await adminClient
+      .from("invite_audit_log")
+      .insert({
+        invite_type: "staff",
+        target_user_id: userId,
+        target_name: full_name ?? null,
+        phone: e164,
+        role,
+        reused,
+        invited_by: callerData.user.id,
+        invited_by_name: inviterProfile?.full_name ?? callerData.user.email ?? null,
+      })
+      .select("id")
+      .maybeSingle();
+
     return new Response(
-      JSON.stringify({ success: true, userId, phone: e164, tempPassword, reused }),
+      JSON.stringify({ success: true, userId, phone: e164, tempPassword, reused, auditId: auditRow?.id ?? null }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } },
     );
   } catch (err) {
