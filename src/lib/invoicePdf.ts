@@ -1,6 +1,16 @@
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
 
+type InvoicePdfPackage = {
+  trackingCode: string;
+  externalTracking: string | null;
+  description: string | null;
+  weightKg: number | null;
+  cbm: number | null;
+  pieces: number | null;
+  notes: string | null;
+};
+
 type InvoicePdfData = {
   number: string;
   currency: string;
@@ -13,9 +23,16 @@ type InvoicePdfData = {
   dueDate: string | null;
   notes: string | null;
   customer: { fullName: string | null; phone: string | null; shippingMark: string | null };
-  items: { description: string; qty: number; unitPrice: number; amount: number }[];
+  items: {
+    description: string;
+    qty: number;
+    unitPrice: number;
+    amount: number;
+    package?: InvoicePdfPackage | null;
+  }[];
   payments: { date: string; method: string; amount: number; reference: string | null }[];
 };
+
 
 const BRAND_NAVY = "#1A1A2E";
 const BRAND_ORANGE = "#F97316";
