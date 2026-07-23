@@ -53,6 +53,9 @@ function LoginHome() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [tracking, setTracking] = useState("");
+  const [signInError, setSignInError] = useState<
+    { title: string; description: string; showHelp: boolean } | null
+  >(null);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
