@@ -66,6 +66,7 @@ function LoginHome() {
   async function handleSignIn(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
+    setSignInError(null);
     try {
       const isEmail = identifier.includes("@");
       if (isEmail) {
