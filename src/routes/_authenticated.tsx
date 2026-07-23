@@ -65,6 +65,12 @@ export const Route = createFileRoute("/_authenticated")({
   beforeLoad: async ({ location }) => {
     const { data, error } = await supabase.auth.getUser();
     if (error || !data.user) throw redirect({ to: "/auth", search: { mode: "signin" } });
+    const { data: prof } = await supabase
+      .from("profiles")
+      .select("must_change_password")
+      .eq("id", data.user.id)
+      .maybeSingle();
+    if (prof?.must_change_password) throw redirect({ to: "/change-password" });
     const { data: roles } = await supabase
       .from("user_roles")
       .select("role")
@@ -72,9 +78,6 @@ export const Route = createFileRoute("/_authenticated")({
     const userRoles = (roles ?? []).map((r) => r.role);
     const isStaff = userRoles.some((r) => (STAFF_ROLES as readonly string[]).includes(r));
     if (!isStaff) {
-      // A freshly-created staff account (no role assigned yet) should wait
-      // for activation, not land in the customer portal. Only route to the
-      // portal if they actually hold the customer role.
       if (userRoles.includes("customer")) throw redirect({ to: "/portal" });
       throw redirect({ to: "/pending-activation" });
     }
