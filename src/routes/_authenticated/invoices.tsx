@@ -492,8 +492,25 @@ function NewInvoiceDialog({ onDone }: { onDone: (id: string) => void }) {
       if (itemsError) throw itemsError;
       return invoice;
     },
-    onSuccess: (inv) => {
+    onSuccess: async (inv) => {
       toast.success(`Invoice ${inv.number} created`);
+      // Auto-open WhatsApp with the "invoice issued" message
+      const cust = customers?.find((c) => c.id === customerId);
+      if (cust) {
+        await notifyCustomer({
+          customerId: cust.id,
+          phone: cust.phone,
+          event: "invoice_issued",
+          invoiceId: inv.id,
+          message: waTemplates.invoiceIssued(
+            cust.full_name ?? "there",
+            inv.number,
+            currency,
+            subtotal,
+            dueDate || null,
+          ),
+        });
+      }
       onDone(inv.id);
     },
     onError: (e) => toast.error(getErrorMessage(e)),
