@@ -11,7 +11,12 @@ import { toast } from "sonner";
 import { getErrorMessage } from "@/lib/errors";
 import { toE164Gh, phoneToSyntheticEmail } from "@/lib/phone";
 import { openWhatsApp } from "@/lib/whatsapp";
-import { Ship, Plane, MessageCircle, PackageSearch } from "lucide-react";
+import {
+  friendlySignInError,
+  SUPPORT_WHATSAPP_NUMBER,
+  SUPPORT_WHATSAPP_MESSAGE,
+} from "@/lib/auth-errors";
+import { Ship, Plane, MessageCircle, PackageSearch, AlertCircle } from "lucide-react";
 
 export const Route = createFileRoute("/")({
   ssr: false,
