@@ -87,7 +87,7 @@ function LoginHome() {
       toast.success("Welcome back.");
       await routeAfterSignIn(navigate);
     } catch (err) {
-      toast.error(getErrorMessage(err));
+      setSignInError(friendlySignInError(err));
     } finally {
       setLoading(false);
     }
