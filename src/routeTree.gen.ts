@@ -33,6 +33,7 @@ import { Route as AuthenticatedTreasuryAccountsRouteImport } from './routes/_aut
 import { Route as AuthenticatedSourcingPosRouteImport } from './routes/_authenticated/sourcing.pos'
 import { Route as AuthenticatedCrmContactsRouteImport } from './routes/_authenticated/crm.contacts'
 import { Route as AuthenticatedAdminUsersRouteImport } from './routes/_authenticated/admin.users'
+import { Route as AuthenticatedAdminAuditRouteImport } from './routes/_authenticated/admin.audit'
 import { Route as ApiPublicHooksPollShipmentEtaRouteImport } from './routes/api/public/hooks/poll-shipment-eta'
 
 const StaffSignupRoute = StaffSignupRouteImport.update({
@@ -157,6 +158,11 @@ const AuthenticatedAdminUsersRoute = AuthenticatedAdminUsersRouteImport.update({
   path: '/admin/users',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedAdminAuditRoute = AuthenticatedAdminAuditRouteImport.update({
+  id: '/admin/audit',
+  path: '/admin/audit',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
 const ApiPublicHooksPollShipmentEtaRoute =
   ApiPublicHooksPollShipmentEtaRouteImport.update({
     id: '/api/public/hooks/poll-shipment-eta',
@@ -184,6 +190,7 @@ export interface FileRoutesByFullPath {
   '/support': typeof AuthenticatedSupportRoute
   '/tracking': typeof AuthenticatedTrackingRoute
   '/track/$code': typeof TrackCodeRoute
+  '/admin/audit': typeof AuthenticatedAdminAuditRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
   '/crm/contacts': typeof AuthenticatedCrmContactsRoute
   '/sourcing/pos': typeof AuthenticatedSourcingPosRoute
@@ -210,6 +217,7 @@ export interface FileRoutesByTo {
   '/support': typeof AuthenticatedSupportRoute
   '/tracking': typeof AuthenticatedTrackingRoute
   '/track/$code': typeof TrackCodeRoute
+  '/admin/audit': typeof AuthenticatedAdminAuditRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
   '/crm/contacts': typeof AuthenticatedCrmContactsRoute
   '/sourcing/pos': typeof AuthenticatedSourcingPosRoute
@@ -238,6 +246,7 @@ export interface FileRoutesById {
   '/_authenticated/support': typeof AuthenticatedSupportRoute
   '/_authenticated/tracking': typeof AuthenticatedTrackingRoute
   '/track/$code': typeof TrackCodeRoute
+  '/_authenticated/admin/audit': typeof AuthenticatedAdminAuditRoute
   '/_authenticated/admin/users': typeof AuthenticatedAdminUsersRoute
   '/_authenticated/crm/contacts': typeof AuthenticatedCrmContactsRoute
   '/_authenticated/sourcing/pos': typeof AuthenticatedSourcingPosRoute
@@ -266,6 +275,7 @@ export interface FileRouteTypes {
     | '/support'
     | '/tracking'
     | '/track/$code'
+    | '/admin/audit'
     | '/admin/users'
     | '/crm/contacts'
     | '/sourcing/pos'
@@ -292,6 +302,7 @@ export interface FileRouteTypes {
     | '/support'
     | '/tracking'
     | '/track/$code'
+    | '/admin/audit'
     | '/admin/users'
     | '/crm/contacts'
     | '/sourcing/pos'
@@ -319,6 +330,7 @@ export interface FileRouteTypes {
     | '/_authenticated/support'
     | '/_authenticated/tracking'
     | '/track/$code'
+    | '/_authenticated/admin/audit'
     | '/_authenticated/admin/users'
     | '/_authenticated/crm/contacts'
     | '/_authenticated/sourcing/pos'
@@ -511,6 +523,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminUsersRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/admin/audit': {
+      id: '/_authenticated/admin/audit'
+      path: '/admin/audit'
+      fullPath: '/admin/audit'
+      preLoaderRoute: typeof AuthenticatedAdminAuditRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/api/public/hooks/poll-shipment-eta': {
       id: '/api/public/hooks/poll-shipment-eta'
       path: '/api/public/hooks/poll-shipment-eta'
@@ -531,6 +550,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedShipmentsRoute: typeof AuthenticatedShipmentsRoute
   AuthenticatedSupportRoute: typeof AuthenticatedSupportRoute
   AuthenticatedTrackingRoute: typeof AuthenticatedTrackingRoute
+  AuthenticatedAdminAuditRoute: typeof AuthenticatedAdminAuditRoute
   AuthenticatedAdminUsersRoute: typeof AuthenticatedAdminUsersRoute
   AuthenticatedCrmContactsRoute: typeof AuthenticatedCrmContactsRoute
   AuthenticatedSourcingPosRoute: typeof AuthenticatedSourcingPosRoute
@@ -547,6 +567,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedShipmentsRoute: AuthenticatedShipmentsRoute,
   AuthenticatedSupportRoute: AuthenticatedSupportRoute,
   AuthenticatedTrackingRoute: AuthenticatedTrackingRoute,
+  AuthenticatedAdminAuditRoute: AuthenticatedAdminAuditRoute,
   AuthenticatedAdminUsersRoute: AuthenticatedAdminUsersRoute,
   AuthenticatedCrmContactsRoute: AuthenticatedCrmContactsRoute,
   AuthenticatedSourcingPosRoute: AuthenticatedSourcingPosRoute,
