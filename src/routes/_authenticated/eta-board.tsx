@@ -17,7 +17,7 @@ import { milestoneLabel } from "@/components/tracking/MilestoneTimeline";
 import { RefreshCw } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-export const Route = createFileRoute("/_authenticated/tracking")({
+export const Route = createFileRoute("/_authenticated/eta-board")({
   component: TrackingBoard,
 });
 

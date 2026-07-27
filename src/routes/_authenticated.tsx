@@ -53,7 +53,7 @@ const ROUTE_ROLES: Array<{ prefix: string; roles: readonly string[] }> = [
   { prefix: "/treasury", roles: ["admin", "accountant", "sales_accountant"] },
   { prefix: "/packages", roles: ["admin", "ops_warehouse", "customer_service"] },
   { prefix: "/shipments", roles: ["admin", "ops_warehouse", "sales", "sales_accountant", "customer_service"] },
-  { prefix: "/tracking", roles: ["admin", "ops_warehouse", "customer_service", "sourcing_agent"] },
+  { prefix: "/eta-board", roles: ["admin", "ops_warehouse", "customer_service", "sourcing_agent"] },
   { prefix: "/deliveries", roles: ["admin", "ops_warehouse", "driver", "customer_service"] },
   { prefix: "/invoices", roles: ["admin", "accountant", "sales", "sales_accountant"] },
   { prefix: "/rates", roles: ["admin", "accountant", "sales", "sales_accountant"] },
@@ -133,7 +133,7 @@ const NAV: NavItem[] = [
     roles: ["admin", "ops_warehouse", "sales", "sales_accountant", "customer_service"],
   },
   {
-    to: "/tracking",
+    to: "/eta-board",
     label: "ETA Tracking",
     icon: Radar,
     roles: ["admin", "ops_warehouse", "customer_service", "sourcing_agent"],
