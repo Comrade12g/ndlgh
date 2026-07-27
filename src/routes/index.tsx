@@ -4,12 +4,17 @@ import { HeroMap } from "@/components/marketing/HeroMap";
 import { QuoteEngine } from "@/components/marketing/QuoteEngine";
 import { TrackingLookup } from "@/components/marketing/TrackingLookup";
 import { MilestoneTimeline } from "@/components/tracking/MilestoneTimeline";
+import { StatsBand } from "@/components/marketing/StatsBand";
+import { Testimonials } from "@/components/marketing/Testimonials";
+import { LaneMarquee } from "@/components/marketing/LaneMarquee";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useReveal } from "@/hooks/use-reveal";
+import { useMagnetic } from "@/hooks/use-magnetic";
+import { useTilt } from "@/hooks/use-tilt";
 import {
-  Ship, Plane, Truck, Warehouse, ShieldCheck, Globe2, Clock,
-  ArrowRight, MapPin, Package, Users, FileCheck, Zap,
+  Ship, Plane, Truck, Warehouse, ShieldCheck, Globe2,
+  ArrowRight, Users, FileCheck,
 } from "lucide-react";
 
 export const Route = createFileRoute("/")({
