@@ -65,12 +65,46 @@ function HomePage() {
       <StatsBand />
       <QuoteSection />
       <LanesSection />
+      <GallerySection />
       <TrackingDemo />
       <Testimonials />
       <TeamSection />
       <ContactCTA />
       <JsonLd />
     </MarketingLayout>
+  );
+}
+
+function GallerySection() {
+  const ref = useReveal<HTMLDivElement>();
+  return (
+    <section className="bg-secondary/40 py-16 md:py-20">
+      <div className="mx-auto max-w-7xl px-4">
+        <div ref={ref} className="reveal">
+          <SectionHeading eyebrow="On the ground" title="From origin port to your door" />
+        </div>
+        <div className="mt-10 grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-6">
+          {GALLERY.map((g, i) => (
+            <div
+              key={g.src}
+              className="reveal group relative aspect-square overflow-hidden rounded-2xl"
+              style={{ transitionDelay: `${i * 60}ms` }}
+            >
+              <img
+                src={g.src}
+                alt={g.alt}
+                loading="lazy"
+                className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-brand-navy/70 via-transparent to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
+              <div className="absolute inset-x-0 bottom-0 translate-y-2 p-3 text-xs font-semibold text-white opacity-0 transition-all group-hover:translate-y-0 group-hover:opacity-100">
+                {g.alt}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
   );
 }
 
