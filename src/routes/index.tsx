@@ -238,17 +238,31 @@ function LanesSection() {
       <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {LANES.map((l, i) => (
           <Link key={l.code} to="/lanes/$origin" params={{ origin: l.code }} className="group block">
-            <RevealCard delay={i * 60} className="transition-all group-hover:-translate-y-1 group-hover:shadow-xl">
-              <div className="flex items-center justify-between">
-                <h3 className="font-display text-xl font-bold text-brand-navy">{l.name}</h3>
-                <ArrowRight className="h-4 w-4 text-brand-orange transition-transform group-hover:translate-x-1" />
+            <RevealCard delay={i * 60} noPadding className="transition-all group-hover:-translate-y-1 group-hover:shadow-xl">
+              <div className="relative h-48 overflow-hidden">
+                <img
+                  src={l.photo}
+                  alt={l.name}
+                  loading="lazy"
+                  className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-brand-navy/85 via-brand-navy/30 to-transparent" />
+                <div className="absolute inset-x-0 bottom-0 p-5 text-white">
+                  <div className="flex items-center justify-between">
+                    <h3 className="font-display text-2xl font-black">{l.name}</h3>
+                    <ArrowRight className="h-4 w-4 text-brand-orange transition-transform group-hover:translate-x-1" />
+                  </div>
+                  <div className="mt-1 font-mono text-[11px] uppercase tracking-wider text-brand-orange">{l.tag}</div>
+                </div>
               </div>
-              <div className="mt-1 font-mono text-xs uppercase tracking-wider text-brand-sky">{l.tag}</div>
-              <p className="mt-3 text-sm text-muted-foreground">{l.note}</p>
+              <div className="p-5">
+                <p className="text-sm text-muted-foreground">{l.note}</p>
+              </div>
             </RevealCard>
           </Link>
         ))}
       </div>
+
     </section>
   );
 }
