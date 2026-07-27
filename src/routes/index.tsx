@@ -32,18 +32,27 @@ export const Route = createFileRoute("/")({
 });
 
 const LANES = [
-  { code: "china", name: "China", tag: "Yiwu · Guangzhou · Taizhou", note: "Small commodities, electronics, hardware" },
-  { code: "dubai", name: "Dubai", tag: "UAE hub", note: "Cosmetics, gold, machinery" },
-  { code: "thailand", name: "Thailand", tag: "Bangkok", note: "Auto parts, wellness, food" },
-  { code: "canada", name: "Canada", tag: "Toronto", note: "Personal effects, retail returns" },
-  { code: "us", name: "United States", tag: "New York · Los Angeles", note: "E-commerce, vehicles, machinery" },
+  { code: "china", name: "China", tag: "Yiwu · Guangzhou · Taizhou", note: "Small commodities, electronics, hardware", photo: "https://images.unsplash.com/photo-1545893835-abaa50cbe628?auto=format&fit=crop&w=800&q=65" },
+  { code: "dubai", name: "Dubai", tag: "UAE hub", note: "Cosmetics, gold, machinery", photo: "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=800&q=65" },
+  { code: "thailand", name: "Thailand", tag: "Bangkok", note: "Auto parts, wellness, food", photo: "https://images.unsplash.com/photo-1508009603885-50cf7c579365?auto=format&fit=crop&w=800&q=65" },
+  { code: "canada", name: "Canada", tag: "Toronto", note: "Personal effects, retail returns", photo: "https://images.unsplash.com/photo-1517090504586-fde19ea6066f?auto=format&fit=crop&w=800&q=65" },
+  { code: "us", name: "United States", tag: "New York · Los Angeles", note: "E-commerce, vehicles, machinery", photo: "https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?auto=format&fit=crop&w=800&q=65" },
 ];
 
 const SERVICES = [
-  { icon: Ship, name: "Sea Freight", desc: "LCL groupage and full-container (FCL) service to Tema Port." },
-  { icon: Plane, name: "Air Cargo", desc: "Express and general air freight into Kotoka International." },
-  { icon: FileCheck, name: "Customs Clearing", desc: "In-house licensed brokers — no third-party leakage." },
-  { icon: Warehouse, name: "Warehousing & Delivery", desc: "Bonded storage plus Ghana-wide last-mile delivery." },
+  { icon: Ship, name: "Sea Freight", desc: "LCL groupage and full-container (FCL) service to Tema Port.", photo: "https://images.unsplash.com/photo-1494412651409-8963ce7935a7?auto=format&fit=crop&w=800&q=65" },
+  { icon: Plane, name: "Air Cargo", desc: "Express and general air freight into Kotoka International.", photo: "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=800&q=65" },
+  { icon: FileCheck, name: "Customs Clearing", desc: "In-house licensed brokers — no third-party leakage.", photo: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=800&q=65" },
+  { icon: Warehouse, name: "Warehousing & Delivery", desc: "Bonded storage plus Ghana-wide last-mile delivery.", photo: "https://images.unsplash.com/photo-1553413077-190dd305871c?auto=format&fit=crop&w=800&q=65" },
+];
+
+const GALLERY = [
+  { src: "https://images.unsplash.com/photo-1578575437130-527eed3abbec?auto=format&fit=crop&w=800&q=65", alt: "Container ship at port" },
+  { src: "https://images.unsplash.com/photo-1601598851547-4302969d0614?auto=format&fit=crop&w=800&q=65", alt: "Warehouse interior" },
+  { src: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=800&q=65", alt: "Cargo plane on tarmac" },
+  { src: "https://images.unsplash.com/photo-1580901368919-7738efb0f87e?auto=format&fit=crop&w=800&q=65", alt: "Delivery truck" },
+  { src: "https://images.unsplash.com/photo-1577032229840-33f74d0ab24e?auto=format&fit=crop&w=800&q=65", alt: "Stacked containers" },
+  { src: "https://images.unsplash.com/photo-1519666336592-e225a99dcd2f?auto=format&fit=crop&w=800&q=65", alt: "Port cranes at dusk" },
 ];
 
 function HomePage() {
