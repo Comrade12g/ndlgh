@@ -133,8 +133,48 @@ function GallerySection() {
     (location === "all" || it.location === location),
   );
 
+  // Schema.org ImageGallery so search engines understand the photos, categories, and cities.
+  const galleryLd = useMemo(() => {
+    const origin =
+      typeof window !== "undefined"
+        ? window.location.origin
+        : "https://ndlgh.susuboxgh.com";
+    return {
+      "@context": "https://schema.org",
+      "@type": "ImageGallery",
+      name: "NDL Cargo Ghana — On the ground",
+      description:
+        "Photos from NDL Cargo warehouses, sea/air lanes and last-mile deliveries across China, Dubai and Ghana.",
+      about: Array.from(new Set(items.map((i) => i.category).filter(Boolean))),
+      contentLocation: Array.from(
+        new Set(items.map((i) => i.location).filter(Boolean)),
+      ).map((city) => ({ "@type": "Place", name: city })),
+      image: items.map((it, i) => {
+        const { alt, caption } = buildGalleryCopy(it);
+        const url = it.src.startsWith("http") ? it.src : `${origin}${it.src}`;
+        return {
+          "@type": "ImageObject",
+          position: i + 1,
+          contentUrl: url,
+          url,
+          name: it.alt || caption,
+          caption,
+          description: alt,
+          ...(it.category ? { keywords: it.category } : {}),
+          ...(it.location
+            ? { contentLocation: { "@type": "Place", name: it.location } }
+            : {}),
+        };
+      }),
+    };
+  }, [items]);
+
   return (
     <section className="bg-secondary/40 py-16 md:py-20">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(galleryLd) }}
+      />
       <div className="mx-auto max-w-7xl px-4">
         <div ref={ref} className="reveal">
           <SectionHeading eyebrow="On the ground" title="From origin port to your door — every step covered" />
