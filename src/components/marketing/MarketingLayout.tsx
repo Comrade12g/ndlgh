@@ -157,23 +157,31 @@ export function MarketingLayout({ children }: { children: ReactNode }) {
 }
 
 export function FloatingWhatsApp({ className }: { className?: string }) {
+  const [showTip, setShowTip] = useState(true);
   return (
-    <button
-      type="button"
-      onClick={() =>
-        openWhatsApp(
-          NDL_PHONE_INTL,
-          "Hello NDL Cargo, I'd like to get a quote / ask about shipping to Ghana.",
-        )
-      }
-      className={cn(
-        "fixed bottom-5 right-5 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-lg shadow-black/20 ring-4 ring-[#25D366]/20 transition-transform hover:scale-110 active:scale-95",
-        className,
+    <div className={cn("fixed bottom-5 right-5 z-50 flex items-center gap-2", className)}>
+      {showTip && (
+        <div className="hidden animate-fade-in items-center gap-2 rounded-full bg-white px-4 py-2 text-xs font-medium text-brand-navy shadow-lg ring-1 ring-black/5 sm:flex">
+          <span>Chat with us on WhatsApp</span>
+          <button aria-label="Dismiss" onClick={() => setShowTip(false)} className="text-muted-foreground hover:text-brand-navy">
+            <X className="h-3 w-3" />
+          </button>
+        </div>
       )}
-      aria-label="Chat on WhatsApp"
-    >
-      <MessageCircle className="h-6 w-6" />
-      <span className="pointer-events-none absolute inset-0 animate-ping rounded-full bg-[#25D366]/30" />
-    </button>
+      <button
+        type="button"
+        onClick={() =>
+          openWhatsApp(
+            NDL_PHONE_INTL,
+            "Hello NDL Cargo, I'd like to get a quote / ask about shipping to Ghana.",
+          )
+        }
+        className="relative flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-lg shadow-black/20 ring-4 ring-[#25D366]/20 transition-transform hover:scale-110 active:scale-95 animate-wa-nudge"
+        aria-label="Chat on WhatsApp"
+      >
+        <MessageCircle className="h-6 w-6" />
+        <span className="pointer-events-none absolute inset-0 animate-ping rounded-full bg-[#25D366]/30" />
+      </button>
+    </div>
   );
 }
