@@ -171,23 +171,7 @@ function GallerySection() {
 
         <div className="mt-8 grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4">
           {filtered.map((g, i) => (
-            <div
-              key={g.src + i}
-              className="reveal group relative aspect-square overflow-hidden rounded-2xl"
-              style={{ transitionDelay: `${i * 40}ms` }}
-            >
-              <SmartImage
-                src={g.src}
-                alt={g.alt}
-                className="h-full w-full"
-                imgClassName="transition-transform duration-700 group-hover:scale-110"
-              />
-              <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-brand-navy/80 via-transparent to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
-              <div className="pointer-events-none absolute inset-x-0 bottom-0 translate-y-2 p-3 text-xs font-semibold text-white opacity-0 transition-all group-hover:translate-y-0 group-hover:opacity-100">
-                <div>{g.alt}</div>
-                {g.location && <div className="text-[10px] font-normal text-white/80">{g.location}</div>}
-              </div>
-            </div>
+            <GalleryTile key={g.src + i} item={g} index={i} />
           ))}
           {filtered.length === 0 && (
             <div className="col-span-full rounded-2xl border border-dashed p-10 text-center text-sm text-muted-foreground">
