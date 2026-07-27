@@ -52,9 +52,13 @@ export function Testimonials() {
                 </div>
                 <p className="mt-3 text-lg font-medium text-brand-navy md:text-xl">"{it.text}"</p>
                 <div className="mt-5 flex items-center gap-3">
-                  <div className="grid h-11 w-11 place-items-center rounded-full bg-brand-navy font-display text-sm font-bold text-white">
-                    {it.name.split(" ").map((n) => n[0]).join("").slice(0, 2)}
-                  </div>
+                  <img
+                    src={it.photo}
+                    alt={it.name}
+                    loading="lazy"
+                    className="h-11 w-11 rounded-full object-cover ring-2 ring-brand-orange/40"
+                  />
+
                   <div>
                     <div className="font-semibold text-brand-navy">{it.name}</div>
                     <div className="text-xs text-muted-foreground">{it.role}</div>
