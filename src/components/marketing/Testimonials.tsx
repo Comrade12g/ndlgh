@@ -2,13 +2,14 @@ import { useEffect, useState } from "react";
 import { useReveal } from "@/hooks/use-reveal";
 import { Quote, Star } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { SmartImage } from "@/components/marketing/SmartImage";
 
 const ITEMS = [
-  { name: "Ama Boateng", role: "Boutique owner, Accra", text: "NDL cleared my Guangzhou consignment in 3 days and delivered to my shop. Fastest I've ever had.", rating: 5, photo: "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=200&q=70" },
-  { name: "Kwame Mensah", role: "Electronics importer", text: "Their WhatsApp updates every step of the way are honestly a game changer. No more guessing.", rating: 5, photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=70" },
-  { name: "Nana Adjoa", role: "Kumasi retailer", text: "The instant quote engine is real. Booked a Yiwu shipment in under 3 minutes.", rating: 5, photo: "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&w=200&q=70" },
-  { name: "Michael O.", role: "Auto parts, Tema", text: "Sourcing agents on the ground in China + customs in-house = zero drama for me.", rating: 5, photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=70" },
-  { name: "Sarah D.", role: "E-commerce founder", text: "From New York to Ghana door delivery in 12 days. I trust them with every launch.", rating: 5, photo: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=200&q=70" },
+  { name: "Ama Boateng", role: "Boutique owner, Accra", text: "NDL cleared my Guangzhou consignment in 3 days and delivered to my shop. Fastest I've ever had.", rating: 5, photo: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=200&q=70" },
+  { name: "Kwame Mensah", role: "Electronics importer", text: "Their WhatsApp updates every step of the way are honestly a game changer. No more guessing.", rating: 5, photo: "https://images.unsplash.com/photo-1531384441138-2736e62e0919?auto=format&fit=crop&w=200&q=70" },
+  { name: "Nana Adjoa", role: "Kumasi retailer", text: "The instant quote engine is real. Booked a Yiwu shipment in under 3 minutes.", rating: 5, photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=200&q=70" },
+  { name: "Michael O.", role: "Auto parts, Tema", text: "Sourcing agents on the ground in China + customs in-house = zero drama for me.", rating: 5, photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=70" },
+  { name: "Sarah D.", role: "E-commerce founder", text: "From New York to Ghana door delivery in 12 days. I trust them with every launch.", rating: 5, photo: "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=200&q=70" },
 ];
 
 export function Testimonials() {
@@ -52,11 +53,11 @@ export function Testimonials() {
                 </div>
                 <p className="mt-3 text-lg font-medium text-brand-navy md:text-xl">"{it.text}"</p>
                 <div className="mt-5 flex items-center gap-3">
-                  <img
+                  <SmartImage
                     src={it.photo}
                     alt={it.name}
-                    loading="lazy"
-                    className="h-11 w-11 rounded-full object-cover ring-2 ring-brand-orange/40"
+                    className="h-11 w-11 rounded-full ring-2 ring-brand-orange/40"
+                    imgClassName="rounded-full"
                   />
 
                   <div>
