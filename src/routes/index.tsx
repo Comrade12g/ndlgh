@@ -86,36 +86,133 @@ function HomePage() {
   );
 }
 
+function useGalleryPhotos() {
+  return useQuery({
+    queryKey: ["public-gallery"],
+    queryFn: fetchActiveGallery,
+    staleTime: 5 * 60_000,
+  });
+}
+
+function heroSlidesFromDb(photos: GalleryPhoto[] | undefined): CarouselSlide[] {
+  const hero = (photos ?? []).filter((p) => p.is_hero);
+  if (hero.length > 0) {
+    return hero.map((p) => ({
+      src: p.image_url,
+      alt: p.title,
+      caption: p.title,
+      location: p.location ?? undefined,
+    }));
+  }
+  return FALLBACK_HERO_SLIDES;
+}
+
 function GallerySection() {
   const ref = useReveal<HTMLDivElement>();
+  const { data } = useGalleryPhotos();
+  const [category, setCategory] = useState<string>("all");
+  const [location, setLocation] = useState<string>("all");
+
+  const items = useMemo(() => {
+    const fromDb = (data ?? []).map((p) => ({
+      src: p.image_url,
+      alt: p.title,
+      category: p.category,
+      location: p.location ?? "",
+    }));
+    return fromDb.length > 0 ? fromDb : FALLBACK_GALLERY;
+  }, [data]);
+
+  const categories = useMemo(() => {
+    const set = new Set<string>();
+    for (const it of items) if (it.category) set.add(it.category);
+    return Array.from(set);
+  }, [items]);
+
+  const locations = useMemo(() => {
+    const set = new Set<string>();
+    for (const it of items) if (it.location) set.add(it.location);
+    return Array.from(set);
+  }, [items]);
+
+  const filtered = items.filter((it) =>
+    (category === "all" || it.category === category) &&
+    (location === "all" || it.location === location),
+  );
+
   return (
     <section className="bg-secondary/40 py-16 md:py-20">
       <div className="mx-auto max-w-7xl px-4">
         <div ref={ref} className="reveal">
-          <SectionHeading eyebrow="On the ground" title="From origin port to your door" />
+          <SectionHeading eyebrow="On the ground" title="From origin port to your door — every step covered" />
+          <p className="mt-3 max-w-2xl text-sm text-muted-foreground">
+            Real photos from our warehouses in Guangzhou and Yiwu, sea and air lanes into Ghana, and last-mile deliveries in Accra, Kumasi and Tema. Filter by service or city.
+          </p>
         </div>
-        <div className="mt-10 grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-6">
-          {GALLERY.map((g, i) => (
+
+        <div className="mt-6 flex flex-wrap items-center gap-2">
+          <div className="inline-flex items-center gap-1 rounded-full bg-white px-3 py-1.5 text-xs font-semibold text-brand-navy shadow-sm">
+            <Filter className="h-3.5 w-3.5 text-brand-orange" /> Filter
+          </div>
+          <FilterChip active={category === "all"} onClick={() => setCategory("all")}>All services</FilterChip>
+          {GALLERY_CATEGORIES.filter((c) => categories.includes(c)).map((c) => (
+            <FilterChip key={c} active={category === c} onClick={() => setCategory(c)}>{c}</FilterChip>
+          ))}
+          {locations.length > 0 && (
+            <>
+              <div className="mx-2 h-4 w-px bg-border" />
+              <FilterChip active={location === "all"} onClick={() => setLocation("all")}>All cities</FilterChip>
+              {locations.map((l) => (
+                <FilterChip key={l} active={location === l} onClick={() => setLocation(l)}>{l}</FilterChip>
+              ))}
+            </>
+          )}
+        </div>
+
+        <div className="mt-8 grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4">
+          {filtered.map((g, i) => (
             <div
-              key={g.src}
+              key={g.src + i}
               className="reveal group relative aspect-square overflow-hidden rounded-2xl"
-              style={{ transitionDelay: `${i * 60}ms` }}
+              style={{ transitionDelay: `${i * 40}ms` }}
             >
-              <img
+              <SmartImage
                 src={g.src}
                 alt={g.alt}
-                loading="lazy"
-                className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+                className="h-full w-full"
+                imgClassName="transition-transform duration-700 group-hover:scale-110"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-brand-navy/70 via-transparent to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
-              <div className="absolute inset-x-0 bottom-0 translate-y-2 p-3 text-xs font-semibold text-white opacity-0 transition-all group-hover:translate-y-0 group-hover:opacity-100">
-                {g.alt}
+              <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-brand-navy/80 via-transparent to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
+              <div className="pointer-events-none absolute inset-x-0 bottom-0 translate-y-2 p-3 text-xs font-semibold text-white opacity-0 transition-all group-hover:translate-y-0 group-hover:opacity-100">
+                <div>{g.alt}</div>
+                {g.location && <div className="text-[10px] font-normal text-white/80">{g.location}</div>}
               </div>
             </div>
           ))}
+          {filtered.length === 0 && (
+            <div className="col-span-full rounded-2xl border border-dashed p-10 text-center text-sm text-muted-foreground">
+              No photos match the current filter.
+            </div>
+          )}
         </div>
       </div>
     </section>
+  );
+}
+
+function FilterChip({ active, onClick, children }: { active: boolean; onClick: () => void; children: React.ReactNode }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={`rounded-full px-3 py-1.5 text-xs font-semibold transition ${
+        active
+          ? "bg-brand-navy text-white shadow"
+          : "bg-white text-brand-navy hover:bg-brand-orange hover:text-white"
+      }`}
+    >
+      {children}
+    </button>
   );
 }
 
