@@ -315,7 +315,7 @@ function Hero() {
       <div className="absolute inset-0 opacity-20" style={{ backgroundImage: "radial-gradient(circle at 25% 30%, rgba(247,148,29,0.35), transparent 40%), radial-gradient(circle at 75% 60%, rgba(46,134,222,0.35), transparent 45%)" }} />
       <div className="absolute -left-16 top-1/4 h-72 w-72 rounded-full bg-brand-orange/15 blur-3xl animate-float-y" />
       <div className="absolute -right-16 bottom-0 h-72 w-72 rounded-full bg-brand-sky/15 blur-3xl animate-float-y" style={{ animationDelay: "-3s" }} />
-      <div className="relative mx-auto grid max-w-7xl gap-10 px-4 py-16 lg:grid-cols-2 lg:py-24">
+      <div className="relative mx-auto grid max-w-7xl items-center gap-10 px-4 py-16 md:grid-cols-2 md:py-20 lg:py-24">
         <div ref={ref} className="reveal">
           <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-brand-orange backdrop-blur">
             <span className="h-2 w-2 rounded-full bg-brand-orange animate-pulse" /> Live network · 5 origin hubs
