@@ -99,7 +99,6 @@ export const Route = createFileRoute("/lanes/$origin")({
 function LaneDetailPage() {
   const d: LaneDetail = Route.useLoaderData();
 
-  const d = Route.useLoaderData();
   const ref = useReveal<HTMLDivElement>();
   return (
     <MarketingLayout>
