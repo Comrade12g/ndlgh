@@ -40,6 +40,7 @@ import { Route as AuthenticatedTreasuryAccountsRouteImport } from './routes/_aut
 import { Route as AuthenticatedSourcingPosRouteImport } from './routes/_authenticated/sourcing.pos'
 import { Route as AuthenticatedCrmContactsRouteImport } from './routes/_authenticated/crm.contacts'
 import { Route as AuthenticatedAdminUsersRouteImport } from './routes/_authenticated/admin.users'
+import { Route as AuthenticatedAdminGalleryRouteImport } from './routes/_authenticated/admin.gallery'
 import { Route as AuthenticatedAdminAuditRouteImport } from './routes/_authenticated/admin.audit'
 import { Route as ApiPublicHooksPollShipmentEtaRouteImport } from './routes/api/public/hooks/poll-shipment-eta'
 
@@ -200,6 +201,12 @@ const AuthenticatedAdminUsersRoute = AuthenticatedAdminUsersRouteImport.update({
   path: '/admin/users',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedAdminGalleryRoute =
+  AuthenticatedAdminGalleryRouteImport.update({
+    id: '/admin/gallery',
+    path: '/admin/gallery',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 const AuthenticatedAdminAuditRoute = AuthenticatedAdminAuditRouteImport.update({
   id: '/admin/audit',
   path: '/admin/audit',
@@ -240,6 +247,7 @@ export interface FileRoutesByFullPath {
   '/lanes/$origin': typeof LanesOriginRoute
   '/track/$code': typeof TrackCodeRoute
   '/admin/audit': typeof AuthenticatedAdminAuditRoute
+  '/admin/gallery': typeof AuthenticatedAdminGalleryRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
   '/crm/contacts': typeof AuthenticatedCrmContactsRoute
   '/sourcing/pos': typeof AuthenticatedSourcingPosRoute
@@ -274,6 +282,7 @@ export interface FileRoutesByTo {
   '/lanes/$origin': typeof LanesOriginRoute
   '/track/$code': typeof TrackCodeRoute
   '/admin/audit': typeof AuthenticatedAdminAuditRoute
+  '/admin/gallery': typeof AuthenticatedAdminGalleryRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
   '/crm/contacts': typeof AuthenticatedCrmContactsRoute
   '/sourcing/pos': typeof AuthenticatedSourcingPosRoute
@@ -310,6 +319,7 @@ export interface FileRoutesById {
   '/lanes/$origin': typeof LanesOriginRoute
   '/track/$code': typeof TrackCodeRoute
   '/_authenticated/admin/audit': typeof AuthenticatedAdminAuditRoute
+  '/_authenticated/admin/gallery': typeof AuthenticatedAdminGalleryRoute
   '/_authenticated/admin/users': typeof AuthenticatedAdminUsersRoute
   '/_authenticated/crm/contacts': typeof AuthenticatedCrmContactsRoute
   '/_authenticated/sourcing/pos': typeof AuthenticatedSourcingPosRoute
@@ -346,6 +356,7 @@ export interface FileRouteTypes {
     | '/lanes/$origin'
     | '/track/$code'
     | '/admin/audit'
+    | '/admin/gallery'
     | '/admin/users'
     | '/crm/contacts'
     | '/sourcing/pos'
@@ -380,6 +391,7 @@ export interface FileRouteTypes {
     | '/lanes/$origin'
     | '/track/$code'
     | '/admin/audit'
+    | '/admin/gallery'
     | '/admin/users'
     | '/crm/contacts'
     | '/sourcing/pos'
@@ -415,6 +427,7 @@ export interface FileRouteTypes {
     | '/lanes/$origin'
     | '/track/$code'
     | '/_authenticated/admin/audit'
+    | '/_authenticated/admin/gallery'
     | '/_authenticated/admin/users'
     | '/_authenticated/crm/contacts'
     | '/_authenticated/sourcing/pos'
@@ -662,6 +675,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminUsersRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/admin/gallery': {
+      id: '/_authenticated/admin/gallery'
+      path: '/admin/gallery'
+      fullPath: '/admin/gallery'
+      preLoaderRoute: typeof AuthenticatedAdminGalleryRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/admin/audit': {
       id: '/_authenticated/admin/audit'
       path: '/admin/audit'
@@ -690,6 +710,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedShipmentsRoute: typeof AuthenticatedShipmentsRoute
   AuthenticatedSupportRoute: typeof AuthenticatedSupportRoute
   AuthenticatedAdminAuditRoute: typeof AuthenticatedAdminAuditRoute
+  AuthenticatedAdminGalleryRoute: typeof AuthenticatedAdminGalleryRoute
   AuthenticatedAdminUsersRoute: typeof AuthenticatedAdminUsersRoute
   AuthenticatedCrmContactsRoute: typeof AuthenticatedCrmContactsRoute
   AuthenticatedSourcingPosRoute: typeof AuthenticatedSourcingPosRoute
@@ -707,6 +728,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedShipmentsRoute: AuthenticatedShipmentsRoute,
   AuthenticatedSupportRoute: AuthenticatedSupportRoute,
   AuthenticatedAdminAuditRoute: AuthenticatedAdminAuditRoute,
+  AuthenticatedAdminGalleryRoute: AuthenticatedAdminGalleryRoute,
   AuthenticatedAdminUsersRoute: AuthenticatedAdminUsersRoute,
   AuthenticatedCrmContactsRoute: AuthenticatedCrmContactsRoute,
   AuthenticatedSourcingPosRoute: AuthenticatedSourcingPosRoute,

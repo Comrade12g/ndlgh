@@ -7,25 +7,36 @@ import { MilestoneTimeline } from "@/components/tracking/MilestoneTimeline";
 import { StatsBand } from "@/components/marketing/StatsBand";
 import { Testimonials } from "@/components/marketing/Testimonials";
 import { LaneMarquee } from "@/components/marketing/LaneMarquee";
+import { HeroCarousel, type CarouselSlide } from "@/components/marketing/HeroCarousel";
+import { SmartImage } from "@/components/marketing/SmartImage";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useReveal } from "@/hooks/use-reveal";
 import { useMagnetic } from "@/hooks/use-magnetic";
 import { useTilt } from "@/hooks/use-tilt";
+import { useQuery } from "@tanstack/react-query";
+import { useMemo, useState } from "react";
+import {
+  fetchActiveGallery, FALLBACK_GALLERY, FALLBACK_HERO_SLIDES, GALLERY_CATEGORIES,
+  type GalleryPhoto,
+} from "@/lib/gallery";
 import {
   Ship, Plane, Truck, Warehouse, ShieldCheck, Globe2,
-  ArrowRight, Users, FileCheck,
+  ArrowRight, Users, FileCheck, Filter,
 } from "lucide-react";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "NDL Cargo Ghana — China, Dubai, US, Canada, Thailand to Tema" },
-      { name: "description", content: "End-to-end sea, air and door-to-door freight from China, Dubai, Thailand, Canada and the US to Ghana. Live tracking, groupage, FCL, air, customs & last-mile delivery." },
+      { title: "NDL Cargo Ghana — Sea, Air & Door Freight from China, Dubai, US, Canada & Thailand" },
+      { name: "description", content: "NDL Cargo Ghana ships sea LCL/FCL, air cargo and door-to-door freight from China (Guangzhou, Yiwu, Shenzhen), Dubai, Thailand, Canada and the US into Tema Port and Accra. Live NDL-CN & NDL-GH tracking, in-house customs clearing, groupage consolidation and Ghana-wide last-mile delivery. Get an instant CBM quote in seconds." },
+      { name: "keywords", content: "shipping to Ghana, China to Ghana cargo, Guangzhou Yiwu Ghana freight, Dubai to Ghana shipping, air cargo Ghana, sea freight Tema, LCL FCL Ghana, customs clearing Tema, Ghana logistics, last-mile delivery Ghana, NDL Cargo, groupage Ghana" },
       { property: "og:title", content: "NDL Cargo Ghana — Global freight, delivered to your door" },
-      { property: "og:description", content: "Sea LCL/FCL, air, customs clearing and Ghana-wide last-mile delivery. Get an instant quote or track your shipment." },
+      { property: "og:description", content: "Sea LCL/FCL, air, customs clearing and Ghana-wide last-mile delivery from China, Dubai, Thailand, Canada and the US. Instant quotes and live shipment tracking." },
       { property: "og:type", content: "website" },
+      { property: "og:image", content: "https://images.unsplash.com/photo-1494412651409-8963ce7935a7?auto=format&fit=crop&w=1600&q=80" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:image", content: "https://images.unsplash.com/photo-1494412651409-8963ce7935a7?auto=format&fit=crop&w=1600&q=80" },
     ],
   }),
   component: HomePage,
