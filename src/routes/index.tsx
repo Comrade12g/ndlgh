@@ -58,14 +58,6 @@ const SERVICES = [
   { icon: Warehouse, name: "Warehousing & Delivery",  desc: "Bonded storage plus Ghana-wide last-mile delivery.",          photo: IMG.warehousePallets },
 ];
 
-const GALLERY = [
-  { src: "https://images.unsplash.com/photo-1578575437130-527eed3abbec?auto=format&fit=crop&w=800&q=65", alt: "Container ship at port" },
-  { src: "https://images.unsplash.com/photo-1601598851547-4302969d0614?auto=format&fit=crop&w=800&q=65", alt: "Warehouse interior" },
-  { src: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=800&q=65", alt: "Cargo plane on tarmac" },
-  { src: "https://images.unsplash.com/photo-1580901368919-7738efb0f87e?auto=format&fit=crop&w=800&q=65", alt: "Delivery truck" },
-  { src: "https://images.unsplash.com/photo-1577032229840-33f74d0ab24e?auto=format&fit=crop&w=800&q=65", alt: "Stacked containers" },
-  { src: "https://images.unsplash.com/photo-1519666336592-e225a99dcd2f?auto=format&fit=crop&w=800&q=65", alt: "Port cranes at dusk" },
-];
 
 function HomePage() {
   return (
