@@ -32,18 +32,27 @@ export const Route = createFileRoute("/")({
 });
 
 const LANES = [
-  { code: "china", name: "China", tag: "Yiwu · Guangzhou · Taizhou", note: "Small commodities, electronics, hardware" },
-  { code: "dubai", name: "Dubai", tag: "UAE hub", note: "Cosmetics, gold, machinery" },
-  { code: "thailand", name: "Thailand", tag: "Bangkok", note: "Auto parts, wellness, food" },
-  { code: "canada", name: "Canada", tag: "Toronto", note: "Personal effects, retail returns" },
-  { code: "us", name: "United States", tag: "New York · Los Angeles", note: "E-commerce, vehicles, machinery" },
+  { code: "china", name: "China", tag: "Yiwu · Guangzhou · Taizhou", note: "Small commodities, electronics, hardware", photo: "https://images.unsplash.com/photo-1545893835-abaa50cbe628?auto=format&fit=crop&w=800&q=65" },
+  { code: "dubai", name: "Dubai", tag: "UAE hub", note: "Cosmetics, gold, machinery", photo: "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=800&q=65" },
+  { code: "thailand", name: "Thailand", tag: "Bangkok", note: "Auto parts, wellness, food", photo: "https://images.unsplash.com/photo-1508009603885-50cf7c579365?auto=format&fit=crop&w=800&q=65" },
+  { code: "canada", name: "Canada", tag: "Toronto", note: "Personal effects, retail returns", photo: "https://images.unsplash.com/photo-1517090504586-fde19ea6066f?auto=format&fit=crop&w=800&q=65" },
+  { code: "us", name: "United States", tag: "New York · Los Angeles", note: "E-commerce, vehicles, machinery", photo: "https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?auto=format&fit=crop&w=800&q=65" },
 ];
 
 const SERVICES = [
-  { icon: Ship, name: "Sea Freight", desc: "LCL groupage and full-container (FCL) service to Tema Port." },
-  { icon: Plane, name: "Air Cargo", desc: "Express and general air freight into Kotoka International." },
-  { icon: FileCheck, name: "Customs Clearing", desc: "In-house licensed brokers — no third-party leakage." },
-  { icon: Warehouse, name: "Warehousing & Delivery", desc: "Bonded storage plus Ghana-wide last-mile delivery." },
+  { icon: Ship, name: "Sea Freight", desc: "LCL groupage and full-container (FCL) service to Tema Port.", photo: "https://images.unsplash.com/photo-1494412651409-8963ce7935a7?auto=format&fit=crop&w=800&q=65" },
+  { icon: Plane, name: "Air Cargo", desc: "Express and general air freight into Kotoka International.", photo: "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=800&q=65" },
+  { icon: FileCheck, name: "Customs Clearing", desc: "In-house licensed brokers — no third-party leakage.", photo: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=800&q=65" },
+  { icon: Warehouse, name: "Warehousing & Delivery", desc: "Bonded storage plus Ghana-wide last-mile delivery.", photo: "https://images.unsplash.com/photo-1553413077-190dd305871c?auto=format&fit=crop&w=800&q=65" },
+];
+
+const GALLERY = [
+  { src: "https://images.unsplash.com/photo-1578575437130-527eed3abbec?auto=format&fit=crop&w=800&q=65", alt: "Container ship at port" },
+  { src: "https://images.unsplash.com/photo-1601598851547-4302969d0614?auto=format&fit=crop&w=800&q=65", alt: "Warehouse interior" },
+  { src: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=800&q=65", alt: "Cargo plane on tarmac" },
+  { src: "https://images.unsplash.com/photo-1580901368919-7738efb0f87e?auto=format&fit=crop&w=800&q=65", alt: "Delivery truck" },
+  { src: "https://images.unsplash.com/photo-1577032229840-33f74d0ab24e?auto=format&fit=crop&w=800&q=65", alt: "Stacked containers" },
+  { src: "https://images.unsplash.com/photo-1519666336592-e225a99dcd2f?auto=format&fit=crop&w=800&q=65", alt: "Port cranes at dusk" },
 ];
 
 function HomePage() {
@@ -56,12 +65,46 @@ function HomePage() {
       <StatsBand />
       <QuoteSection />
       <LanesSection />
+      <GallerySection />
       <TrackingDemo />
       <Testimonials />
       <TeamSection />
       <ContactCTA />
       <JsonLd />
     </MarketingLayout>
+  );
+}
+
+function GallerySection() {
+  const ref = useReveal<HTMLDivElement>();
+  return (
+    <section className="bg-secondary/40 py-16 md:py-20">
+      <div className="mx-auto max-w-7xl px-4">
+        <div ref={ref} className="reveal">
+          <SectionHeading eyebrow="On the ground" title="From origin port to your door" />
+        </div>
+        <div className="mt-10 grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-6">
+          {GALLERY.map((g, i) => (
+            <div
+              key={g.src}
+              className="reveal group relative aspect-square overflow-hidden rounded-2xl"
+              style={{ transitionDelay: `${i * 60}ms` }}
+            >
+              <img
+                src={g.src}
+                alt={g.alt}
+                loading="lazy"
+                className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-brand-navy/70 via-transparent to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
+              <div className="absolute inset-x-0 bottom-0 translate-y-2 p-3 text-xs font-semibold text-white opacity-0 transition-all group-hover:translate-y-0 group-hover:opacity-100">
+                {g.alt}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
   );
 }
 
@@ -157,15 +200,27 @@ function ServicesSection() {
       </div>
       <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {SERVICES.map((s, i) => (
-          <RevealCard key={s.name} delay={i * 80}>
-            <div className="rounded-lg bg-brand-orange/10 p-2.5 w-fit text-brand-orange">
-              <s.icon className="h-5 w-5" />
+          <RevealCard key={s.name} delay={i * 80} noPadding>
+            <div className="relative h-40 overflow-hidden">
+              <img
+                src={s.photo}
+                alt={s.name}
+                loading="lazy"
+                className="h-full w-full object-cover transition-transform duration-700 hover:scale-110"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-brand-navy/80 via-brand-navy/20 to-transparent" />
+              <div className="absolute left-4 top-4 rounded-lg bg-white/95 p-2 text-brand-orange shadow-lg">
+                <s.icon className="h-5 w-5" />
+              </div>
             </div>
-            <h3 className="mt-4 font-display text-lg font-bold text-brand-navy">{s.name}</h3>
-            <p className="mt-2 text-sm text-muted-foreground">{s.desc}</p>
+            <div className="p-5">
+              <h3 className="font-display text-lg font-bold text-brand-navy">{s.name}</h3>
+              <p className="mt-2 text-sm text-muted-foreground">{s.desc}</p>
+            </div>
           </RevealCard>
         ))}
       </div>
+
       <div className="mt-8 text-center">
         <Link to="/services">
           <Button variant="outline">Explore all services <ArrowRight className="ml-2 h-4 w-4" /></Button>
@@ -217,17 +272,31 @@ function LanesSection() {
       <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {LANES.map((l, i) => (
           <Link key={l.code} to="/lanes/$origin" params={{ origin: l.code }} className="group block">
-            <RevealCard delay={i * 60} className="transition-all group-hover:-translate-y-1 group-hover:shadow-xl">
-              <div className="flex items-center justify-between">
-                <h3 className="font-display text-xl font-bold text-brand-navy">{l.name}</h3>
-                <ArrowRight className="h-4 w-4 text-brand-orange transition-transform group-hover:translate-x-1" />
+            <RevealCard delay={i * 60} noPadding className="transition-all group-hover:-translate-y-1 group-hover:shadow-xl">
+              <div className="relative h-48 overflow-hidden">
+                <img
+                  src={l.photo}
+                  alt={l.name}
+                  loading="lazy"
+                  className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-brand-navy/85 via-brand-navy/30 to-transparent" />
+                <div className="absolute inset-x-0 bottom-0 p-5 text-white">
+                  <div className="flex items-center justify-between">
+                    <h3 className="font-display text-2xl font-black">{l.name}</h3>
+                    <ArrowRight className="h-4 w-4 text-brand-orange transition-transform group-hover:translate-x-1" />
+                  </div>
+                  <div className="mt-1 font-mono text-[11px] uppercase tracking-wider text-brand-orange">{l.tag}</div>
+                </div>
               </div>
-              <div className="mt-1 font-mono text-xs uppercase tracking-wider text-brand-sky">{l.tag}</div>
-              <p className="mt-3 text-sm text-muted-foreground">{l.note}</p>
+              <div className="p-5">
+                <p className="text-sm text-muted-foreground">{l.note}</p>
+              </div>
             </RevealCard>
           </Link>
         ))}
       </div>
+
     </section>
   );
 }
@@ -316,13 +385,13 @@ function SectionHeading({ eyebrow, title }: { eyebrow: string; title: string }) 
   );
 }
 
-function RevealCard({ children, delay = 0, className = "", tilt = true }: { children: React.ReactNode; delay?: number; className?: string; tilt?: boolean }) {
+function RevealCard({ children, delay = 0, className = "", tilt = true, noPadding = false }: { children: React.ReactNode; delay?: number; className?: string; tilt?: boolean; noPadding?: boolean }) {
   const ref = useReveal<HTMLDivElement>();
   const tiltRef = useTilt<HTMLDivElement>(8);
   return (
     <div ref={ref} className="reveal" style={{ transitionDelay: `${delay}ms` }}>
       <div ref={tilt ? tiltRef : undefined}>
-        <Card className={`p-6 transition-shadow hover:shadow-xl ${className}`}>{children}</Card>
+        <Card className={`${noPadding ? "overflow-hidden" : "p-6"} transition-shadow hover:shadow-xl ${className}`}>{children}</Card>
       </div>
     </div>
   );
