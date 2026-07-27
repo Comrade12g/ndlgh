@@ -50,11 +50,14 @@ function HomePage() {
   return (
     <MarketingLayout>
       <Hero />
+      <LaneMarquee />
       <TrustStrip />
       <ServicesSection />
+      <StatsBand />
       <QuoteSection />
       <LanesSection />
       <TrackingDemo />
+      <Testimonials />
       <TeamSection />
       <ContactCTA />
       <JsonLd />
@@ -64,38 +67,54 @@ function HomePage() {
 
 function Hero() {
   const ref = useReveal<HTMLDivElement>();
+  const magneticA = useMagnetic<HTMLDivElement>(0.18);
+  const magneticB = useMagnetic<HTMLDivElement>(0.18);
+  const headline = "Global freight, delivered to your door in Ghana.".split(" ");
   return (
     <section className="relative overflow-hidden bg-gradient-to-b from-brand-navy via-[#0d2551] to-brand-navy text-white">
       <div className="absolute inset-0 opacity-20" style={{ backgroundImage: "radial-gradient(circle at 25% 30%, rgba(247,148,29,0.35), transparent 40%), radial-gradient(circle at 75% 60%, rgba(46,134,222,0.35), transparent 45%)" }} />
+      <div className="absolute -left-16 top-1/4 h-72 w-72 rounded-full bg-brand-orange/15 blur-3xl animate-float-y" />
+      <div className="absolute -right-16 bottom-0 h-72 w-72 rounded-full bg-brand-sky/15 blur-3xl animate-float-y" style={{ animationDelay: "-3s" }} />
       <div className="relative mx-auto grid max-w-7xl gap-10 px-4 py-16 lg:grid-cols-2 lg:py-24">
         <div ref={ref} className="reveal">
           <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-brand-orange backdrop-blur">
             <span className="h-2 w-2 rounded-full bg-brand-orange animate-pulse" /> Live network · 5 origin hubs
           </div>
-          <h1 className="mt-5 font-display text-4xl font-black leading-[1.05] tracking-tight sm:text-5xl lg:text-6xl">
-            Global freight,<br />
-            <span className="text-gradient-brand">delivered</span> to your door in Ghana.
+          <h1 className="mt-5 word-rise font-display text-4xl font-black leading-[1.05] tracking-tight sm:text-5xl lg:text-6xl">
+            {headline.map((w, i) => (
+              <span
+                key={i}
+                style={{ animationDelay: `${i * 90}ms` }}
+                className={w === "delivered" ? "text-gradient-brand mr-2" : "mr-2"}
+              >
+                {w}
+              </span>
+            ))}
           </h1>
           <p className="mt-5 max-w-lg text-lg text-white/80">
             Sea groupage, full containers, air cargo, customs clearing and Ghana-wide last-mile delivery — from China, Dubai, Thailand, Canada and the US.
           </p>
           <div className="mt-6 flex flex-wrap gap-3">
-            <Link to="/quote">
-              <Button size="lg" className="bg-brand-orange text-white hover:bg-brand-orange/90">
-                Get an instant quote <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-            </Link>
-            <Link to="/tracking">
-              <Button size="lg" variant="outline" className="border-white/30 bg-white/5 text-white hover:bg-white/10">
-                Track a shipment
-              </Button>
-            </Link>
+            <div ref={magneticA} className="inline-block">
+              <Link to="/quote">
+                <Button size="lg" className="bg-brand-orange text-white shadow-lg shadow-brand-orange/30 hover:bg-brand-orange/90 hover:scale-105 transition-transform">
+                  Get an instant quote <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </Link>
+            </div>
+            <div ref={magneticB} className="inline-block">
+              <Link to="/tracking">
+                <Button size="lg" variant="outline" className="border-white/30 bg-white/5 text-white hover:bg-white/10 hover:scale-105 transition-transform">
+                  Track a shipment
+                </Button>
+              </Link>
+            </div>
           </div>
           <div className="mt-8">
             <TrackingLookup variant="hero" />
           </div>
         </div>
-        <div className="reveal">
+        <div className="reveal-scale">
           <HeroMap />
         </div>
       </div>
