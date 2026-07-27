@@ -28,6 +28,8 @@ export function SmartImage({
   aspect,
   eager = false,
   prefetch = false,
+  width,
+  height,
 }: Props) {
   const [loaded, setLoaded] = useState(false);
   const [errored, setErrored] = useState(false);
