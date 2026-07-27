@@ -9,6 +9,8 @@ type Props = {
   aspect?: string; // e.g. "aspect-square" or "aspect-[4/3]"
   eager?: boolean;
   prefetch?: boolean; // when true, start loading before scroll (uses fetchpriority high)
+  width?: number;
+  height?: number;
 };
 
 /**
@@ -26,6 +28,8 @@ export function SmartImage({
   aspect,
   eager = false,
   prefetch = false,
+  width,
+  height,
 }: Props) {
   const [loaded, setLoaded] = useState(false);
   const [errored, setErrored] = useState(false);
@@ -50,9 +54,11 @@ export function SmartImage({
           ref={ref}
           src={src}
           alt={alt}
-          loading={eager ? "eager" : "lazy"}
-          decoding="async"
+          {...(eager ? {} : { loading: "lazy" as const })}
+          decoding={eager ? "sync" : "async"}
           {...(prefetch ? { fetchPriority: "high" as const } : {})}
+          {...(width ? { width } : {})}
+          {...(height ? { height } : {})}
           onLoad={() => setLoaded(true)}
           onError={() => setErrored(true)}
           className={cn(
