@@ -506,7 +506,7 @@ function ShipmentDetailDialog({ id, onChanged }: { id: string; onChanged: () => 
 
       // Fetch shipment ref + eta once, and each package's customer contact info
       const [{ data: ship }, { data: pkgs }] = await Promise.all([
-        supabase.from("shipments").select("ndl_reference, eta").eq("id", id).maybeSingle(),
+        supabase.from("shipments").select("ndl_reference, eta, mode").eq("id", id).maybeSingle(),
         supabase
           .from("packages")
           .select("id, customer_id, profiles:customer_id(full_name, phone)")
@@ -515,6 +515,7 @@ function ShipmentDetailDialog({ id, onChanged }: { id: string; onChanged: () => 
       ]);
       const ref = ship?.ndl_reference ?? "";
       if (!ref) return;
+      const mode = ship?.mode ?? null;
       const seen = new Set<string>();
       for (const p of (pkgs ?? []) as Array<{
         id: string;
@@ -528,8 +529,8 @@ function ShipmentDetailDialog({ id, onChanged }: { id: string; onChanged: () => 
           tplKey === "shipmentDeparted"
             ? waTemplates.shipmentDeparted(name, ref, ship?.eta ?? null)
             : tplKey === "shipmentArrived"
-              ? waTemplates.shipmentArrived(name, ref)
-              : waTemplates.shipmentCleared(name, ref);
+              ? waTemplates.shipmentArrived(name, ref, mode)
+              : waTemplates.shipmentCleared(name, ref, mode);
         // Log all, but only open WhatsApp for the first (avoid popup storm)
         await notifyCustomer({
           customerId: p.customer_id,
