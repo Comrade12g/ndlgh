@@ -20,6 +20,7 @@ import {
   fetchActiveGallery, FALLBACK_GALLERY, FALLBACK_HERO_SLIDES, GALLERY_CATEGORIES,
   type GalleryPhoto,
 } from "@/lib/gallery";
+import { IMG } from "@/assets/gallery";
 import {
   Ship, Plane, Truck, Warehouse, ShieldCheck, Globe2,
   ArrowRight, Users, FileCheck, Filter,
@@ -34,37 +35,29 @@ export const Route = createFileRoute("/")({
       { property: "og:title", content: "NDL Cargo Ghana — Global freight, delivered to your door" },
       { property: "og:description", content: "Sea LCL/FCL, air, customs clearing and Ghana-wide last-mile delivery from China, Dubai, Thailand, Canada and the US. Instant quotes and live shipment tracking." },
       { property: "og:type", content: "website" },
-      { property: "og:image", content: "https://images.unsplash.com/photo-1494412651409-8963ce7935a7?auto=format&fit=crop&w=1600&q=80" },
+      { property: "og:image", content: `https://ndlgh.susuboxgh.com${IMG.seaTema}` },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:image", content: "https://images.unsplash.com/photo-1494412651409-8963ce7935a7?auto=format&fit=crop&w=1600&q=80" },
+      { name: "twitter:image", content: `https://ndlgh.susuboxgh.com${IMG.seaTema}` },
     ],
   }),
   component: HomePage,
 });
 
 const LANES = [
-  { code: "china", name: "China", tag: "Yiwu · Guangzhou · Taizhou", note: "Small commodities, electronics, hardware", photo: "https://images.unsplash.com/photo-1545893835-abaa50cbe628?auto=format&fit=crop&w=800&q=65" },
-  { code: "dubai", name: "Dubai", tag: "UAE hub", note: "Cosmetics, gold, machinery", photo: "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=800&q=65" },
-  { code: "thailand", name: "Thailand", tag: "Bangkok", note: "Auto parts, wellness, food", photo: "https://images.unsplash.com/photo-1508009603885-50cf7c579365?auto=format&fit=crop&w=800&q=65" },
-  { code: "canada", name: "Canada", tag: "Toronto", note: "Personal effects, retail returns", photo: "https://images.unsplash.com/photo-1517090504586-fde19ea6066f?auto=format&fit=crop&w=800&q=65" },
-  { code: "us", name: "United States", tag: "New York · Los Angeles", note: "E-commerce, vehicles, machinery", photo: "https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?auto=format&fit=crop&w=800&q=65" },
+  { code: "china",    name: "China",         tag: "Yiwu · Guangzhou · Taizhou", note: "Small commodities, electronics, hardware", photo: IMG.chinaHub },
+  { code: "dubai",    name: "Dubai",         tag: "UAE hub",                    note: "Cosmetics, gold, machinery",               photo: IMG.dubaiHub },
+  { code: "thailand", name: "Thailand",      tag: "Bangkok",                    note: "Auto parts, wellness, food",               photo: IMG.thailandHub },
+  { code: "canada",   name: "Canada",        tag: "Toronto",                    note: "Personal effects, retail returns",         photo: IMG.canadaHub },
+  { code: "us",       name: "United States", tag: "New York · Los Angeles",     note: "E-commerce, vehicles, machinery",          photo: IMG.usHub },
 ];
 
 const SERVICES = [
-  { icon: Ship, name: "Sea Freight", desc: "LCL groupage and full-container (FCL) service to Tema Port.", photo: "https://images.unsplash.com/photo-1494412651409-8963ce7935a7?auto=format&fit=crop&w=800&q=65" },
-  { icon: Plane, name: "Air Cargo", desc: "Express and general air freight into Kotoka International.", photo: "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=800&q=65" },
-  { icon: FileCheck, name: "Customs Clearing", desc: "In-house licensed brokers — no third-party leakage.", photo: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=800&q=65" },
-  { icon: Warehouse, name: "Warehousing & Delivery", desc: "Bonded storage plus Ghana-wide last-mile delivery.", photo: "https://images.unsplash.com/photo-1553413077-190dd305871c?auto=format&fit=crop&w=800&q=65" },
+  { icon: Ship,      name: "Sea Freight",             desc: "LCL groupage and full-container (FCL) service to Tema Port.", photo: IMG.seaTema },
+  { icon: Plane,     name: "Air Cargo",               desc: "Express and general air freight into Kotoka International.",  photo: IMG.airCargoPlane },
+  { icon: FileCheck, name: "Customs Clearing",        desc: "In-house licensed brokers — no third-party leakage.",         photo: IMG.customsClearing },
+  { icon: Warehouse, name: "Warehousing & Delivery",  desc: "Bonded storage plus Ghana-wide last-mile delivery.",          photo: IMG.warehousePallets },
 ];
 
-const GALLERY = [
-  { src: "https://images.unsplash.com/photo-1578575437130-527eed3abbec?auto=format&fit=crop&w=800&q=65", alt: "Container ship at port" },
-  { src: "https://images.unsplash.com/photo-1601598851547-4302969d0614?auto=format&fit=crop&w=800&q=65", alt: "Warehouse interior" },
-  { src: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=800&q=65", alt: "Cargo plane on tarmac" },
-  { src: "https://images.unsplash.com/photo-1580901368919-7738efb0f87e?auto=format&fit=crop&w=800&q=65", alt: "Delivery truck" },
-  { src: "https://images.unsplash.com/photo-1577032229840-33f74d0ab24e?auto=format&fit=crop&w=800&q=65", alt: "Stacked containers" },
-  { src: "https://images.unsplash.com/photo-1519666336592-e225a99dcd2f?auto=format&fit=crop&w=800&q=65", alt: "Port cranes at dusk" },
-];
 
 function HomePage() {
   return (
@@ -140,8 +133,48 @@ function GallerySection() {
     (location === "all" || it.location === location),
   );
 
+  // Schema.org ImageGallery so search engines understand the photos, categories, and cities.
+  const galleryLd = useMemo(() => {
+    const origin =
+      typeof window !== "undefined"
+        ? window.location.origin
+        : "https://ndlgh.susuboxgh.com";
+    return {
+      "@context": "https://schema.org",
+      "@type": "ImageGallery",
+      name: "NDL Cargo Ghana — On the ground",
+      description:
+        "Photos from NDL Cargo warehouses, sea/air lanes and last-mile deliveries across China, Dubai and Ghana.",
+      about: Array.from(new Set(items.map((i) => i.category).filter(Boolean))),
+      contentLocation: Array.from(
+        new Set(items.map((i) => i.location).filter(Boolean)),
+      ).map((city) => ({ "@type": "Place", name: city })),
+      image: items.map((it, i) => {
+        const { alt, caption } = buildGalleryCopy(it);
+        const url = it.src.startsWith("http") ? it.src : `${origin}${it.src}`;
+        return {
+          "@type": "ImageObject",
+          position: i + 1,
+          contentUrl: url,
+          url,
+          name: it.alt || caption,
+          caption,
+          description: alt,
+          ...(it.category ? { keywords: it.category } : {}),
+          ...(it.location
+            ? { contentLocation: { "@type": "Place", name: it.location } }
+            : {}),
+        };
+      }),
+    };
+  }, [items]);
+
   return (
     <section className="bg-secondary/40 py-16 md:py-20">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(galleryLd) }}
+      />
       <div className="mx-auto max-w-7xl px-4">
         <div ref={ref} className="reveal">
           <SectionHeading eyebrow="On the ground" title="From origin port to your door — every step covered" />
@@ -282,7 +315,7 @@ function Hero() {
       <div className="absolute inset-0 opacity-20" style={{ backgroundImage: "radial-gradient(circle at 25% 30%, rgba(247,148,29,0.35), transparent 40%), radial-gradient(circle at 75% 60%, rgba(46,134,222,0.35), transparent 45%)" }} />
       <div className="absolute -left-16 top-1/4 h-72 w-72 rounded-full bg-brand-orange/15 blur-3xl animate-float-y" />
       <div className="absolute -right-16 bottom-0 h-72 w-72 rounded-full bg-brand-sky/15 blur-3xl animate-float-y" style={{ animationDelay: "-3s" }} />
-      <div className="relative mx-auto grid max-w-7xl gap-10 px-4 py-16 lg:grid-cols-2 lg:py-24">
+      <div className="relative mx-auto grid max-w-7xl items-center gap-10 px-4 py-16 md:grid-cols-2 md:py-20 lg:py-24">
         <div ref={ref} className="reveal">
           <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-brand-orange backdrop-blur">
             <span className="h-2 w-2 rounded-full bg-brand-orange animate-pulse" /> Live network · 5 origin hubs
