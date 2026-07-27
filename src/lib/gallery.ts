@@ -41,50 +41,26 @@ export const GALLERY_LOCATIONS = [
   "Other",
 ] as const;
 
-// Curated fallback photos used when the admin has not populated the gallery yet
-// (or as seed content).
+// Curated fallback photos hosted on Lovable CDN (from src/assets/gallery).
+import { IMG } from "@/assets/gallery";
+
 export const FALLBACK_HERO_SLIDES = [
-  {
-    src: "https://images.unsplash.com/photo-1494412651409-8963ce7935a7?auto=format&fit=crop&w=1600&q=70",
-    alt: "Container ship arriving at port",
-    caption: "Sea freight into Tema Port",
-    location: "Tema",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1587293852726-70cdb56c2866?auto=format&fit=crop&w=1600&q=70",
-    alt: "Cargo plane on tarmac at sunrise",
-    caption: "Air cargo via Kotoka International",
-    location: "Accra",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1553413077-190dd305871c?auto=format&fit=crop&w=1600&q=70",
-    alt: "Warehouse pallets ready for dispatch",
-    caption: "Groupage consolidation warehouse",
-    location: "Guangzhou",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1580901368919-7738efb0f87e?auto=format&fit=crop&w=1600&q=70",
-    alt: "Delivery truck with cargo",
-    caption: "Ghana-wide last-mile delivery",
-    location: "Kumasi",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1519666336592-e225a99dcd2f?auto=format&fit=crop&w=1600&q=70",
-    alt: "Port cranes at dusk",
-    caption: "24/7 port operations",
-    location: "Tema",
-  },
+  { src: IMG.seaTema,           alt: "Container ship arriving at port",       caption: "Sea freight into Tema Port",         location: "Tema" },
+  { src: IMG.airAccra,          alt: "Cargo plane on tarmac at sunrise",      caption: "Air cargo via Kotoka International", location: "Accra" },
+  { src: IMG.warehousePallets,  alt: "Warehouse pallets ready for dispatch",  caption: "Groupage consolidation warehouse",   location: "Guangzhou" },
+  { src: IMG.deliveryTruck,     alt: "Delivery truck with cargo",             caption: "Ghana-wide last-mile delivery",      location: "Kumasi" },
+  { src: IMG.portCranes,        alt: "Port cranes at dusk",                   caption: "24/7 port operations",               location: "Tema" },
 ];
 
 export const FALLBACK_GALLERY = [
-  { src: "https://images.unsplash.com/photo-1578575437130-527eed3abbec?auto=format&fit=crop&w=900&q=65", alt: "Container ship at port", category: "Port & Vessels", location: "Tema" },
-  { src: "https://images.unsplash.com/photo-1601598851547-4302969d0614?auto=format&fit=crop&w=900&q=65", alt: "Warehouse interior", category: "Warehouse", location: "Accra" },
-  { src: "https://images.unsplash.com/photo-1587293852726-70cdb56c2866?auto=format&fit=crop&w=900&q=65", alt: "Cargo plane on tarmac", category: "Air Cargo", location: "Accra" },
-  { src: "https://images.unsplash.com/photo-1580901368919-7738efb0f87e?auto=format&fit=crop&w=900&q=65", alt: "Delivery truck", category: "Delivery", location: "Kumasi" },
-  { src: "https://images.unsplash.com/photo-1577032229840-33f74d0ab24e?auto=format&fit=crop&w=900&q=65", alt: "Stacked containers", category: "Port & Vessels", location: "Tema" },
-  { src: "https://images.unsplash.com/photo-1519666336592-e225a99dcd2f?auto=format&fit=crop&w=900&q=65", alt: "Port cranes at dusk", category: "Port & Vessels", location: "Takoradi" },
-  { src: "https://images.unsplash.com/photo-1553413077-190dd305871c?auto=format&fit=crop&w=900&q=65", alt: "Pallets in a bonded warehouse", category: "Warehouse", location: "Guangzhou" },
-  { src: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=900&q=65", alt: "Freighter loading at night", category: "Air Cargo", location: "Dubai" },
+  { src: IMG.containerShipPort, alt: "Container ship at port",              category: "Port & Vessels", location: "Tema" },
+  { src: IMG.warehouseInterior, alt: "Warehouse interior",                  category: "Warehouse",      location: "Accra" },
+  { src: IMG.airAccra,          alt: "Cargo plane on tarmac",               category: "Air Cargo",      location: "Accra" },
+  { src: IMG.deliveryTruck,     alt: "Delivery truck",                      category: "Delivery",       location: "Kumasi" },
+  { src: IMG.stackedContainers, alt: "Stacked containers",                  category: "Port & Vessels", location: "Tema" },
+  { src: IMG.portCranes,        alt: "Port cranes at dusk",                 category: "Port & Vessels", location: "Takoradi" },
+  { src: IMG.warehousePallets,  alt: "Pallets in a bonded warehouse",       category: "Warehouse",      location: "Guangzhou" },
+  { src: IMG.freighterNight,    alt: "Freighter loading at night",          category: "Air Cargo",      location: "Dubai" },
 ];
 
 export async function fetchActiveGallery(): Promise<GalleryPhoto[]> {
