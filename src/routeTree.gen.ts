@@ -9,24 +9,31 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TrackingRouteImport } from './routes/tracking'
 import { Route as StaffSignupRouteImport } from './routes/staff-signup'
+import { Route as ServicesRouteImport } from './routes/services'
+import { Route as QuoteRouteImport } from './routes/quote'
 import { Route as PortalRouteImport } from './routes/portal'
 import { Route as PendingActivationRouteImport } from './routes/pending-activation'
+import { Route as LanesRouteImport } from './routes/lanes'
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
+import { Route as ContactRouteImport } from './routes/contact'
 import { Route as ChangePasswordRouteImport } from './routes/change-password'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AccountRouteImport } from './routes/account'
 import { Route as AcceptInviteRouteImport } from './routes/accept-invite'
+import { Route as AboutRouteImport } from './routes/about'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as TrackCodeRouteImport } from './routes/track.$code'
-import { Route as AuthenticatedTrackingRouteImport } from './routes/_authenticated/tracking'
+import { Route as LanesOriginRouteImport } from './routes/lanes.$origin'
 import { Route as AuthenticatedSupportRouteImport } from './routes/_authenticated/support'
 import { Route as AuthenticatedShipmentsRouteImport } from './routes/_authenticated/shipments'
 import { Route as AuthenticatedReportsRouteImport } from './routes/_authenticated/reports'
 import { Route as AuthenticatedRatesRouteImport } from './routes/_authenticated/rates'
 import { Route as AuthenticatedPackagesRouteImport } from './routes/_authenticated/packages'
 import { Route as AuthenticatedInvoicesRouteImport } from './routes/_authenticated/invoices'
+import { Route as AuthenticatedEtaBoardRouteImport } from './routes/_authenticated/eta-board'
 import { Route as AuthenticatedDeliveriesRouteImport } from './routes/_authenticated/deliveries'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedTreasuryAccountsRouteImport } from './routes/_authenticated/treasury.accounts'
@@ -36,9 +43,24 @@ import { Route as AuthenticatedAdminUsersRouteImport } from './routes/_authentic
 import { Route as AuthenticatedAdminAuditRouteImport } from './routes/_authenticated/admin.audit'
 import { Route as ApiPublicHooksPollShipmentEtaRouteImport } from './routes/api/public/hooks/poll-shipment-eta'
 
+const TrackingRoute = TrackingRouteImport.update({
+  id: '/tracking',
+  path: '/tracking',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const StaffSignupRoute = StaffSignupRouteImport.update({
   id: '/staff-signup',
   path: '/staff-signup',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ServicesRoute = ServicesRouteImport.update({
+  id: '/services',
+  path: '/services',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const QuoteRoute = QuoteRouteImport.update({
+  id: '/quote',
+  path: '/quote',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PortalRoute = PortalRouteImport.update({
@@ -51,9 +73,19 @@ const PendingActivationRoute = PendingActivationRouteImport.update({
   path: '/pending-activation',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LanesRoute = LanesRouteImport.update({
+  id: '/lanes',
+  path: '/lanes',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
   id: '/forgot-password',
   path: '/forgot-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ChangePasswordRoute = ChangePasswordRouteImport.update({
@@ -76,6 +108,11 @@ const AcceptInviteRoute = AcceptInviteRouteImport.update({
   path: '/accept-invite',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AboutRoute = AboutRouteImport.update({
+  id: '/about',
+  path: '/about',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedRoute = AuthenticatedRouteImport.update({
   id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
@@ -90,10 +127,10 @@ const TrackCodeRoute = TrackCodeRouteImport.update({
   path: '/track/$code',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthenticatedTrackingRoute = AuthenticatedTrackingRouteImport.update({
-  id: '/tracking',
-  path: '/tracking',
-  getParentRoute: () => AuthenticatedRoute,
+const LanesOriginRoute = LanesOriginRouteImport.update({
+  id: '/$origin',
+  path: '/$origin',
+  getParentRoute: () => LanesRoute,
 } as any)
 const AuthenticatedSupportRoute = AuthenticatedSupportRouteImport.update({
   id: '/support',
@@ -123,6 +160,11 @@ const AuthenticatedPackagesRoute = AuthenticatedPackagesRouteImport.update({
 const AuthenticatedInvoicesRoute = AuthenticatedInvoicesRouteImport.update({
   id: '/invoices',
   path: '/invoices',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedEtaBoardRoute = AuthenticatedEtaBoardRouteImport.update({
+  id: '/eta-board',
+  path: '/eta-board',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
 const AuthenticatedDeliveriesRoute = AuthenticatedDeliveriesRouteImport.update({
@@ -172,23 +214,30 @@ const ApiPublicHooksPollShipmentEtaRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/accept-invite': typeof AcceptInviteRoute
   '/account': typeof AccountRoute
   '/auth': typeof AuthRoute
   '/change-password': typeof ChangePasswordRoute
+  '/contact': typeof ContactRoute
   '/forgot-password': typeof ForgotPasswordRoute
+  '/lanes': typeof LanesRouteWithChildren
   '/pending-activation': typeof PendingActivationRoute
   '/portal': typeof PortalRoute
+  '/quote': typeof QuoteRoute
+  '/services': typeof ServicesRoute
   '/staff-signup': typeof StaffSignupRoute
+  '/tracking': typeof TrackingRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/deliveries': typeof AuthenticatedDeliveriesRoute
+  '/eta-board': typeof AuthenticatedEtaBoardRoute
   '/invoices': typeof AuthenticatedInvoicesRoute
   '/packages': typeof AuthenticatedPackagesRoute
   '/rates': typeof AuthenticatedRatesRoute
   '/reports': typeof AuthenticatedReportsRoute
   '/shipments': typeof AuthenticatedShipmentsRoute
   '/support': typeof AuthenticatedSupportRoute
-  '/tracking': typeof AuthenticatedTrackingRoute
+  '/lanes/$origin': typeof LanesOriginRoute
   '/track/$code': typeof TrackCodeRoute
   '/admin/audit': typeof AuthenticatedAdminAuditRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
@@ -199,23 +248,30 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/accept-invite': typeof AcceptInviteRoute
   '/account': typeof AccountRoute
   '/auth': typeof AuthRoute
   '/change-password': typeof ChangePasswordRoute
+  '/contact': typeof ContactRoute
   '/forgot-password': typeof ForgotPasswordRoute
+  '/lanes': typeof LanesRouteWithChildren
   '/pending-activation': typeof PendingActivationRoute
   '/portal': typeof PortalRoute
+  '/quote': typeof QuoteRoute
+  '/services': typeof ServicesRoute
   '/staff-signup': typeof StaffSignupRoute
+  '/tracking': typeof TrackingRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/deliveries': typeof AuthenticatedDeliveriesRoute
+  '/eta-board': typeof AuthenticatedEtaBoardRoute
   '/invoices': typeof AuthenticatedInvoicesRoute
   '/packages': typeof AuthenticatedPackagesRoute
   '/rates': typeof AuthenticatedRatesRoute
   '/reports': typeof AuthenticatedReportsRoute
   '/shipments': typeof AuthenticatedShipmentsRoute
   '/support': typeof AuthenticatedSupportRoute
-  '/tracking': typeof AuthenticatedTrackingRoute
+  '/lanes/$origin': typeof LanesOriginRoute
   '/track/$code': typeof TrackCodeRoute
   '/admin/audit': typeof AuthenticatedAdminAuditRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
@@ -228,23 +284,30 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteWithChildren
+  '/about': typeof AboutRoute
   '/accept-invite': typeof AcceptInviteRoute
   '/account': typeof AccountRoute
   '/auth': typeof AuthRoute
   '/change-password': typeof ChangePasswordRoute
+  '/contact': typeof ContactRoute
   '/forgot-password': typeof ForgotPasswordRoute
+  '/lanes': typeof LanesRouteWithChildren
   '/pending-activation': typeof PendingActivationRoute
   '/portal': typeof PortalRoute
+  '/quote': typeof QuoteRoute
+  '/services': typeof ServicesRoute
   '/staff-signup': typeof StaffSignupRoute
+  '/tracking': typeof TrackingRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/deliveries': typeof AuthenticatedDeliveriesRoute
+  '/_authenticated/eta-board': typeof AuthenticatedEtaBoardRoute
   '/_authenticated/invoices': typeof AuthenticatedInvoicesRoute
   '/_authenticated/packages': typeof AuthenticatedPackagesRoute
   '/_authenticated/rates': typeof AuthenticatedRatesRoute
   '/_authenticated/reports': typeof AuthenticatedReportsRoute
   '/_authenticated/shipments': typeof AuthenticatedShipmentsRoute
   '/_authenticated/support': typeof AuthenticatedSupportRoute
-  '/_authenticated/tracking': typeof AuthenticatedTrackingRoute
+  '/lanes/$origin': typeof LanesOriginRoute
   '/track/$code': typeof TrackCodeRoute
   '/_authenticated/admin/audit': typeof AuthenticatedAdminAuditRoute
   '/_authenticated/admin/users': typeof AuthenticatedAdminUsersRoute
@@ -257,23 +320,30 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/about'
     | '/accept-invite'
     | '/account'
     | '/auth'
     | '/change-password'
+    | '/contact'
     | '/forgot-password'
+    | '/lanes'
     | '/pending-activation'
     | '/portal'
+    | '/quote'
+    | '/services'
     | '/staff-signup'
+    | '/tracking'
     | '/dashboard'
     | '/deliveries'
+    | '/eta-board'
     | '/invoices'
     | '/packages'
     | '/rates'
     | '/reports'
     | '/shipments'
     | '/support'
-    | '/tracking'
+    | '/lanes/$origin'
     | '/track/$code'
     | '/admin/audit'
     | '/admin/users'
@@ -284,23 +354,30 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/about'
     | '/accept-invite'
     | '/account'
     | '/auth'
     | '/change-password'
+    | '/contact'
     | '/forgot-password'
+    | '/lanes'
     | '/pending-activation'
     | '/portal'
+    | '/quote'
+    | '/services'
     | '/staff-signup'
+    | '/tracking'
     | '/dashboard'
     | '/deliveries'
+    | '/eta-board'
     | '/invoices'
     | '/packages'
     | '/rates'
     | '/reports'
     | '/shipments'
     | '/support'
-    | '/tracking'
+    | '/lanes/$origin'
     | '/track/$code'
     | '/admin/audit'
     | '/admin/users'
@@ -312,23 +389,30 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/_authenticated'
+    | '/about'
     | '/accept-invite'
     | '/account'
     | '/auth'
     | '/change-password'
+    | '/contact'
     | '/forgot-password'
+    | '/lanes'
     | '/pending-activation'
     | '/portal'
+    | '/quote'
+    | '/services'
     | '/staff-signup'
+    | '/tracking'
     | '/_authenticated/dashboard'
     | '/_authenticated/deliveries'
+    | '/_authenticated/eta-board'
     | '/_authenticated/invoices'
     | '/_authenticated/packages'
     | '/_authenticated/rates'
     | '/_authenticated/reports'
     | '/_authenticated/shipments'
     | '/_authenticated/support'
-    | '/_authenticated/tracking'
+    | '/lanes/$origin'
     | '/track/$code'
     | '/_authenticated/admin/audit'
     | '/_authenticated/admin/users'
@@ -341,25 +425,52 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
+  AboutRoute: typeof AboutRoute
   AcceptInviteRoute: typeof AcceptInviteRoute
   AccountRoute: typeof AccountRoute
   AuthRoute: typeof AuthRoute
   ChangePasswordRoute: typeof ChangePasswordRoute
+  ContactRoute: typeof ContactRoute
   ForgotPasswordRoute: typeof ForgotPasswordRoute
+  LanesRoute: typeof LanesRouteWithChildren
   PendingActivationRoute: typeof PendingActivationRoute
   PortalRoute: typeof PortalRoute
+  QuoteRoute: typeof QuoteRoute
+  ServicesRoute: typeof ServicesRoute
   StaffSignupRoute: typeof StaffSignupRoute
+  TrackingRoute: typeof TrackingRoute
   TrackCodeRoute: typeof TrackCodeRoute
   ApiPublicHooksPollShipmentEtaRoute: typeof ApiPublicHooksPollShipmentEtaRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/tracking': {
+      id: '/tracking'
+      path: '/tracking'
+      fullPath: '/tracking'
+      preLoaderRoute: typeof TrackingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/staff-signup': {
       id: '/staff-signup'
       path: '/staff-signup'
       fullPath: '/staff-signup'
       preLoaderRoute: typeof StaffSignupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/services': {
+      id: '/services'
+      path: '/services'
+      fullPath: '/services'
+      preLoaderRoute: typeof ServicesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/quote': {
+      id: '/quote'
+      path: '/quote'
+      fullPath: '/quote'
+      preLoaderRoute: typeof QuoteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/portal': {
@@ -376,11 +487,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PendingActivationRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/lanes': {
+      id: '/lanes'
+      path: '/lanes'
+      fullPath: '/lanes'
+      preLoaderRoute: typeof LanesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/forgot-password': {
       id: '/forgot-password'
       path: '/forgot-password'
       fullPath: '/forgot-password'
       preLoaderRoute: typeof ForgotPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/change-password': {
@@ -411,6 +536,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AcceptInviteRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated': {
       id: '/_authenticated'
       path: ''
@@ -432,12 +564,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TrackCodeRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_authenticated/tracking': {
-      id: '/_authenticated/tracking'
-      path: '/tracking'
-      fullPath: '/tracking'
-      preLoaderRoute: typeof AuthenticatedTrackingRouteImport
-      parentRoute: typeof AuthenticatedRoute
+    '/lanes/$origin': {
+      id: '/lanes/$origin'
+      path: '/$origin'
+      fullPath: '/lanes/$origin'
+      preLoaderRoute: typeof LanesOriginRouteImport
+      parentRoute: typeof LanesRoute
     }
     '/_authenticated/support': {
       id: '/_authenticated/support'
@@ -479,6 +611,13 @@ declare module '@tanstack/react-router' {
       path: '/invoices'
       fullPath: '/invoices'
       preLoaderRoute: typeof AuthenticatedInvoicesRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/eta-board': {
+      id: '/_authenticated/eta-board'
+      path: '/eta-board'
+      fullPath: '/eta-board'
+      preLoaderRoute: typeof AuthenticatedEtaBoardRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
     '/_authenticated/deliveries': {
@@ -543,13 +682,13 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedRouteChildren {
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedDeliveriesRoute: typeof AuthenticatedDeliveriesRoute
+  AuthenticatedEtaBoardRoute: typeof AuthenticatedEtaBoardRoute
   AuthenticatedInvoicesRoute: typeof AuthenticatedInvoicesRoute
   AuthenticatedPackagesRoute: typeof AuthenticatedPackagesRoute
   AuthenticatedRatesRoute: typeof AuthenticatedRatesRoute
   AuthenticatedReportsRoute: typeof AuthenticatedReportsRoute
   AuthenticatedShipmentsRoute: typeof AuthenticatedShipmentsRoute
   AuthenticatedSupportRoute: typeof AuthenticatedSupportRoute
-  AuthenticatedTrackingRoute: typeof AuthenticatedTrackingRoute
   AuthenticatedAdminAuditRoute: typeof AuthenticatedAdminAuditRoute
   AuthenticatedAdminUsersRoute: typeof AuthenticatedAdminUsersRoute
   AuthenticatedCrmContactsRoute: typeof AuthenticatedCrmContactsRoute
@@ -560,13 +699,13 @@ interface AuthenticatedRouteChildren {
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedDeliveriesRoute: AuthenticatedDeliveriesRoute,
+  AuthenticatedEtaBoardRoute: AuthenticatedEtaBoardRoute,
   AuthenticatedInvoicesRoute: AuthenticatedInvoicesRoute,
   AuthenticatedPackagesRoute: AuthenticatedPackagesRoute,
   AuthenticatedRatesRoute: AuthenticatedRatesRoute,
   AuthenticatedReportsRoute: AuthenticatedReportsRoute,
   AuthenticatedShipmentsRoute: AuthenticatedShipmentsRoute,
   AuthenticatedSupportRoute: AuthenticatedSupportRoute,
-  AuthenticatedTrackingRoute: AuthenticatedTrackingRoute,
   AuthenticatedAdminAuditRoute: AuthenticatedAdminAuditRoute,
   AuthenticatedAdminUsersRoute: AuthenticatedAdminUsersRoute,
   AuthenticatedCrmContactsRoute: AuthenticatedCrmContactsRoute,
@@ -578,17 +717,33 @@ const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
   AuthenticatedRouteChildren,
 )
 
+interface LanesRouteChildren {
+  LanesOriginRoute: typeof LanesOriginRoute
+}
+
+const LanesRouteChildren: LanesRouteChildren = {
+  LanesOriginRoute: LanesOriginRoute,
+}
+
+const LanesRouteWithChildren = LanesRoute._addFileChildren(LanesRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRoute: AuthenticatedRouteWithChildren,
+  AboutRoute: AboutRoute,
   AcceptInviteRoute: AcceptInviteRoute,
   AccountRoute: AccountRoute,
   AuthRoute: AuthRoute,
   ChangePasswordRoute: ChangePasswordRoute,
+  ContactRoute: ContactRoute,
   ForgotPasswordRoute: ForgotPasswordRoute,
+  LanesRoute: LanesRouteWithChildren,
   PendingActivationRoute: PendingActivationRoute,
   PortalRoute: PortalRoute,
+  QuoteRoute: QuoteRoute,
+  ServicesRoute: ServicesRoute,
   StaffSignupRoute: StaffSignupRoute,
+  TrackingRoute: TrackingRoute,
   TrackCodeRoute: TrackCodeRoute,
   ApiPublicHooksPollShipmentEtaRoute: ApiPublicHooksPollShipmentEtaRoute,
 }
