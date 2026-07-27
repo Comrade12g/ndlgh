@@ -1,0 +1,1 @@
+REVOKE EXECUTE ON FUNCTION public.get_public_shipment_status(text) FROM anon, PUBLIC;
