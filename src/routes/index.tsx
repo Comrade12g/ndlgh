@@ -20,6 +20,7 @@ import {
   fetchActiveGallery, FALLBACK_GALLERY, FALLBACK_HERO_SLIDES, GALLERY_CATEGORIES,
   type GalleryPhoto,
 } from "@/lib/gallery";
+import { IMG } from "@/assets/gallery";
 import {
   Ship, Plane, Truck, Warehouse, ShieldCheck, Globe2,
   ArrowRight, Users, FileCheck, Filter,
@@ -34,27 +35,27 @@ export const Route = createFileRoute("/")({
       { property: "og:title", content: "NDL Cargo Ghana — Global freight, delivered to your door" },
       { property: "og:description", content: "Sea LCL/FCL, air, customs clearing and Ghana-wide last-mile delivery from China, Dubai, Thailand, Canada and the US. Instant quotes and live shipment tracking." },
       { property: "og:type", content: "website" },
-      { property: "og:image", content: "https://images.unsplash.com/photo-1494412651409-8963ce7935a7?auto=format&fit=crop&w=1600&q=80" },
+      { property: "og:image", content: `https://ndlgh.susuboxgh.com${IMG.seaTema}` },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:image", content: "https://images.unsplash.com/photo-1494412651409-8963ce7935a7?auto=format&fit=crop&w=1600&q=80" },
+      { name: "twitter:image", content: `https://ndlgh.susuboxgh.com${IMG.seaTema}` },
     ],
   }),
   component: HomePage,
 });
 
 const LANES = [
-  { code: "china", name: "China", tag: "Yiwu · Guangzhou · Taizhou", note: "Small commodities, electronics, hardware", photo: "https://images.unsplash.com/photo-1545893835-abaa50cbe628?auto=format&fit=crop&w=800&q=65" },
-  { code: "dubai", name: "Dubai", tag: "UAE hub", note: "Cosmetics, gold, machinery", photo: "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=800&q=65" },
-  { code: "thailand", name: "Thailand", tag: "Bangkok", note: "Auto parts, wellness, food", photo: "https://images.unsplash.com/photo-1508009603885-50cf7c579365?auto=format&fit=crop&w=800&q=65" },
-  { code: "canada", name: "Canada", tag: "Toronto", note: "Personal effects, retail returns", photo: "https://images.unsplash.com/photo-1517090504586-fde19ea6066f?auto=format&fit=crop&w=800&q=65" },
-  { code: "us", name: "United States", tag: "New York · Los Angeles", note: "E-commerce, vehicles, machinery", photo: "https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?auto=format&fit=crop&w=800&q=65" },
+  { code: "china",    name: "China",         tag: "Yiwu · Guangzhou · Taizhou", note: "Small commodities, electronics, hardware", photo: IMG.chinaHub },
+  { code: "dubai",    name: "Dubai",         tag: "UAE hub",                    note: "Cosmetics, gold, machinery",               photo: IMG.dubaiHub },
+  { code: "thailand", name: "Thailand",      tag: "Bangkok",                    note: "Auto parts, wellness, food",               photo: IMG.thailandHub },
+  { code: "canada",   name: "Canada",        tag: "Toronto",                    note: "Personal effects, retail returns",         photo: IMG.canadaHub },
+  { code: "us",       name: "United States", tag: "New York · Los Angeles",     note: "E-commerce, vehicles, machinery",          photo: IMG.usHub },
 ];
 
 const SERVICES = [
-  { icon: Ship, name: "Sea Freight", desc: "LCL groupage and full-container (FCL) service to Tema Port.", photo: "https://images.unsplash.com/photo-1494412651409-8963ce7935a7?auto=format&fit=crop&w=800&q=65" },
-  { icon: Plane, name: "Air Cargo", desc: "Express and general air freight into Kotoka International.", photo: "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=800&q=65" },
-  { icon: FileCheck, name: "Customs Clearing", desc: "In-house licensed brokers — no third-party leakage.", photo: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=800&q=65" },
-  { icon: Warehouse, name: "Warehousing & Delivery", desc: "Bonded storage plus Ghana-wide last-mile delivery.", photo: "https://images.unsplash.com/photo-1553413077-190dd305871c?auto=format&fit=crop&w=800&q=65" },
+  { icon: Ship,      name: "Sea Freight",             desc: "LCL groupage and full-container (FCL) service to Tema Port.", photo: IMG.seaTema },
+  { icon: Plane,     name: "Air Cargo",               desc: "Express and general air freight into Kotoka International.",  photo: IMG.airCargoPlane },
+  { icon: FileCheck, name: "Customs Clearing",        desc: "In-house licensed brokers — no third-party leakage.",         photo: IMG.customsClearing },
+  { icon: Warehouse, name: "Warehousing & Delivery",  desc: "Bonded storage plus Ghana-wide last-mile delivery.",          photo: IMG.warehousePallets },
 ];
 
 const GALLERY = [
