@@ -39,6 +39,10 @@ export const Route = createFileRoute("/")({
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:image", content: `https://ndlgh.susuboxgh.com${IMG.seaTema}` },
     ],
+    links: [
+      // Preload the LCP hero image so it paints as fast as possible.
+      { rel: "preload", as: "image", href: IMG.seaTema, fetchpriority: "high" },
+    ],
   }),
   component: HomePage,
 });
