@@ -267,7 +267,8 @@ function Hero() {
             <TrackingLookup variant="hero" />
           </div>
         </div>
-        <div className="reveal-scale">
+        <div className="reveal-scale space-y-4">
+          <HeroCarousel slides={slides} />
           <HeroMap />
         </div>
       </div>
