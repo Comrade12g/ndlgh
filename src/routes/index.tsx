@@ -184,6 +184,31 @@ function GallerySection() {
   );
 }
 
+function GalleryTile({ item, index }: { item: { src: string; alt: string; location?: string }; index: number }) {
+  const ref = useReveal<HTMLDivElement>();
+  return (
+    <div
+      ref={ref}
+      className="reveal group relative aspect-square overflow-hidden rounded-2xl"
+      style={{ transitionDelay: `${Math.min(index, 8) * 40}ms` }}
+    >
+      <SmartImage
+        src={item.src}
+        alt={item.alt}
+        className="h-full w-full"
+        imgClassName="transition-transform duration-700 group-hover:scale-110"
+      />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-brand-navy/80 via-transparent to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 translate-y-2 p-3 text-xs font-semibold text-white opacity-0 transition-all group-hover:translate-y-0 group-hover:opacity-100">
+        <div>{item.alt}</div>
+        {item.location && <div className="text-[10px] font-normal text-white/80">{item.location}</div>}
+      </div>
+    </div>
+  );
+}
+
+
+
 function FilterChip({ active, onClick, children }: { active: boolean; onClick: () => void; children: React.ReactNode }) {
   return (
     <button
