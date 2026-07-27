@@ -1355,6 +1355,19 @@ export type Database = {
           origin_city: string
         }[]
       }
+      get_public_shipment_status: {
+        Args: { _ref: string }
+        Returns: {
+          current_eta: string
+          current_milestone: Database["public"]["Enums"]["shipment_milestone"]
+          destination_city: string
+          eta_last_changed_at: string
+          eta_recently_changed: boolean
+          mode: Database["public"]["Enums"]["shipment_mode"]
+          ndl_reference: string
+          origin_city: string
+        }[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
