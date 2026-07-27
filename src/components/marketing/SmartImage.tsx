@@ -54,9 +54,11 @@ export function SmartImage({
           ref={ref}
           src={src}
           alt={alt}
-          loading={eager ? "eager" : "lazy"}
-          decoding="async"
+          {...(eager ? {} : { loading: "lazy" as const })}
+          decoding={eager ? "sync" : "async"}
           {...(prefetch ? { fetchPriority: "high" as const } : {})}
+          {...(width ? { width } : {})}
+          {...(height ? { height } : {})}
           onLoad={() => setLoaded(true)}
           onError={() => setErrored(true)}
           className={cn(
