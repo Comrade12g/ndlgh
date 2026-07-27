@@ -67,11 +67,29 @@ export const waTemplates = {
   shipmentDeparted: (name: string, ref: string, eta: string | null) =>
     `Hi ${name}, your shipment ${ref} has departed origin and is now in transit${eta ? ` — ETA ${eta}` : ""}. Track: ${trackLink(ref)}\n${SIGNOFF}`,
 
-  shipmentArrived: (name: string, ref: string) =>
-    `Hi ${name}, your shipment ${ref} has arrived at Tema Port. Customs clearance is next. Track: ${trackLink(ref)}\n${SIGNOFF}`,
+  shipmentArrived: (name: string, ref: string, mode?: string | null) => {
+    const m = (mode ?? "").toLowerCase();
+    const location =
+      m === "air"
+        ? "Kotoka International Airport"
+        : m === "intercity"
+          ? "its destination hub"
+          : "Tema Port";
+    const nextStep =
+      m === "intercity"
+        ? "We'll schedule delivery shortly."
+        : "Customs clearance is next.";
+    return `Hi ${name}, your shipment ${ref} has arrived at ${location}. ${nextStep} Track: ${trackLink(ref)}\n${SIGNOFF}`;
+  },
 
-  shipmentCleared: (name: string, ref: string) =>
-    `Hi ${name}, your shipment ${ref} has cleared customs. We'll schedule delivery shortly. Track: ${trackLink(ref)}\n${SIGNOFF}`,
+  shipmentCleared: (name: string, ref: string, mode?: string | null) => {
+    const m = (mode ?? "").toLowerCase();
+    const body =
+      m === "intercity"
+        ? "has reached the local hub. We'll schedule delivery shortly."
+        : "has cleared customs. We'll schedule delivery shortly.";
+    return `Hi ${name}, your shipment ${ref} ${body} Track: ${trackLink(ref)}\n${SIGNOFF}`;
+  },
 
   deliveryScheduled: (name: string, code: string, city: string, date: string | null) =>
     `Hi ${name}, your delivery ${code} to ${city} has been scheduled${date ? ` for ${date}` : ""}. We'll let you know when it's out for delivery.\n\nTrack: ${trackLink(code)}\n${SIGNOFF}`,
