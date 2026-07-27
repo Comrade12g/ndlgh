@@ -184,28 +184,73 @@ function GallerySection() {
   );
 }
 
-function GalleryTile({ item, index }: { item: { src: string; alt: string; location?: string }; index: number }) {
+const CATEGORY_SEO: Record<string, { verb: string; keyword: string }> = {
+  "Warehouse": { verb: "at", keyword: "NDL Cargo bonded warehouse & groupage consolidation" },
+  "Port & Vessels": { verb: "at", keyword: "sea freight LCL/FCL container operations" },
+  "Air Cargo": { verb: "at", keyword: "air cargo freight into Ghana" },
+  "Customs": { verb: "at", keyword: "licensed customs clearing & duty processing" },
+  "Delivery": { verb: "in", keyword: "Ghana-wide last-mile cargo delivery" },
+  "Team": { verb: "in", keyword: "NDL Cargo logistics team on the ground" },
+  "Origin Hubs": { verb: "at", keyword: "China & Dubai origin sourcing hub" },
+  "Other": { verb: "in", keyword: "NDL Cargo shipping operations" },
+};
+
+function buildGalleryCopy(item: { alt: string; category?: string; location?: string }) {
+  const meta = (item.category && CATEGORY_SEO[item.category]) || CATEGORY_SEO["Other"];
+  const city = item.location?.trim();
+  const where = city ? `${meta.verb} ${city}` : "";
+  const base = item.alt?.trim() || meta.keyword;
+  // SEO-friendly alt: description + service + city + brand context
+  const alt = [
+    base,
+    "—",
+    meta.keyword,
+    where,
+    "| NDL Cargo Ghana",
+  ]
+    .filter(Boolean)
+    .join(" ")
+    .replace(/\s+/g, " ")
+    .trim();
+  const caption = city ? `${base} · ${city}` : base;
+  const sub = item.category
+    ? city
+      ? `${item.category} • ${city}`
+      : item.category
+    : city || "";
+  return { alt, caption, sub };
+}
+
+function GalleryTile({
+  item,
+  index,
+}: {
+  item: { src: string; alt: string; category?: string; location?: string };
+  index: number;
+}) {
   const ref = useReveal<HTMLDivElement>();
+  const { alt, caption, sub } = buildGalleryCopy(item);
   return (
-    <div
+    <figure
       ref={ref}
       className="reveal group relative aspect-square overflow-hidden rounded-2xl"
       style={{ transitionDelay: `${Math.min(index, 8) * 40}ms` }}
     >
       <SmartImage
         src={item.src}
-        alt={item.alt}
+        alt={alt}
         className="h-full w-full"
         imgClassName="transition-transform duration-700 group-hover:scale-110"
       />
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-brand-navy/80 via-transparent to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 translate-y-2 p-3 text-xs font-semibold text-white opacity-0 transition-all group-hover:translate-y-0 group-hover:opacity-100">
-        <div>{item.alt}</div>
-        {item.location && <div className="text-[10px] font-normal text-white/80">{item.location}</div>}
-      </div>
-    </div>
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-brand-navy/85 via-brand-navy/10 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
+      <figcaption className="pointer-events-none absolute inset-x-0 bottom-0 translate-y-2 p-3 text-white opacity-0 transition-all group-hover:translate-y-0 group-hover:opacity-100">
+        <div className="text-xs font-semibold leading-tight">{caption}</div>
+        {sub && <div className="mt-0.5 text-[10px] font-normal text-white/80">{sub}</div>}
+      </figcaption>
+    </figure>
   );
 }
+
 
 
 
