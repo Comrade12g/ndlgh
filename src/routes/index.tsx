@@ -1,355 +1,317 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
-import { lovable } from "@/integrations/lovable";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { MarketingLayout, NDL_ADDRESS, NDL_EMAIL, NDL_PHONE } from "@/components/marketing/MarketingLayout";
+import { HeroMap } from "@/components/marketing/HeroMap";
+import { QuoteEngine } from "@/components/marketing/QuoteEngine";
+import { TrackingLookup } from "@/components/marketing/TrackingLookup";
+import { MilestoneTimeline } from "@/components/tracking/MilestoneTimeline";
+import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { PasswordInput } from "@/components/ui/password-input";
-import { Label } from "@/components/ui/label";
-import { LogoLockup } from "@/components/brand/Logo";
-import { toast } from "sonner";
-import { getErrorMessage } from "@/lib/errors";
-import { toE164Gh, phoneToSyntheticEmail, phoneToStaffSyntheticEmail } from "@/lib/phone";
-import { openWhatsApp } from "@/lib/whatsapp";
+import { useReveal } from "@/hooks/use-reveal";
 import {
-  friendlySignInError,
-  SUPPORT_WHATSAPP_NUMBER,
-  SUPPORT_WHATSAPP_MESSAGE,
-} from "@/lib/auth-errors";
-import { Ship, Plane, MessageCircle, PackageSearch, AlertCircle } from "lucide-react";
+  Ship, Plane, Truck, Warehouse, ShieldCheck, Globe2, Clock,
+  ArrowRight, MapPin, Package, Users, FileCheck, Zap,
+} from "lucide-react";
 
 export const Route = createFileRoute("/")({
-  ssr: false,
-  component: LoginHome,
+  head: () => ({
+    meta: [
+      { title: "NDL Cargo Ghana — China, Dubai, US, Canada, Thailand to Tema" },
+      { name: "description", content: "End-to-end sea, air and door-to-door freight from China, Dubai, Thailand, Canada and the US to Ghana. Live tracking, groupage, FCL, air, customs & last-mile delivery." },
+      { property: "og:title", content: "NDL Cargo Ghana — Global freight, delivered to your door" },
+      { property: "og:description", content: "Sea LCL/FCL, air, customs clearing and Ghana-wide last-mile delivery. Get an instant quote or track your shipment." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+  }),
+  component: HomePage,
 });
 
-const STAFF_ROLES = [
-  "admin",
-  "ops_warehouse",
-  "sales_accountant",
-  "sourcing_agent",
-  "driver",
-  "sales",
-  "accountant",
-  "customer_service",
+const LANES = [
+  { code: "china", name: "China", tag: "Yiwu · Guangzhou · Taizhou", note: "Small commodities, electronics, hardware" },
+  { code: "dubai", name: "Dubai", tag: "UAE hub", note: "Cosmetics, gold, machinery" },
+  { code: "thailand", name: "Thailand", tag: "Bangkok", note: "Auto parts, wellness, food" },
+  { code: "canada", name: "Canada", tag: "Toronto", note: "Personal effects, retail returns" },
+  { code: "us", name: "United States", tag: "New York · Los Angeles", note: "E-commerce, vehicles, machinery" },
 ];
 
-const SIGNUP_WHATSAPP_NUMBER = "+233500229352";
+const SERVICES = [
+  { icon: Ship, name: "Sea Freight", desc: "LCL groupage and full-container (FCL) service to Tema Port." },
+  { icon: Plane, name: "Air Cargo", desc: "Express and general air freight into Kotoka International." },
+  { icon: FileCheck, name: "Customs Clearing", desc: "In-house licensed brokers — no third-party leakage." },
+  { icon: Warehouse, name: "Warehousing & Delivery", desc: "Bonded storage plus Ghana-wide last-mile delivery." },
+];
 
-async function routeAfterSignIn(navigate: ReturnType<typeof useNavigate>) {
-  const { data: u } = await supabase.auth.getUser();
-  if (!u.user) return;
-  const { data: roles } = await supabase
-    .from("user_roles")
-    .select("role")
-    .eq("user_id", u.user.id);
-  const isStaff = (roles ?? []).some((r) => STAFF_ROLES.includes(r.role));
-  navigate({ to: isStaff ? "/dashboard" : "/portal" });
+function HomePage() {
+  return (
+    <MarketingLayout>
+      <Hero />
+      <TrustStrip />
+      <ServicesSection />
+      <QuoteSection />
+      <LanesSection />
+      <TrackingDemo />
+      <TeamSection />
+      <ContactCTA />
+      <JsonLd />
+    </MarketingLayout>
+  );
 }
 
-function LoginHome() {
-  const navigate = useNavigate();
-  const [identifier, setIdentifier] = useState("");
-  const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [tracking, setTracking] = useState("");
-  const [signInError, setSignInError] = useState<
-    { title: string; description: string; showHelp: boolean } | null
-  >(null);
-
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => {
-      if (data.session) routeAfterSignIn(navigate);
-    });
-  }, [navigate]);
-
-  async function handleSignIn(e: React.FormEvent) {
-    e.preventDefault();
-    const cleanPassword = password.trim();
-    setLoading(true);
-    setSignInError(null);
-    try {
-      const isEmail = identifier.includes("@");
-      if (isEmail) {
-        const { error } = await supabase.auth.signInWithPassword({
-          email: identifier.trim(),
-          password: cleanPassword,
-        });
-        if (error) throw error;
-      } else {
-        const e164 = toE164Gh(identifier);
-        if (!e164) throw new Error("Enter a valid phone number");
-        let { error } = await supabase.auth.signInWithPassword({
-          email: phoneToSyntheticEmail(e164),
-          password: cleanPassword,
-        });
-        if (error) {
-          const retry = await supabase.auth.signInWithPassword({
-            email: phoneToStaffSyntheticEmail(e164),
-            password: cleanPassword,
-          });
-          if (retry.error) throw retry.error;
-        }
-      }
-      toast.success("Welcome back.");
-      await routeAfterSignIn(navigate);
-    } catch (err) {
-      setSignInError(friendlySignInError(err));
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  async function handleGoogle() {
-    setLoading(true);
-    try {
-      const result = await lovable.auth.signInWithOAuth("google", {
-        redirect_uri: window.location.origin,
-      });
-      if (result.error) throw result.error;
-      if (!result.redirected) await routeAfterSignIn(navigate);
-    } catch (err) {
-      toast.error(getErrorMessage(err));
-      setLoading(false);
-    }
-  }
-
-  function handleTrack(e: React.FormEvent) {
-    e.preventDefault();
-    const code = tracking.trim();
-    if (!code) return;
-    navigate({ to: "/track/$code", params: { code } });
-  }
-
+function Hero() {
+  const ref = useReveal<HTMLDivElement>();
   return (
-    <div className="grid min-h-screen md:grid-cols-2">
-      {/* ============ Left: Aesthetic graphics ============ */}
-      <div className="relative hidden overflow-hidden bg-gradient-to-br from-[#0A2E5C] via-[#0F3A73] to-[#1E7FD1] p-10 text-white md:flex md:flex-col md:justify-between [contain:strict]">
-        {/* soft blobs */}
-        <div className="pointer-events-none absolute -right-24 -top-24 h-96 w-96 rounded-full bg-brand-orange/25 blur-3xl animate-blob" />
-        <div className="pointer-events-none absolute -bottom-16 -left-16 h-80 w-80 rounded-full bg-brand-sky/30 blur-3xl animate-blob" style={{ animationDelay: "-6s" }} />
-
-        {/* route arcs */}
-        <svg
-          className="pointer-events-none absolute inset-0 h-full w-full opacity-70"
-          viewBox="0 0 600 800"
-          fill="none"
-          aria-hidden
-        >
-          <defs>
-            <linearGradient id="arc-g" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stopColor="#F7941D" />
-              <stop offset="100%" stopColor="#2E86DE" />
-            </linearGradient>
-          </defs>
-          <path
-            d="M40,120 C200,40 420,80 560,260"
-            stroke="url(#arc-g)"
-            strokeWidth="2"
-            className="animate-dash"
-          />
-          <path
-            d="M20,320 C220,240 420,360 580,460"
-            stroke="url(#arc-g)"
-            strokeWidth="2"
-            className="animate-dash"
-            style={{ animationDelay: "-2s" }}
-          />
-          <path
-            d="M60,640 C220,560 400,700 560,660"
-            stroke="url(#arc-g)"
-            strokeWidth="2"
-            className="animate-dash"
-            style={{ animationDelay: "-4s" }}
-          />
-          {/* hub dots */}
-          <circle cx="40" cy="120" r="5" fill="#F7941D" />
-          <circle cx="20" cy="320" r="5" fill="#F7941D" />
-          <circle cx="60" cy="640" r="5" fill="#F7941D" />
-          <circle cx="560" cy="260" r="6" fill="#fff" />
-          <circle cx="580" cy="460" r="6" fill="#fff" />
-          <circle cx="560" cy="660" r="6" fill="#fff" />
-        </svg>
-
-        {/* moving ship & plane */}
-        <div className="pointer-events-none absolute inset-x-0 top-1/3 animate-sail-right">
-          <Ship className="h-10 w-10 text-white/85 drop-shadow-lg animate-bob" />
-        </div>
-        <div className="pointer-events-none absolute inset-x-0 top-16 animate-fly">
-          <Plane className="h-8 w-8 -rotate-6 text-brand-orange drop-shadow" />
-        </div>
-
-        {/* animated waves */}
-        <svg
-          className="pointer-events-none absolute inset-x-0 bottom-0 h-24 w-[200%] animate-waves"
-          viewBox="0 0 1200 100"
-          preserveAspectRatio="none"
-          aria-hidden
-        >
-          <path
-            d="M0,60 C150,20 300,100 450,60 C600,20 750,100 900,60 C1050,20 1200,80 1200,60 L1200,100 L0,100 Z"
-            fill="rgba(255,255,255,0.10)"
-          />
-          <path
-            d="M0,70 C150,40 300,100 450,70 C600,40 750,100 900,70 C1050,40 1200,90 1200,70 L1200,100 L0,100 Z"
-            fill="rgba(255,255,255,0.15)"
-          />
-        </svg>
-
-        {/* content */}
-        <div className="relative z-10 inline-flex text-white">
-          <LogoLockup />
-        </div>
-
-        <div className="relative z-10 max-w-md">
-          <h1 className="font-display text-4xl font-extrabold leading-tight md:text-5xl">
-            The world to your <span className="text-brand-orange">doorstep</span>.
+    <section className="relative overflow-hidden bg-gradient-to-b from-brand-navy via-[#0d2551] to-brand-navy text-white">
+      <div className="absolute inset-0 opacity-20" style={{ backgroundImage: "radial-gradient(circle at 25% 30%, rgba(247,148,29,0.35), transparent 40%), radial-gradient(circle at 75% 60%, rgba(46,134,222,0.35), transparent 45%)" }} />
+      <div className="relative mx-auto grid max-w-7xl gap-10 px-4 py-16 lg:grid-cols-2 lg:py-24">
+        <div ref={ref} className="reveal">
+          <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-brand-orange backdrop-blur">
+            <span className="h-2 w-2 rounded-full bg-brand-orange animate-pulse" /> Live network · 5 origin hubs
+          </div>
+          <h1 className="mt-5 font-display text-4xl font-black leading-[1.05] tracking-tight sm:text-5xl lg:text-6xl">
+            Global freight,<br />
+            <span className="text-gradient-brand">delivered</span> to your door in Ghana.
           </h1>
-          <p className="mt-4 text-white/85">
-            Groupage & full-container shipping from China, UK and Dubai — delivered to your door in
-            Ghana, tracked every mile.
+          <p className="mt-5 max-w-lg text-lg text-white/80">
+            Sea groupage, full containers, air cargo, customs clearing and Ghana-wide last-mile delivery — from China, Dubai, Thailand, Canada and the US.
           </p>
-
-          <form onSubmit={handleTrack} className="mt-6 flex max-w-sm gap-2">
-            <div className="relative flex-1">
-              <PackageSearch className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/60" />
-              <Input
-                value={tracking}
-                onChange={(e) => setTracking(e.target.value)}
-                placeholder="Track NDL-CN-00123"
-                className="h-11 border-white/30 bg-white/10 pl-9 text-white placeholder:text-white/60"
-              />
-            </div>
-            <Button type="submit" variant="secondary" className="h-11">
-              Track
-            </Button>
-          </form>
+          <div className="mt-6 flex flex-wrap gap-3">
+            <Link to="/quote">
+              <Button size="lg" className="bg-brand-orange text-white hover:bg-brand-orange/90">
+                Get an instant quote <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </Link>
+            <Link to="/tracking">
+              <Button size="lg" variant="outline" className="border-white/30 bg-white/5 text-white hover:bg-white/10">
+                Track a shipment
+              </Button>
+            </Link>
+          </div>
+          <div className="mt-8">
+            <TrackingLookup variant="hero" />
+          </div>
         </div>
-
-        <div className="relative z-10 text-xs text-white/70">
-          © {new Date().getFullYear()} NDL Ghana — Global Shipping: China · UK · Dubai
+        <div className="reveal">
+          <HeroMap />
         </div>
       </div>
+    </section>
+  );
+}
 
-      {/* ============ Right: Login ============ */}
-      <div className="flex items-center justify-center px-4 py-10">
-        <div className="w-full max-w-md">
-          <div className="mb-8 md:hidden">
-            <LogoLockup />
+function TrustStrip() {
+  const items = [
+    { icon: Globe2, k: "5", label: "origin hubs" },
+    { icon: Ship, k: "24/7", label: "shipment tracking" },
+    { icon: ShieldCheck, k: "In-house", label: "customs clearing" },
+    { icon: Truck, k: "Ghana-wide", label: "last-mile delivery" },
+  ];
+  return (
+    <section className="border-b bg-card">
+      <div className="mx-auto grid max-w-7xl grid-cols-2 gap-4 px-4 py-8 md:grid-cols-4">
+        {items.map((it) => (
+          <div key={it.label} className="flex items-center gap-3">
+            <div className="rounded-lg bg-brand-orange/10 p-2.5 text-brand-orange">
+              <it.icon className="h-5 w-5" />
+            </div>
+            <div>
+              <div className="font-display text-lg font-bold text-brand-navy">{it.k}</div>
+              <div className="text-xs text-muted-foreground">{it.label}</div>
+            </div>
           </div>
+        ))}
+      </div>
+    </section>
+  );
+}
 
-          <h2 className="font-display text-2xl font-extrabold text-brand-navy">Welcome back</h2>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Customers sign in with your phone. Staff sign in with your work email.
+function ServicesSection() {
+  const ref = useReveal<HTMLDivElement>();
+  return (
+    <section className="mx-auto max-w-7xl px-4 py-16 md:py-20">
+      <div ref={ref} className="reveal">
+        <SectionHeading eyebrow="Services" title="What we ship, end-to-end" />
+      </div>
+      <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {SERVICES.map((s, i) => (
+          <RevealCard key={s.name} delay={i * 80}>
+            <div className="rounded-lg bg-brand-orange/10 p-2.5 w-fit text-brand-orange">
+              <s.icon className="h-5 w-5" />
+            </div>
+            <h3 className="mt-4 font-display text-lg font-bold text-brand-navy">{s.name}</h3>
+            <p className="mt-2 text-sm text-muted-foreground">{s.desc}</p>
+          </RevealCard>
+        ))}
+      </div>
+      <div className="mt-8 text-center">
+        <Link to="/services">
+          <Button variant="outline">Explore all services <ArrowRight className="ml-2 h-4 w-4" /></Button>
+        </Link>
+      </div>
+    </section>
+  );
+}
+
+function QuoteSection() {
+  const ref = useReveal<HTMLDivElement>();
+  return (
+    <section className="bg-secondary/40 py-16 md:py-20">
+      <div className="mx-auto grid max-w-7xl gap-10 px-4 lg:grid-cols-2">
+        <div ref={ref} className="reveal">
+          <SectionHeading eyebrow="Instant quote" title="Know your freight cost in seconds" />
+          <p className="mt-4 max-w-md text-muted-foreground">
+            Enter weight and dimensions — we calculate CBM automatically and pick the chargeable weight against live tariffs.
           </p>
+          <ul className="mt-6 space-y-3 text-sm">
+            {[
+              "Live rate lookup, no waiting for email replies",
+              "Auto CBM from length × width × height × pieces",
+              "Whichever costs more: chargeable weight or volume",
+              "One tap to confirm on WhatsApp",
+            ].map((t) => (
+              <li key={t} className="flex items-start gap-2">
+                <div className="mt-1 h-2 w-2 rounded-full bg-brand-orange" />
+                <span>{t}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div className="reveal">
+          <QuoteEngine />
+        </div>
+      </div>
+    </section>
+  );
+}
 
-          <Button
-            type="button"
-            variant="outline"
-            className="mt-6 h-11 w-full"
-            onClick={handleGoogle}
-            disabled={loading}
-          >
-            <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">
-              <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
-              <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
-              <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" />
-              <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84C6.71 7.31 9.14 5.38 12 5.38z" />
-            </svg>
-            Continue with Google (staff)
-          </Button>
-
-          <div className="relative my-6">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t" />
-            </div>
-            <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-background px-2 text-muted-foreground">or</span>
-            </div>
-          </div>
-
-          {signInError ? (
-            <div
-              role="alert"
-              className="mb-4 rounded-lg border border-destructive/30 bg-destructive/5 p-4"
-            >
-              <div className="flex gap-3">
-                <AlertCircle className="mt-0.5 h-5 w-5 flex-shrink-0 text-destructive" />
-                <div className="flex-1">
-                  <p className="text-sm font-semibold text-destructive">{signInError.title}</p>
-                  <p className="mt-1 text-sm text-muted-foreground">{signInError.description}</p>
-                  {signInError.showHelp ? (
-                    <button
-                      type="button"
-                      onClick={() =>
-                        openWhatsApp(SUPPORT_WHATSAPP_NUMBER, SUPPORT_WHATSAPP_MESSAGE)
-                      }
-                      className="mt-3 inline-flex items-center gap-1.5 text-sm font-medium text-emerald-700 hover:text-emerald-800 hover:underline"
-                    >
-                      <MessageCircle className="h-4 w-4" />
-                      Need help signing in? Message us on WhatsApp
-                    </button>
-                  ) : null}
-                </div>
+function LanesSection() {
+  const ref = useReveal<HTMLDivElement>();
+  return (
+    <section className="mx-auto max-w-7xl px-4 py-16 md:py-20">
+      <div ref={ref} className="reveal">
+        <SectionHeading eyebrow="Lane intelligence" title="Origins we operate every week" />
+      </div>
+      <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {LANES.map((l, i) => (
+          <Link key={l.code} to="/lanes/$origin" params={{ origin: l.code }} className="group block">
+            <RevealCard delay={i * 60} className="transition-all group-hover:-translate-y-1 group-hover:shadow-xl">
+              <div className="flex items-center justify-between">
+                <h3 className="font-display text-xl font-bold text-brand-navy">{l.name}</h3>
+                <ArrowRight className="h-4 w-4 text-brand-orange transition-transform group-hover:translate-x-1" />
               </div>
-            </div>
-          ) : null}
+              <div className="mt-1 font-mono text-xs uppercase tracking-wider text-brand-sky">{l.tag}</div>
+              <p className="mt-3 text-sm text-muted-foreground">{l.note}</p>
+            </RevealCard>
+          </Link>
+        ))}
+      </div>
+    </section>
+  );
+}
 
-          <form onSubmit={handleSignIn} className="space-y-4">
+function TrackingDemo() {
+  const ref = useReveal<HTMLDivElement>();
+  return (
+    <section className="bg-brand-navy py-16 text-white md:py-20">
+      <div className="mx-auto max-w-7xl px-4">
+        <div ref={ref} className="reveal text-center">
+          <div className="inline-flex rounded-full bg-brand-orange/20 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-brand-orange">
+            Live tracking
+          </div>
+          <h2 className="mt-4 font-display text-3xl font-black md:text-4xl">
+            Every shipment, every stage
+          </h2>
+          <p className="mx-auto mt-3 max-w-2xl text-white/70">
+            Track your NDL-CN-##### or NDL-GH-##### reference through the full lifecycle — right up to your doorstep.
+          </p>
+        </div>
+        <div className="mt-10 rounded-2xl border border-white/15 bg-white/95 p-6 text-foreground shadow-2xl">
+          <MilestoneTimeline current="in_transit" />
+        </div>
+        <div className="mx-auto mt-8 max-w-2xl">
+          <TrackingLookup variant="page" />
+        </div>
+      </div>
+    </section>
+  );
+}
 
-            <div>
-              <Label htmlFor="identifier">Phone (customers) or email (staff)</Label>
-              <Input
-                id="identifier"
-                value={identifier}
-                onChange={(e) => setIdentifier(e.target.value)}
-                placeholder="+233 … or name@company.com"
-                required
-                className="h-11"
-              />
+function TeamSection() {
+  const ref = useReveal<HTMLDivElement>();
+  const teams = [
+    { icon: Users, name: "Operations", desc: "Warehouse intake, groupage consolidation and shipment planning." },
+    { icon: FileCheck, name: "Customs", desc: "Licensed in-house brokerage — GRA and port compliance." },
+    { icon: Warehouse, name: "Warehousing", desc: "Bonded storage at Tema and Accra with last-mile dispatch." },
+  ];
+  return (
+    <section className="mx-auto max-w-7xl px-4 py-16 md:py-20">
+      <div ref={ref} className="reveal">
+        <SectionHeading eyebrow="Team" title="Who moves your cargo" />
+      </div>
+      <div className="mt-10 grid gap-4 md:grid-cols-3">
+        {teams.map((t, i) => (
+          <RevealCard key={t.name} delay={i * 80}>
+            <div className="rounded-lg bg-brand-sky/10 p-2.5 w-fit text-brand-sky">
+              <t.icon className="h-5 w-5" />
             </div>
-            <div>
-              <Label htmlFor="password">Password</Label>
-              <PasswordInput
-                id="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                minLength={6}
-                className="h-11"
-              />
-            </div>
-            <Button
-              type="submit"
-              className="h-11 w-full bg-brand-orange hover:bg-brand-orange/90"
-              disabled={loading}
-            >
-              {loading ? "Please wait…" : "Sign in"}
-            </Button>
-          </form>
+            <h3 className="mt-4 font-display text-lg font-bold text-brand-navy">{t.name}</h3>
+            <p className="mt-2 text-sm text-muted-foreground">{t.desc}</p>
+          </RevealCard>
+        ))}
+      </div>
+    </section>
+  );
+}
 
-          <div className="mt-6 rounded-lg border bg-muted/40 p-4 text-sm">
-            <p className="font-medium text-brand-navy">New customer?</p>
-            <p className="mt-1 text-muted-foreground">
-              We onboard everyone personally. Message us on WhatsApp and your account manager sets
-              up your shipping mark and login within a business day.
+function ContactCTA() {
+  return (
+    <section className="mx-auto max-w-7xl px-4 pb-20">
+      <div className="overflow-hidden rounded-3xl bg-gradient-to-br from-brand-orange via-[#f0862a] to-brand-orange p-10 text-white md:p-14">
+        <div className="grid gap-6 md:grid-cols-[1fr_auto] md:items-center">
+          <div>
+            <h2 className="font-display text-3xl font-black md:text-4xl">Ready to ship?</h2>
+            <p className="mt-2 max-w-xl text-white/90">
+              Speak to the NDL team at {NDL_ADDRESS}. Call {NDL_PHONE} or email {NDL_EMAIL}.
             </p>
-            <Button
-              type="button"
-              variant="outline"
-              className="mt-3 h-10 w-full border-emerald-600 text-emerald-700 hover:bg-emerald-50"
-              onClick={() =>
-                openWhatsApp(
-                  SIGNUP_WHATSAPP_NUMBER,
-                  "Hi NDL Ghana! I'd like to sign up for your shipping service.",
-                )
-              }
-            >
-              <MessageCircle className="mr-2 h-4 w-4" /> Get started on WhatsApp
-            </Button>
+          </div>
+          <div className="flex flex-wrap gap-3">
+            <Link to="/contact"><Button size="lg" className="bg-white text-brand-navy hover:bg-white/90">Contact us</Button></Link>
+            <Link to="/quote"><Button size="lg" variant="outline" className="border-white bg-transparent text-white hover:bg-white/10">Get a quote</Button></Link>
           </div>
         </div>
       </div>
+    </section>
+  );
+}
+
+function SectionHeading({ eyebrow, title }: { eyebrow: string; title: string }) {
+  return (
+    <div>
+      <div className="text-xs font-semibold uppercase tracking-widest text-brand-orange">{eyebrow}</div>
+      <h2 className="mt-2 font-display text-3xl font-black tracking-tight text-brand-navy md:text-4xl">{title}</h2>
     </div>
   );
+}
+
+function RevealCard({ children, delay = 0, className = "" }: { children: React.ReactNode; delay?: number; className?: string }) {
+  const ref = useReveal<HTMLDivElement>();
+  return (
+    <div ref={ref} className="reveal" style={{ transitionDelay: `${delay}ms` }}>
+      <Card className={`p-6 ${className}`}>{children}</Card>
+    </div>
+  );
+}
+
+function JsonLd() {
+  const data = {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    name: "NDL Cargo Ghana",
+    image: "https://ndlgh.susuboxgh.com/favicon.png",
+    address: { "@type": "PostalAddress", streetAddress: NDL_ADDRESS, addressLocality: "Accra", addressCountry: "GH" },
+    telephone: NDL_PHONE,
+    email: NDL_EMAIL,
+    url: "https://ndlgh.com",
+    areaServed: "Ghana",
+  };
+  return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }} />;
 }
