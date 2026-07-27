@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/select";
 import { openWhatsApp } from "@/lib/whatsapp";
 import { NDL_PHONE_INTL } from "./MarketingLayout";
-import { Ship, Plane, Calculator, MessageCircle } from "lucide-react";
+import { Ship, Plane, Calculator, MessageCircle, Package } from "lucide-react";
 
 const ORIGINS = [
   { code: "CN-YIWU", label: "Yiwu, China" },
@@ -50,6 +50,21 @@ export function QuoteEngine({ compact = false }: { compact?: boolean }) {
     return (l * w * h * p) / 1_000_000;
   }, [length, width, height, pieces]);
 
+  // Box visualization scale — clamp for aesthetics
+  const boxScale = useMemo(() => {
+    const maxDim = Math.max(Number(length) || 0, Number(width) || 0, Number(height) || 0, 1);
+    return {
+      w: 40 + Math.min(140, ((Number(width) || 0) / maxDim) * 140),
+      h: 40 + Math.min(120, ((Number(height) || 0) / maxDim) * 120),
+      d: 20 + Math.min(80, ((Number(length) || 0) / maxDim) * 80),
+    };
+  }, [length, width, height]);
+
+  const wKg = Number(weight) || 0;
+  const volKg = cbm * 167; // volumetric factor for sea groupage indicative
+  const chargeable = Math.max(wKg, volKg);
+  const heavier = volKg > wKg ? "volumetric" : "actual";
+
   const fetchRate = useServerFn(getIndicativeRate);
   const mut = useMutation({ mutationFn: fetchRate });
 
@@ -59,13 +74,14 @@ export function QuoteEngine({ compact = false }: { compact?: boolean }) {
       data: {
         origin,
         mode,
-        weightKg: Number(weight) || 0,
+        weightKg: wKg,
         cbm,
       },
     });
   }
 
   const originLabel = ORIGINS.find((o) => o.code === origin)?.label ?? origin;
+  const maxBar = Math.max(wKg, volKg, 1);
 
   return (
     <Card className={compact ? "p-5" : "p-6 md:p-8"}>
@@ -140,8 +156,63 @@ export function QuoteEngine({ compact = false }: { compact?: boolean }) {
         </div>
       </form>
 
+      {/* Live visualization panel */}
+      <div className="mt-5 grid gap-4 rounded-xl border bg-gradient-to-br from-secondary/30 to-transparent p-4 md:grid-cols-[160px_1fr]">
+        <div className="grid place-items-center">
+          <div className="relative" style={{ perspective: "600px" }}>
+            <div
+              className="relative transition-all duration-300 ease-out"
+              style={{
+                width: `${boxScale.w}px`,
+                height: `${boxScale.h}px`,
+                transform: `rotateX(-20deg) rotateY(-30deg)`,
+                transformStyle: "preserve-3d",
+              }}
+            >
+              {/* front */}
+              <div className="absolute inset-0 border-2 border-brand-orange/70 bg-brand-orange/15" />
+              {/* top */}
+              <div
+                className="absolute left-0 top-0 border-2 border-brand-orange/70 bg-brand-orange/30 origin-bottom-left"
+                style={{
+                  width: `${boxScale.w}px`,
+                  height: `${boxScale.d}px`,
+                  transform: `translateY(-${boxScale.d}px) rotateX(90deg)`,
+                }}
+              />
+              {/* right */}
+              <div
+                className="absolute right-0 top-0 border-2 border-brand-orange/70 bg-brand-orange/25 origin-top-right"
+                style={{
+                  width: `${boxScale.d}px`,
+                  height: `${boxScale.h}px`,
+                  transform: `translateX(${boxScale.d}px) rotateY(90deg)`,
+                }}
+              />
+              <Package className="absolute inset-0 m-auto h-6 w-6 text-brand-navy/50" />
+            </div>
+          </div>
+          <div className="mt-2 text-[10px] uppercase tracking-wider text-muted-foreground">
+            Live box preview
+          </div>
+        </div>
+        <div className="space-y-3">
+          <BarRow label="Actual weight" value={wKg} max={maxBar} highlight={heavier === "actual"} unit="kg" />
+          <BarRow label="Volumetric weight" value={volKg} max={maxBar} highlight={heavier === "volumetric"} unit="kg" />
+          <div className="rounded-md border border-dashed border-brand-orange/40 bg-brand-orange/5 p-3">
+            <div className="text-[10px] uppercase tracking-wider text-muted-foreground">Chargeable weight</div>
+            <div className="font-mono text-2xl font-black text-brand-navy tabular-nums">
+              {chargeable.toFixed(1)} <span className="text-sm text-muted-foreground">kg</span>
+            </div>
+            <div className="mt-1 text-[11px] text-muted-foreground">
+              {heavier === "volumetric" ? "Volume is heavier — CBM billing applies" : "Actual weight wins"}
+            </div>
+          </div>
+        </div>
+      </div>
+
       {mut.data && (
-        <div className="mt-5 rounded-xl border-2 border-brand-orange/40 bg-gradient-to-br from-brand-orange/5 to-transparent p-5">
+        <div className="mt-5 rounded-xl border-2 border-brand-orange/40 bg-gradient-to-br from-brand-orange/10 to-transparent p-5">
           {mut.data.available ? (
             <>
               <div className="text-xs uppercase tracking-wider text-muted-foreground">
@@ -195,5 +266,24 @@ export function QuoteEngine({ compact = false }: { compact?: boolean }) {
         </div>
       )}
     </Card>
+  );
+}
+
+function BarRow({ label, value, max, unit, highlight }: { label: string; value: number; max: number; unit: string; highlight: boolean }) {
+  const pct = Math.min(100, (value / max) * 100);
+  return (
+    <div>
+      <div className="mb-1 flex items-center justify-between text-xs">
+        <span className={highlight ? "font-semibold text-brand-navy" : "text-muted-foreground"}>{label}</span>
+        <span className="font-mono tabular-nums text-brand-navy">{value.toFixed(1)} {unit}</span>
+      </div>
+      <div className="h-3 overflow-hidden rounded-full bg-border/60">
+        <div
+          key={`${label}-${value}`}
+          className={`animate-bar h-full rounded-full ${highlight ? "bg-gradient-to-r from-brand-orange to-[#FDB760]" : "bg-brand-sky/70"}`}
+          style={{ width: `${pct}%` }}
+        />
+      </div>
+    </div>
   );
 }
