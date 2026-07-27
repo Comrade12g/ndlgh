@@ -166,15 +166,27 @@ function ServicesSection() {
       </div>
       <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {SERVICES.map((s, i) => (
-          <RevealCard key={s.name} delay={i * 80}>
-            <div className="rounded-lg bg-brand-orange/10 p-2.5 w-fit text-brand-orange">
-              <s.icon className="h-5 w-5" />
+          <RevealCard key={s.name} delay={i * 80} noPadding>
+            <div className="relative h-40 overflow-hidden">
+              <img
+                src={s.photo}
+                alt={s.name}
+                loading="lazy"
+                className="h-full w-full object-cover transition-transform duration-700 hover:scale-110"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-brand-navy/80 via-brand-navy/20 to-transparent" />
+              <div className="absolute left-4 top-4 rounded-lg bg-white/95 p-2 text-brand-orange shadow-lg">
+                <s.icon className="h-5 w-5" />
+              </div>
             </div>
-            <h3 className="mt-4 font-display text-lg font-bold text-brand-navy">{s.name}</h3>
-            <p className="mt-2 text-sm text-muted-foreground">{s.desc}</p>
+            <div className="p-5">
+              <h3 className="font-display text-lg font-bold text-brand-navy">{s.name}</h3>
+              <p className="mt-2 text-sm text-muted-foreground">{s.desc}</p>
+            </div>
           </RevealCard>
         ))}
       </div>
+
       <div className="mt-8 text-center">
         <Link to="/services">
           <Button variant="outline">Explore all services <ArrowRight className="ml-2 h-4 w-4" /></Button>
