@@ -41,8 +41,10 @@ export const getIndicativeRate = createServerFn({ method: "GET" })
     cbm: Math.max(0, Number(d.cbm) || 0),
   }))
   .handler(async ({ data }) => {
-    const sb = serverPublicClient();
-    const { data: rates, error } = await sb
+    // Rates are not publicly readable via anon; use trusted server client and
+    // return only the derived indicative amount, never raw rate rows.
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: rates, error } = await supabaseAdmin
       .from("rates")
       .select("unit, price, currency, origin_code, mode, effective_from")
       .eq("active", true)
