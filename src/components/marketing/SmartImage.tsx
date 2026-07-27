@@ -9,6 +9,8 @@ type Props = {
   aspect?: string; // e.g. "aspect-square" or "aspect-[4/3]"
   eager?: boolean;
   prefetch?: boolean; // when true, start loading before scroll (uses fetchpriority high)
+  width?: number;
+  height?: number;
 };
 
 /**
