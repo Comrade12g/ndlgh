@@ -57,6 +57,8 @@ export function HeroCarousel({ slides, interval = 5200, className }: Props) {
               imgClassName="animate-[float-y_16s_ease-in-out_infinite]"
               eager={idx === 0}
               prefetch={idx === 0}
+              width={idx === 0 ? 1600 : undefined}
+              height={idx === 0 ? 1000 : undefined}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-brand-navy/85 via-brand-navy/25 to-transparent" />
             {(s.caption || s.location) && (
