@@ -220,6 +220,8 @@ function Hero() {
   const ref = useReveal<HTMLDivElement>();
   const magneticA = useMagnetic<HTMLDivElement>(0.18);
   const magneticB = useMagnetic<HTMLDivElement>(0.18);
+  const { data: photos } = useGalleryPhotos();
+  const slides = useMemo(() => heroSlidesFromDb(photos), [photos]);
   const headline = "Global freight, delivered to your door in Ghana.".split(" ");
   return (
     <section className="relative overflow-hidden bg-gradient-to-b from-brand-navy via-[#0d2551] to-brand-navy text-white">
