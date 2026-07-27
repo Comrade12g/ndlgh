@@ -337,13 +337,13 @@ function SectionHeading({ eyebrow, title }: { eyebrow: string; title: string }) 
   );
 }
 
-function RevealCard({ children, delay = 0, className = "", tilt = true }: { children: React.ReactNode; delay?: number; className?: string; tilt?: boolean }) {
+function RevealCard({ children, delay = 0, className = "", tilt = true, noPadding = false }: { children: React.ReactNode; delay?: number; className?: string; tilt?: boolean; noPadding?: boolean }) {
   const ref = useReveal<HTMLDivElement>();
   const tiltRef = useTilt<HTMLDivElement>(8);
   return (
     <div ref={ref} className="reveal" style={{ transitionDelay: `${delay}ms` }}>
       <div ref={tilt ? tiltRef : undefined}>
-        <Card className={`p-6 transition-shadow hover:shadow-xl ${className}`}>{children}</Card>
+        <Card className={`${noPadding ? "overflow-hidden" : "p-6"} transition-shadow hover:shadow-xl ${className}`}>{children}</Card>
       </div>
     </div>
   );
