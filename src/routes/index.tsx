@@ -341,8 +341,21 @@ function Hero() {
             ))}
           </h1>
           <p className="mt-5 max-w-lg text-lg text-white/80">
-            Sea groupage, full containers, air cargo, customs clearing and Ghana-wide last-mile delivery — from China, Dubai, Thailand, Canada and the US.
+            Sea LCL/FCL, air cargo, customs clearing and Ghana-wide last-mile delivery — from China, Dubai, Thailand, Canada and the US to Tema and every region of Ghana.
           </p>
+          <ul className="mt-6 grid max-w-lg gap-2 text-sm text-white/85 sm:grid-cols-2">
+            {[
+              { icon: ShieldCheck, text: "In-house licensed customs brokers at Tema" },
+              { icon: MessageCircle, text: "WhatsApp tracking updates on every milestone" },
+              { icon: Zap, text: "Instant online quotes — no waiting for email" },
+              { icon: Truck, text: "Door delivery to all 16 regions of Ghana" },
+            ].map((f) => (
+              <li key={f.text} className="flex items-start gap-2">
+                <f.icon className="mt-0.5 h-4 w-4 shrink-0 text-brand-orange" />
+                <span>{f.text}</span>
+              </li>
+            ))}
+          </ul>
           <div className="mt-6 flex flex-wrap gap-3">
             <div ref={magneticA} className="inline-block">
               <Link to="/quote">
