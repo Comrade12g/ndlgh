@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TrackingRouteImport } from './routes/tracking'
 import { Route as StaffSignupRouteImport } from './routes/staff-signup'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as ServicesRouteImport } from './routes/services'
 import { Route as QuoteRouteImport } from './routes/quote'
 import { Route as PortalRouteImport } from './routes/portal'
@@ -52,6 +53,11 @@ const TrackingRoute = TrackingRouteImport.update({
 const StaffSignupRoute = StaffSignupRouteImport.update({
   id: '/staff-signup',
   path: '/staff-signup',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ServicesRoute = ServicesRouteImport.update({
@@ -233,6 +239,7 @@ export interface FileRoutesByFullPath {
   '/portal': typeof PortalRoute
   '/quote': typeof QuoteRoute
   '/services': typeof ServicesRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/staff-signup': typeof StaffSignupRoute
   '/tracking': typeof TrackingRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
@@ -268,6 +275,7 @@ export interface FileRoutesByTo {
   '/portal': typeof PortalRoute
   '/quote': typeof QuoteRoute
   '/services': typeof ServicesRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/staff-signup': typeof StaffSignupRoute
   '/tracking': typeof TrackingRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
@@ -305,6 +313,7 @@ export interface FileRoutesById {
   '/portal': typeof PortalRoute
   '/quote': typeof QuoteRoute
   '/services': typeof ServicesRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/staff-signup': typeof StaffSignupRoute
   '/tracking': typeof TrackingRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
@@ -342,6 +351,7 @@ export interface FileRouteTypes {
     | '/portal'
     | '/quote'
     | '/services'
+    | '/sitemap.xml'
     | '/staff-signup'
     | '/tracking'
     | '/dashboard'
@@ -377,6 +387,7 @@ export interface FileRouteTypes {
     | '/portal'
     | '/quote'
     | '/services'
+    | '/sitemap.xml'
     | '/staff-signup'
     | '/tracking'
     | '/dashboard'
@@ -413,6 +424,7 @@ export interface FileRouteTypes {
     | '/portal'
     | '/quote'
     | '/services'
+    | '/sitemap.xml'
     | '/staff-signup'
     | '/tracking'
     | '/_authenticated/dashboard'
@@ -450,6 +462,7 @@ export interface RootRouteChildren {
   PortalRoute: typeof PortalRoute
   QuoteRoute: typeof QuoteRoute
   ServicesRoute: typeof ServicesRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   StaffSignupRoute: typeof StaffSignupRoute
   TrackingRoute: typeof TrackingRoute
   TrackCodeRoute: typeof TrackCodeRoute
@@ -470,6 +483,13 @@ declare module '@tanstack/react-router' {
       path: '/staff-signup'
       fullPath: '/staff-signup'
       preLoaderRoute: typeof StaffSignupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/services': {
@@ -764,6 +784,7 @@ const rootRouteChildren: RootRouteChildren = {
   PortalRoute: PortalRoute,
   QuoteRoute: QuoteRoute,
   ServicesRoute: ServicesRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
   StaffSignupRoute: StaffSignupRoute,
   TrackingRoute: TrackingRoute,
   TrackCodeRoute: TrackCodeRoute,
