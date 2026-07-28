@@ -1,0 +1,28 @@
+# NDL Cargo Ghana
+
+> NDL Cargo Ghana is a Ghanaian-owned freight and logistics company that ships sea LCL/FCL, air cargo, and door-to-door parcels from China, Dubai, Thailand, Canada, and the United States into Ghana. The platform offers instant quotes, live shipment tracking, in-house customs clearing, warehousing, and Ghana-wide last-mile delivery.
+
+NDL Cargo operates its own origin teams and warehouses in Yiwu, Guangzhou, Taizhou, Dubai, Bangkok, Toronto, New York, and Los Angeles. Customers can get indicative freight quotes, track shipments by NDL-CN or NDL-GH reference, and manage orders through a customer portal.
+
+## Pages
+
+- [/](/): Home — freight services overview, shipping lanes, instant quote engine, live tracking demo, gallery, and customer testimonials.
+- [/about](/about): About NDL Cargo — company background, operations teams, customs brokerage, values, and contact calls-to-action.
+- [/contact](/contact): Contact page with office address, phone, email, WhatsApp chat, opening hours, and an embedded map.
+- [/services](/services): Detailed service cards for sea freight (FCL & LCL), air cargo, customs clearing, and warehousing with last-mile delivery.
+- [/lanes](/lanes): Origin-to-Ghana shipping lanes from China, Dubai, Thailand, Canada, and the United States, with transit times and cutoff schedules.
+- [/lanes/china](/lanes/china): Example lane detail page showing hub cities, transit modes, and typical cargo types for a specific origin.
+- [/quote](/quote): Instant freight quote calculator using live tariffs and volumetric-weight logic.
+- [/tracking](/tracking): Public shipment tracking lookup by NDL reference number.
+- [/track/NDL-CN-00042](/track/NDL-CN-00042): Example tracking result page showing shipment milestones and ETA updates.
+
+## Tools
+
+- [Quote engine](/quote): Calculate indicative shipping cost from weight, dimensions, origin, and mode.
+- [Shipment tracking](/tracking): Look up milestone status for any NDL-CN or NDL-GH reference.
+- [Customer portal](/auth): Sign-in portal for customers to view packages, invoices, and delivery details.
+
+## Optional
+
+- [/auth](/auth): Authentication entry point for customers and staff to sign in or reset passwords.
+- [/sitemap.xml](/sitemap.xml): Machine-readable list of public routes for search engines.
