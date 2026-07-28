@@ -24,6 +24,8 @@ import { IMG } from "@/assets/gallery";
 import {
   Ship, Plane, Truck, Warehouse, ShieldCheck, Globe2,
   ArrowRight, Users, FileCheck, Filter,
+  MessageCircle, Zap, Calculator, PackageCheck, Home as HomeIcon,
+  ChevronDown,
 } from "lucide-react";
 
 export const Route = createFileRoute("/")({
