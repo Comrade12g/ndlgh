@@ -79,6 +79,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
+      { name: "google-site-verification", content: "EjsUT4_PS35Pz0djhdJd8Z8i7LYL4-di-5yStfVaB10" },
       { title: "NDL Ghana — Global Shipping: China, UK, Dubai to your door" },
       {
         name: "description",
