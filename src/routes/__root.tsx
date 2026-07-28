@@ -80,41 +80,32 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { name: "google-site-verification", content: "EjsUT4_PS35Pz0djhdJd8Z8i7LYL4-di-5yStfVaB10" },
-      { title: "NDL Ghana — Global Shipping: China, UK, Dubai to your door" },
+      { title: "NDL Cargo Ghana — China, Dubai, Thailand, Canada & US to Ghana Shipping" },
       {
         name: "description",
         content:
-          "NDL Ghana ships parcels, e-commerce orders and full containers from China, UK, and Dubai to your doorstep in Ghana. Track shipments, manage sourcing, invoices, and deliveries in one platform.",
+          "NDL Cargo Ghana is a licensed freight forwarder shipping sea LCL/FCL, air cargo and door-to-door parcels from China, Dubai, Thailand, Canada and the US to Tema, Accra and every region of Ghana. In-house customs clearing, WhatsApp tracking and instant online quotes.",
       },
       {
         property: "og:title",
-        content: "NDL Ghana — Global Shipping: China, UK, Dubai to your door",
+        content: "NDL Cargo Ghana — China, Dubai, Thailand, Canada & US to Ghana Shipping",
       },
       {
         property: "og:description",
         content:
-          "Sea groupage, full containers, air freight, and intercity delivery — end-to-end shipping from China, UK, and Dubai to Ghana.",
+          "Freight forwarder Ghana: sea groupage, full containers, air cargo, customs clearing at Tema Port and last-mile delivery. Ship from China, Dubai, Thailand, Canada or the US to Accra with instant quotes and live tracking.",
       },
       { property: "og:type", content: "website" },
+      { property: "og:site_name", content: "NDL Cargo Ghana" },
       { name: "twitter:card", content: "summary_large_image" },
       {
         name: "twitter:title",
-        content: "NDL Ghana — Global Shipping: China, UK, Dubai to your door",
-      },
-      {
-        name: "description",
-        content:
-          "ShipFlow CRM is a SaaS platform for shipping companies to manage customer relationships and operations.",
-      },
-      {
-        property: "og:description",
-        content:
-          "ShipFlow CRM is a SaaS platform for shipping companies to manage customer relationships and operations.",
+        content: "NDL Cargo Ghana — China, Dubai, Thailand, Canada & US to Ghana Shipping",
       },
       {
         name: "twitter:description",
         content:
-          "ShipFlow CRM is a SaaS platform for shipping companies to manage customer relationships and operations.",
+          "China to Ghana shipping, cargo from Dubai to Accra, customs clearing at Tema — NDL Cargo delivers sea, air and door-to-door freight with instant quotes and WhatsApp tracking updates.",
       },
       {
         property: "og:image",
