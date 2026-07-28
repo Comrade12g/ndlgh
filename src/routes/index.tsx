@@ -72,12 +72,15 @@ function HomePage() {
       <LaneMarquee />
       <TrustStrip />
       <ServicesSection />
+      <HowItWorks />
       <StatsBand />
       <QuoteSection />
       <LanesSection />
+      <WhyNDL />
       <GallerySection />
       <TrackingDemo />
       <Testimonials />
+      <FaqSection />
       <TeamSection />
       <ContactCTA />
       <JsonLd />
