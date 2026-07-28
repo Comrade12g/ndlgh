@@ -617,17 +617,199 @@ function RevealCard({ children, delay = 0, className = "", tilt = true, noPaddin
   );
 }
 
+const FAQS = [
+  {
+    q: "How long does shipping from China to Ghana take?",
+    a: "Sea LCL groupage from Guangzhou, Yiwu or Shenzhen to Tema Port typically takes 35–45 days door-to-door including customs clearing. Air cargo from China to Kotoka arrives in 5–9 days. Dubai to Accra by sea is 25–30 days; from the US and Canada expect 40–55 days by sea and 7–12 days by air.",
+  },
+  {
+    q: "How is chargeable weight calculated?",
+    a: "For sea freight we bill on volume (CBM = length × width × height in metres) or actual weight — whichever produces the higher charge. For air cargo the volumetric divisor is 6,000, so 1 CBM ≈ 167 kg. Our instant quote engine calculates both automatically and shows you the chargeable amount before you commit.",
+  },
+  {
+    q: "Does NDL Cargo handle customs clearing at Tema?",
+    a: "Yes. Our in-house licensed customs brokers handle GRA duty assessment, port charges, terminal handling and delivery orders end-to-end. You never deal with a third-party clearing agent, which is why our clearance times average 3–5 working days after arrival.",
+  },
+  {
+    q: "Do you deliver outside Accra and Tema?",
+    a: "We deliver door-to-door across all 16 regions of Ghana — Accra, Tema, Kumasi, Takoradi, Cape Coast, Tamale, Sunyani, Ho and every district in between. Intercity delivery fees are quoted upfront based on weight/volume and destination.",
+  },
+  {
+    q: "How do I track my shipment?",
+    a: "Every shipment gets an NDL-CN-##### (origin) and NDL-GH-##### (Ghana) reference. Enter it on our tracking page or reply to our WhatsApp updates — we push notifications at every milestone: booked, departed, in transit, arrived Tema, customs clearing, out for delivery, delivered.",
+  },
+];
+
+function HowItWorks() {
+  const ref = useReveal<HTMLDivElement>();
+  const steps = [
+    { icon: Calculator, title: "1. Get an instant quote", desc: "Enter weight and dimensions on the quote engine — we price sea, air and door delivery in real-time from live tariffs." },
+    { icon: PackageCheck, title: "2. Ship to our origin hub", desc: "Drop your goods at our Guangzhou, Yiwu, Dubai, Thailand, Canada or US warehouse. We consolidate groupage into containers weekly." },
+    { icon: ShieldCheck, title: "3. Customs clearing at Tema", desc: "Our in-house licensed brokers handle GRA duty, port charges and delivery orders. Average clearance: 3–5 working days." },
+    { icon: HomeIcon, title: "4. Delivered to your door", desc: "Ghana-wide last-mile delivery to Accra, Kumasi, Takoradi, Tamale and every region — with WhatsApp confirmation on arrival." },
+  ];
+  return (
+    <section id="how-it-works" className="mx-auto max-w-7xl px-4 py-16 md:py-20">
+      <div ref={ref} className="reveal text-center">
+        <SectionHeading eyebrow="How it works" title="Ship to Ghana in four simple steps" />
+        <p className="mx-auto mt-3 max-w-2xl text-muted-foreground">
+          First time importing? Here's exactly what happens from the moment you request a quote to the moment your cargo lands at your door in Ghana.
+        </p>
+      </div>
+      <ol className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {steps.map((s, i) => (
+          <RevealCard key={s.title} delay={i * 80}>
+            <div className="rounded-lg bg-brand-orange/10 p-2.5 w-fit text-brand-orange">
+              <s.icon className="h-5 w-5" />
+            </div>
+            <h3 className="mt-4 font-display text-lg font-bold text-brand-navy">{s.title}</h3>
+            <p className="mt-2 text-sm text-muted-foreground">{s.desc}</p>
+          </RevealCard>
+        ))}
+      </ol>
+    </section>
+  );
+}
+
+function WhyNDL() {
+  const ref = useReveal<HTMLDivElement>();
+  const points = [
+    "Licensed in-house customs brokers — no third-party leakage or hidden fees",
+    "Weekly groupage consolidation from every origin, so small shipments still get container rates",
+    "Live WhatsApp tracking pushed at every milestone — no more chasing agents for updates",
+    "Transparent pricing: quote matches the final invoice, no surprise port or duty add-ons",
+    "Bonded warehousing at Tema and Accra for buffer stock and staged delivery",
+    "Sourcing agents on the ground in Guangzhou, Yiwu and Bangkok",
+  ];
+  return (
+    <section id="why-ndl" className="bg-secondary/40 py-16 md:py-20">
+      <div className="mx-auto grid max-w-7xl gap-10 px-4 lg:grid-cols-2 lg:items-center">
+        <div ref={ref} className="reveal">
+          <SectionHeading eyebrow="Why NDL Cargo" title="Ghana's most trusted freight forwarder" />
+          <p className="mt-4 max-w-lg text-muted-foreground">
+            Headquartered on Derby Avenue, Accra with operations at Tema Port, NDL Cargo Ghana has cleared thousands of containers and delivered to every region of Ghana. We built the network for Ghanaian importers who are tired of opaque agents and delayed clearances.
+          </p>
+          <ul className="mt-6 space-y-3 text-sm text-foreground">
+            {points.map((p) => (
+              <li key={p} className="flex items-start gap-3">
+                <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-brand-orange" />
+                <span>{p}</span>
+              </li>
+            ))}
+          </ul>
+          <div className="mt-6 flex flex-wrap gap-3">
+            <Link to="/about"><Button variant="outline">About NDL Cargo</Button></Link>
+            <Link to="/services"><Button className="bg-brand-orange text-white hover:bg-brand-orange/90">See all services</Button></Link>
+          </div>
+        </div>
+        <div className="reveal-scale">
+          <SmartImage
+            src={IMG.warehouseInterior}
+            alt="NDL Cargo Ghana bonded warehouse and groupage consolidation facility"
+            className="aspect-[4/3] w-full overflow-hidden rounded-3xl shadow-xl"
+            imgClassName="h-full w-full object-cover"
+          />
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function FaqSection() {
+  const ref = useReveal<HTMLDivElement>();
+  const [open, setOpen] = useState<number | null>(0);
+  const faqLd = useMemo(
+    () => ({
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      mainEntity: FAQS.map((f) => ({
+        "@type": "Question",
+        name: f.q,
+        acceptedAnswer: { "@type": "Answer", text: f.a },
+      })),
+    }),
+    [],
+  );
+  return (
+    <section id="faq" className="mx-auto max-w-4xl px-4 py-16 md:py-20">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }}
+      />
+      <div ref={ref} className="reveal text-center">
+        <SectionHeading eyebrow="FAQ" title="Answers for first-time importers" />
+      </div>
+      <div className="mt-8 divide-y rounded-2xl border bg-white shadow-sm">
+        {FAQS.map((f, i) => {
+          const isOpen = open === i;
+          return (
+            <div key={f.q}>
+              <button
+                type="button"
+                onClick={() => setOpen(isOpen ? null : i)}
+                aria-expanded={isOpen}
+                className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left"
+              >
+                <span className="font-display font-bold text-brand-navy">{f.q}</span>
+                <ChevronDown
+                  className={`h-4 w-4 shrink-0 text-brand-orange transition-transform ${isOpen ? "rotate-180" : ""}`}
+                />
+              </button>
+              {isOpen && (
+                <div className="px-5 pb-5 text-sm text-muted-foreground">{f.a}</div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
+
 function JsonLd() {
-  const data = {
+  const org = {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
+    "@id": "https://ndlgh.susuboxgh.com/#business",
     name: "NDL Cargo Ghana",
+    alternateName: "NDL Ghana",
+    description:
+      "Licensed freight forwarder shipping sea LCL/FCL, air cargo and door-to-door parcels from China, Dubai, Thailand, Canada and the US to Ghana, with in-house customs clearing at Tema Port.",
     image: "https://ndlgh.susuboxgh.com/favicon.png",
-    address: { "@type": "PostalAddress", streetAddress: NDL_ADDRESS, addressLocality: "Accra", addressCountry: "GH" },
+    logo: "https://ndlgh.susuboxgh.com/favicon.png",
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: NDL_ADDRESS,
+      addressLocality: "Accra",
+      addressRegion: "Greater Accra",
+      addressCountry: "GH",
+    },
     telephone: NDL_PHONE,
     email: NDL_EMAIL,
-    url: "https://ndlgh.com",
-    areaServed: "Ghana",
+    url: "https://ndlgh.susuboxgh.com",
+    priceRange: "$$",
+    areaServed: [
+      { "@type": "Country", name: "Ghana" },
+      { "@type": "City", name: "Accra" },
+      { "@type": "City", name: "Tema" },
+      { "@type": "City", name: "Kumasi" },
+      { "@type": "City", name: "Takoradi" },
+    ],
+    knowsAbout: [
+      "Freight forwarding Ghana",
+      "China to Ghana shipping",
+      "Customs clearing Tema Port",
+      "Sea LCL groupage",
+      "Air cargo Kotoka",
+      "Cargo from Dubai to Accra",
+      "Last-mile delivery Ghana",
+    ],
+    sameAs: ["https://ndlgh.lovable.app", "https://ndlgh.com"],
   };
-  return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }} />;
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(org) }}
+    />
+  );
 }
