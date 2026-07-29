@@ -262,7 +262,7 @@ export function HeroMap() {
         <div className="absolute bottom-3 left-4 rounded-full bg-black/40 px-3 py-1 text-[11px] font-medium text-white/85 backdrop-blur">
           Active lane: <span className="font-semibold text-brand-orange">{activeLane.label}</span>
         </div>
-        <div className="absolute right-4 top-3 rounded-full bg-black/40 px-3 py-1 text-[10px] font-semibold uppercase tracking-widest text-white/70 backdrop-blur">
+        <div className="absolute right-4 top-3 rounded-full bg-black/60 px-3 py-1 text-[10px] font-semibold uppercase tracking-widest text-white backdrop-blur">
           {paused ? "Paused" : "Auto-cycling"}
         </div>
       </div>
