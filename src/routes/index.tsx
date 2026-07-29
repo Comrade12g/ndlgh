@@ -314,10 +314,12 @@ function FilterChip({ active, onClick, children }: { active: boolean; onClick: (
 
 function Hero() {
   const ref = useReveal<HTMLDivElement>();
+  const rightRef = useReveal<HTMLDivElement>();
   const magneticA = useMagnetic<HTMLDivElement>(0.18);
   const magneticB = useMagnetic<HTMLDivElement>(0.18);
   const { data: photos } = useGalleryPhotos();
   const slides = useMemo(() => heroSlidesFromDb(photos), [photos]);
+
   const headline = "Global freight, delivered to your door in Ghana.".split(" ");
   return (
     <section className="relative overflow-hidden bg-gradient-to-b from-brand-navy via-[#0d2551] to-brand-navy text-white">
@@ -376,10 +378,11 @@ function Hero() {
             <TrackingLookup variant="hero" />
           </div>
         </div>
-        <div className="reveal-scale space-y-4">
+        <div ref={rightRef} className="reveal-scale space-y-4">
           <HeroCarousel slides={slides} />
           <HeroMap />
         </div>
+
       </div>
     </section>
   );
@@ -452,6 +455,7 @@ function ServicesSection() {
 
 function QuoteSection() {
   const ref = useReveal<HTMLDivElement>();
+  const rightRef = useReveal<HTMLDivElement>();
   return (
     <section className="bg-secondary/40 py-16 md:py-20">
       <div className="mx-auto grid max-w-7xl gap-10 px-4 lg:grid-cols-2">
@@ -474,13 +478,14 @@ function QuoteSection() {
             ))}
           </ul>
         </div>
-        <div className="reveal">
+        <div ref={rightRef} className="reveal">
           <QuoteEngine />
         </div>
       </div>
     </section>
   );
 }
+
 
 function LanesSection() {
   const ref = useReveal<HTMLDivElement>();
@@ -673,6 +678,7 @@ function HowItWorks() {
 
 function WhyNDL() {
   const ref = useReveal<HTMLDivElement>();
+  const rightRef = useReveal<HTMLDivElement>();
   const points = [
     "Licensed in-house customs brokers — no third-party leakage or hidden fees",
     "Weekly groupage consolidation from every origin, so small shipments still get container rates",
@@ -702,7 +708,7 @@ function WhyNDL() {
             <Link to="/services"><Button className="bg-brand-orange text-white hover:bg-brand-orange/90">See all services</Button></Link>
           </div>
         </div>
-        <div className="reveal-scale">
+        <div ref={rightRef} className="reveal-scale">
           <SmartImage
             src={IMG.warehouseInterior}
             alt="NDL Cargo Ghana bonded warehouse and groupage consolidation facility"
@@ -714,6 +720,7 @@ function WhyNDL() {
     </section>
   );
 }
+
 
 function FaqSection() {
   const ref = useReveal<HTMLDivElement>();
