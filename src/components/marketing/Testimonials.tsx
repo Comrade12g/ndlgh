@@ -65,6 +65,7 @@ const ITEMS = [
 
 export function Testimonials() {
   const ref = useReveal<HTMLDivElement>();
+  const carouselRef = useReveal<HTMLDivElement>();
   const [i, setI] = useState(0);
   useEffect(() => {
     const t = setInterval(() => setI((v) => (v + 1) % ITEMS.length), 5000);
