@@ -146,7 +146,7 @@ export function Testimonials() {
         </div>
       </div>
 
-      <div className="reveal mt-10 grid items-center gap-6 md:grid-cols-[80px_1fr_80px]">
+      <div ref={carouselRef} className="reveal mt-10 grid items-center gap-6 md:grid-cols-[80px_1fr_80px]">
         <button
           onClick={() => setI((v) => (v - 1 + ITEMS.length) % ITEMS.length)}
           className="hidden h-12 w-12 items-center justify-center rounded-full border bg-card text-brand-navy transition hover:border-brand-orange hover:text-brand-orange md:flex md:justify-self-end"
