@@ -144,7 +144,7 @@ export function MarketingLayout({ children }: { children: ReactNode }) {
           </div>
         </div>
         <div className="border-t border-white/10">
-          <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-2 px-4 py-5 text-xs text-white/60 md:flex-row">
+          <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-2 px-4 py-5 text-xs text-white/85 md:flex-row">
             <div>© {new Date().getFullYear()} NDL Cargo Ghana. All rights reserved.</div>
             <div>Reliable global freight · Accra, Ghana</div>
           </div>
