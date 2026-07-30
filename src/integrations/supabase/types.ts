@@ -1403,14 +1403,27 @@ export type Database = {
       get_public_shipment_status: {
         Args: { _ref: string }
         Returns: {
+          actual_arrival: string
+          actual_departure: string
+          carrier: string
+          cbm: number
           current_eta: string
           current_milestone: Database["public"]["Enums"]["shipment_milestone"]
           destination_city: string
           eta_last_changed_at: string
           eta_recently_changed: boolean
+          etd: string
+          last_checked_at: string
+          matched_mark: string
           mode: Database["public"]["Enums"]["shipment_mode"]
           ndl_reference: string
           origin_city: string
+          original_eta: string
+          package_count: number
+          pieces: number
+          received_at: string
+          vessel_or_flight: string
+          weight_kg: number
         }[]
       }
       has_role: {
