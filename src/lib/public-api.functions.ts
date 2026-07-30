@@ -24,14 +24,20 @@ export const getPublicShipmentStatus = createServerFn({ method: "GET" })
   .inputValidator((d: { ref: string }) => ({ ref: String(d.ref ?? "").trim().toUpperCase() }))
   .handler(async ({ data }) => {
     if (!data.ref) return null;
-    // Use admin client server-side so we can revoke anon EXECUTE on the
-    // SECURITY DEFINER RPC while keeping public tracking working.
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { data: rows, error } = await supabaseAdmin.rpc("get_public_shipment_status", { _ref: data.ref });
-    if (error) return null;
-    const row = Array.isArray(rows) ? rows[0] : rows;
-    return row ?? null;
+    try {
+      // Use admin client server-side so we can revoke anon EXECUTE on the
+      // SECURITY DEFINER RPC while keeping public tracking working.
+      const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+      const { data: rows, error } = await supabaseAdmin.rpc("get_public_shipment_status", { _ref: data.ref });
+      if (error) return null;
+      const row = Array.isArray(rows) ? rows[0] : rows;
+      return row ?? null;
+    } catch (e) {
+      console.error("getPublicShipmentStatus failed", e);
+      return null;
+    }
   });
+
 
 export const getIndicativeRate = createServerFn({ method: "GET" })
   .inputValidator((d: { origin: string; mode: string; weightKg: number; cbm: number }) => ({
