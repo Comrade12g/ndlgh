@@ -55,6 +55,7 @@ function TrackPage() {
           <>
             <CustomerTrackingCard
               s={{
+                ...(q.data as Record<string, unknown>),
                 ndl_reference: q.data.ndl_reference,
                 origin_city: q.data.origin_city,
                 destination_city: q.data.destination_city,
@@ -64,6 +65,7 @@ function TrackPage() {
                 eta_recently_changed: q.data.eta_recently_changed,
               }}
             />
+
             <div className="mt-6 flex items-start gap-3 rounded-xl border bg-secondary/40 p-4 text-sm">
               <ShieldCheck className="h-5 w-5 shrink-0 text-brand-orange" />
               <div>
