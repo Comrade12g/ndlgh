@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { AnimatedBackdrop } from "@/components/marketing/AnimatedBackdrop";
 import { MarketingLayout } from "@/components/marketing/MarketingLayout";
 import { TrackingLookup } from "@/components/marketing/TrackingLookup";
 import { MilestoneTimeline } from "@/components/tracking/MilestoneTimeline";
@@ -22,8 +23,9 @@ export const Route = createFileRoute("/tracking")({
 function TrackingPage() {
   return (
     <MarketingLayout>
-      <section className="border-b bg-gradient-to-b from-brand-navy to-[#0d2551] py-14 text-white">
-        <div className="mx-auto max-w-3xl px-4 text-center">
+      <section className="relative overflow-hidden border-b bg-gradient-to-b from-brand-navy to-[#0d2551] py-14 text-white">
+        <AnimatedBackdrop />
+        <div className="relative mx-auto max-w-3xl px-4 text-center">
           <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-brand-orange/20 text-brand-orange">
             <PackageSearch className="h-5 w-5" />
           </div>

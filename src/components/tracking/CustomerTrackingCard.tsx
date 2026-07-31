@@ -1,5 +1,6 @@
 import { Card } from "@/components/ui/card";
 import { MilestoneTimeline, milestoneLabel, type MilestoneKey } from "./MilestoneTimeline";
+import { MilestoneJourney } from "./MilestoneJourney";
 import { MapPin, CalendarClock, Clock, Ship, Plane, Truck, Package, Scale, Box, Tag, RefreshCw } from "lucide-react";
 
 export type CustomerShipment = {
@@ -128,6 +129,10 @@ export function CustomerTrackingCard({ s }: { s: CustomerShipment }) {
           <span className="font-semibold text-brand-navy">{milestoneLabel(s.current_milestone)}</span>
         </div>
         <MilestoneTimeline current={s.current_milestone} />
+      </div>
+
+      <div className="mt-3">
+        <MilestoneJourney shipment={s} />
       </div>
 
       <div className="mt-5">
