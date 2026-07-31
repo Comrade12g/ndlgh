@@ -227,7 +227,7 @@ export function MilestoneJourney({ shipment }: { shipment: JourneyShipment }) {
                   meta.cls,
                 )}
               >
-                <meta.Icon className={cn("h-4 w-4", e.status === "current" && "animate-spin-slow")} />
+                <meta.Icon className={cn("h-4 w-4", e.status === "current" && "animate-spin")} />
               </span>
               <span className="min-w-[8rem] flex-1">
                 <span className="block text-sm font-semibold text-brand-navy">{e.label}</span>
