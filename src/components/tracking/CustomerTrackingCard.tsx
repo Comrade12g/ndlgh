@@ -130,6 +130,10 @@ export function CustomerTrackingCard({ s }: { s: CustomerShipment }) {
         <MilestoneTimeline current={s.current_milestone} />
       </div>
 
+      <div className="mt-3">
+        <MilestoneJourney shipment={s} />
+      </div>
+
       <div className="mt-5">
         <div className="mb-2 text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">
           Shipment details
