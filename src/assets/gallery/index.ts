@@ -1,37 +1,26 @@
-// Centralized asset URLs for marketing gallery.
-// Files are hosted on Lovable CDN — see the sibling `.asset.json` pointers.
-import airAccra from "./air-accra.jpg.asset.json";
-import airCargoPlane from "./air-cargo-plane.jpg.asset.json";
-import canadaHub from "./canada-hub.jpg.asset.json";
-import chinaHub from "./china-hub.jpg.asset.json";
-import containerShipPort from "./container-ship-port.jpg.asset.json";
-import customsClearing from "./customs-clearing.jpg.asset.json";
-import deliveryTruck from "./delivery-truck.jpg.asset.json";
-import dubaiHub from "./dubai-hub.jpg.asset.json";
-import freighterNight from "./freighter-night.jpg.asset.json";
-import portCranes from "./port-cranes.jpg.asset.json";
-import seaTema from "./sea-tema.jpg.asset.json";
-import stackedContainers from "./stacked-containers.jpg.asset.json";
-import thailandHub from "./thailand-hub.jpg.asset.json";
-import usHub from "./us-hub.jpg.asset.json";
-import warehouseInterior from "./warehouse-interior.jpg.asset.json";
-import warehousePallets from "./warehouse-pallets.jpg.asset.json";
-
+// Centralized asset URLs for the marketing gallery.
+// Photos are served from /public/gallery as optimized progressive JPEGs
+// (1600w + 800w variants) with inline LQIP previews in ./lqip.ts.
 export const IMG = {
-  airAccra: airAccra.url,
-  airCargoPlane: airCargoPlane.url,
-  canadaHub: canadaHub.url,
-  chinaHub: chinaHub.url,
-  containerShipPort: containerShipPort.url,
-  customsClearing: customsClearing.url,
-  deliveryTruck: deliveryTruck.url,
-  dubaiHub: dubaiHub.url,
-  freighterNight: freighterNight.url,
-  portCranes: portCranes.url,
-  seaTema: seaTema.url,
-  stackedContainers: stackedContainers.url,
-  thailandHub: thailandHub.url,
-  usHub: usHub.url,
-  warehouseInterior: warehouseInterior.url,
-  warehousePallets: warehousePallets.url,
+  airAccra: "/gallery/air-accra.jpg",
+  airCargoPlane: "/gallery/air-cargo-plane.jpg",
+  canadaHub: "/gallery/canada-hub.jpg",
+  chinaHub: "/gallery/china-hub.jpg",
+  containerShipPort: "/gallery/container-ship-port.jpg",
+  customsClearing: "/gallery/customs-clearing.jpg",
+  deliveryTruck: "/gallery/delivery-truck.jpg",
+  dubaiHub: "/gallery/dubai-hub.jpg",
+  freighterNight: "/gallery/freighter-night.jpg",
+  portCranes: "/gallery/port-cranes.jpg",
+  seaTema: "/gallery/sea-tema.jpg",
+  stackedContainers: "/gallery/stacked-containers.jpg",
+  thailandHub: "/gallery/thailand-hub.jpg",
+  usHub: "/gallery/us-hub.jpg",
+  warehouseInterior: "/gallery/warehouse-interior.jpg",
+  warehousePallets: "/gallery/warehouse-pallets.jpg",
 };
+
+/** Small (800w) variant for cards, thumbnails and mobile. */
+export function small(src: string) {
+  return src.startsWith("/gallery/") ? src.replace(/\.jpg$/, "-800.jpg") : src;
+}
