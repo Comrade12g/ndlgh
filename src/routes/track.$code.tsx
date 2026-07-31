@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
+import { AnimatedBackdrop } from "@/components/marketing/AnimatedBackdrop";
 import { MarketingLayout } from "@/components/marketing/MarketingLayout";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -31,8 +32,9 @@ function TrackPage() {
 
   return (
     <MarketingLayout>
-      <section className="border-b bg-gradient-to-b from-brand-navy to-[#0d2551] py-10 text-white">
-        <div className="mx-auto max-w-4xl px-4">
+      <section className="relative overflow-hidden border-b bg-gradient-to-b from-brand-navy to-[#0d2551] py-10 text-white">
+        <AnimatedBackdrop />
+        <div className="relative mx-auto max-w-4xl px-4">
           <Link to="/tracking" className="inline-flex items-center gap-1 text-sm text-white/70 hover:text-white">
             <ArrowLeft className="h-4 w-4" /> New search
           </Link>
