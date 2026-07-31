@@ -41,7 +41,15 @@ export function HeroCarousel({ slides, interval = 5200, className }: Props) {
   return (
     <div className={cn("relative overflow-hidden rounded-3xl border border-white/15 bg-brand-navy shadow-2xl", className)}>
       <div className="relative aspect-[4/3] w-full md:aspect-[16/10]">
-        {slides.map((s, idx) => (
+        {slides.map((s, idx) => {
+          // Only mount the current slide and its neighbours so the hero never
+          // downloads the whole deck up front.
+          const near =
+            idx === i ||
+            idx === (i + 1) % slides.length ||
+            idx === (i - 1 + slides.length) % slides.length;
+          if (!near) return null;
+          return (
           <div
             key={s.src + idx}
             className={cn(
@@ -57,6 +65,7 @@ export function HeroCarousel({ slides, interval = 5200, className }: Props) {
               imgClassName="animate-[float-y_16s_ease-in-out_infinite]"
               eager={idx === 0}
               prefetch={idx === 0}
+              sizes="(max-width: 768px) 100vw, 720px"
               width={idx === 0 ? 1600 : undefined}
               height={idx === 0 ? 1000 : undefined}
             />
