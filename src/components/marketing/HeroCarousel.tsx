@@ -85,7 +85,8 @@ export function HeroCarousel({ slides, interval = 5200, className }: Props) {
               </div>
             )}
           </div>
-        ))}
+          );
+        })}
       </div>
 
       {/* Controls */}
