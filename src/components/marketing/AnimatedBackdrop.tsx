@@ -36,7 +36,7 @@ export const AnimatedBackdrop = memo(function AnimatedBackdrop({
           { d: "M-40 120 C 380 40, 820 260, 1240 60", delay: "-6s" },
         ].map((a, i) => (
           <g key={i}>
-            <path d={a.d} fill="none" stroke="hsl(var(--brand-sky, 210 80% 55%))" strokeOpacity="0.28" strokeWidth="1.5" />
+            <path d={a.d} fill="none" stroke="#2E86DE" strokeOpacity="0.28" strokeWidth="1.5" />
             <path
               d={a.d}
               fill="none"
@@ -84,7 +84,7 @@ function Vessel({ className, duration, delay }: { className?: string; duration: 
   return (
     <div
       className={cn("absolute left-0", className)}
-      style={{ animation: `drift-x ${duration} linear infinite`, animationDelay: delay }}
+      style={{ animation: `sail-right ${duration} linear infinite`, animationDelay: delay }}
     >
       <svg viewBox="0 0 64 24" className="h-full w-full text-white">
         <rect x="8" y="14" width="44" height="6" rx="1.5" fill="currentColor" fillOpacity="0.9" />
@@ -101,7 +101,7 @@ function Plane({ className, duration, delay }: { className?: string; duration: s
   return (
     <div
       className={cn("absolute left-0", className)}
-      style={{ animation: `drift-x ${duration} linear infinite`, animationDelay: delay }}
+      style={{ animation: `sail-right ${duration} linear infinite`, animationDelay: delay }}
     >
       <svg viewBox="0 0 48 24" className="h-4 w-10 text-white">
         <path d="M2 13l40-6-8 10-6 1-4 5-3-1 1-5-20-4z" fill="currentColor" fillOpacity="0.9" />
