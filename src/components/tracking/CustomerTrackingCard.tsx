@@ -1,5 +1,6 @@
 import { Card } from "@/components/ui/card";
 import { MilestoneTimeline, milestoneLabel, type MilestoneKey } from "./MilestoneTimeline";
+import { MilestoneJourney } from "./MilestoneJourney";
 import { MapPin, CalendarClock, Clock, Ship, Plane, Truck, Package, Scale, Box, Tag, RefreshCw } from "lucide-react";
 
 export type CustomerShipment = {
