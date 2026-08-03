@@ -43,7 +43,7 @@ export const Route = createFileRoute("/")({
     ],
     links: [
       // Preload the LCP hero image so it paints as fast as possible.
-      { rel: "preload", as: "image", href: IMG.seaTema, fetchpriority: "high" },
+      { rel: "preload", as: "image", href: IMG.seaTema },
     ],
   }),
   component: HomePage,

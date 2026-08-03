@@ -4,7 +4,7 @@ import { Card } from "@/components/ui/card";
 import { ArrowRight } from "lucide-react";
 import { useReveal } from "@/hooks/use-reveal";
 
-export const Route = createFileRoute("/lanes")({
+export const Route = createFileRoute("/lanes/")({
   head: () => ({
     meta: [
       { title: "Shipping Lanes — China, Dubai, Thailand, Canada, US to Ghana" },

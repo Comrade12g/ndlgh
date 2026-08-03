@@ -18,7 +18,6 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as ChangePasswordRouteImport } from './routes/change-password'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
-import { Route as LanesRouteImport } from './routes/lanes'
 import { Route as PendingActivationRouteImport } from './routes/pending-activation'
 import { Route as PortalRouteImport } from './routes/portal'
 import { Route as QuoteRouteImport } from './routes/quote'
@@ -35,6 +34,7 @@ import { Route as AuthenticatedRatesRouteImport } from './routes/_authenticated/
 import { Route as AuthenticatedReportsRouteImport } from './routes/_authenticated/reports'
 import { Route as AuthenticatedShipmentsRouteImport } from './routes/_authenticated/shipments'
 import { Route as AuthenticatedSupportRouteImport } from './routes/_authenticated/support'
+import { Route as LanesIndexRouteImport } from './routes/lanes.index'
 import { Route as LanesOriginRouteImport } from './routes/lanes.$origin'
 import { Route as TrackCodeRouteImport } from './routes/track.$code'
 import { Route as AuthenticatedAdminAuditRouteImport } from './routes/_authenticated/admin.audit'
@@ -87,11 +87,6 @@ const ContactRoute = ContactRouteImport.update({
 const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
   id: '/forgot-password',
   path: '/forgot-password',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LanesRoute = LanesRouteImport.update({
-  id: '/lanes',
-  path: '/lanes',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PendingActivationRoute = PendingActivationRouteImport.update({
@@ -174,10 +169,15 @@ const AuthenticatedSupportRoute = AuthenticatedSupportRouteImport.update({
   path: '/support',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const LanesIndexRoute = LanesIndexRouteImport.update({
+  id: '/lanes/',
+  path: '/lanes/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LanesOriginRoute = LanesOriginRouteImport.update({
-  id: '/$origin',
-  path: '/$origin',
-  getParentRoute: () => LanesRoute,
+  id: '/lanes/$origin',
+  path: '/lanes/$origin',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const TrackCodeRoute = TrackCodeRouteImport.update({
   id: '/track/$code',
@@ -234,7 +234,6 @@ export interface FileRoutesByFullPath {
   '/change-password': typeof ChangePasswordRoute
   '/contact': typeof ContactRoute
   '/forgot-password': typeof ForgotPasswordRoute
-  '/lanes': typeof LanesRouteWithChildren
   '/pending-activation': typeof PendingActivationRoute
   '/portal': typeof PortalRoute
   '/quote': typeof QuoteRoute
@@ -253,6 +252,7 @@ export interface FileRoutesByFullPath {
   '/support': typeof AuthenticatedSupportRoute
   '/lanes/$origin': typeof LanesOriginRoute
   '/track/$code': typeof TrackCodeRoute
+  '/lanes/': typeof LanesIndexRoute
   '/admin/audit': typeof AuthenticatedAdminAuditRoute
   '/admin/gallery': typeof AuthenticatedAdminGalleryRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
@@ -270,7 +270,6 @@ export interface FileRoutesByTo {
   '/change-password': typeof ChangePasswordRoute
   '/contact': typeof ContactRoute
   '/forgot-password': typeof ForgotPasswordRoute
-  '/lanes': typeof LanesRouteWithChildren
   '/pending-activation': typeof PendingActivationRoute
   '/portal': typeof PortalRoute
   '/quote': typeof QuoteRoute
@@ -289,6 +288,7 @@ export interface FileRoutesByTo {
   '/support': typeof AuthenticatedSupportRoute
   '/lanes/$origin': typeof LanesOriginRoute
   '/track/$code': typeof TrackCodeRoute
+  '/lanes': typeof LanesIndexRoute
   '/admin/audit': typeof AuthenticatedAdminAuditRoute
   '/admin/gallery': typeof AuthenticatedAdminGalleryRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
@@ -308,7 +308,6 @@ export interface FileRoutesById {
   '/change-password': typeof ChangePasswordRoute
   '/contact': typeof ContactRoute
   '/forgot-password': typeof ForgotPasswordRoute
-  '/lanes': typeof LanesRouteWithChildren
   '/pending-activation': typeof PendingActivationRoute
   '/portal': typeof PortalRoute
   '/quote': typeof QuoteRoute
@@ -327,6 +326,7 @@ export interface FileRoutesById {
   '/_authenticated/support': typeof AuthenticatedSupportRoute
   '/lanes/$origin': typeof LanesOriginRoute
   '/track/$code': typeof TrackCodeRoute
+  '/lanes/': typeof LanesIndexRoute
   '/_authenticated/admin/audit': typeof AuthenticatedAdminAuditRoute
   '/_authenticated/admin/gallery': typeof AuthenticatedAdminGalleryRoute
   '/_authenticated/admin/users': typeof AuthenticatedAdminUsersRoute
@@ -346,7 +346,6 @@ export interface FileRouteTypes {
     | '/change-password'
     | '/contact'
     | '/forgot-password'
-    | '/lanes'
     | '/pending-activation'
     | '/portal'
     | '/quote'
@@ -365,6 +364,7 @@ export interface FileRouteTypes {
     | '/support'
     | '/lanes/$origin'
     | '/track/$code'
+    | '/lanes/'
     | '/admin/audit'
     | '/admin/gallery'
     | '/admin/users'
@@ -382,7 +382,6 @@ export interface FileRouteTypes {
     | '/change-password'
     | '/contact'
     | '/forgot-password'
-    | '/lanes'
     | '/pending-activation'
     | '/portal'
     | '/quote'
@@ -401,6 +400,7 @@ export interface FileRouteTypes {
     | '/support'
     | '/lanes/$origin'
     | '/track/$code'
+    | '/lanes'
     | '/admin/audit'
     | '/admin/gallery'
     | '/admin/users'
@@ -419,7 +419,6 @@ export interface FileRouteTypes {
     | '/change-password'
     | '/contact'
     | '/forgot-password'
-    | '/lanes'
     | '/pending-activation'
     | '/portal'
     | '/quote'
@@ -438,6 +437,7 @@ export interface FileRouteTypes {
     | '/_authenticated/support'
     | '/lanes/$origin'
     | '/track/$code'
+    | '/lanes/'
     | '/_authenticated/admin/audit'
     | '/_authenticated/admin/gallery'
     | '/_authenticated/admin/users'
@@ -457,7 +457,6 @@ export interface RootRouteChildren {
   ChangePasswordRoute: typeof ChangePasswordRoute
   ContactRoute: typeof ContactRoute
   ForgotPasswordRoute: typeof ForgotPasswordRoute
-  LanesRoute: typeof LanesRouteWithChildren
   PendingActivationRoute: typeof PendingActivationRoute
   PortalRoute: typeof PortalRoute
   QuoteRoute: typeof QuoteRoute
@@ -465,7 +464,9 @@ export interface RootRouteChildren {
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   StaffSignupRoute: typeof StaffSignupRoute
   TrackingRoute: typeof TrackingRoute
+  LanesOriginRoute: typeof LanesOriginRoute
   TrackCodeRoute: typeof TrackCodeRoute
+  LanesIndexRoute: typeof LanesIndexRoute
   ApiPublicHooksPollShipmentEtaRoute: typeof ApiPublicHooksPollShipmentEtaRoute
 }
 
@@ -532,13 +533,6 @@ declare module '@tanstack/react-router' {
       path: '/forgot-password'
       fullPath: '/forgot-password'
       preLoaderRoute: typeof ForgotPasswordRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/lanes': {
-      id: '/lanes'
-      path: '/lanes'
-      fullPath: '/lanes'
-      preLoaderRoute: typeof LanesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/pending-activation': {
@@ -653,12 +647,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSupportRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/lanes/': {
+      id: '/lanes/'
+      path: '/lanes'
+      fullPath: '/lanes/'
+      preLoaderRoute: typeof LanesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/lanes/$origin': {
       id: '/lanes/$origin'
-      path: '/$origin'
+      path: '/lanes/$origin'
       fullPath: '/lanes/$origin'
       preLoaderRoute: typeof LanesOriginRouteImport
-      parentRoute: typeof LanesRoute
+      parentRoute: typeof rootRouteImport
     }
     '/track/$code': {
       id: '/track/$code'
@@ -759,16 +760,6 @@ const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
   AuthenticatedRouteChildren,
 )
 
-interface LanesRouteChildren {
-  LanesOriginRoute: typeof LanesOriginRoute
-}
-
-const LanesRouteChildren: LanesRouteChildren = {
-  LanesOriginRoute: LanesOriginRoute,
-}
-
-const LanesRouteWithChildren = LanesRoute._addFileChildren(LanesRouteChildren)
-
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRoute: AuthenticatedRouteWithChildren,
@@ -779,7 +770,6 @@ const rootRouteChildren: RootRouteChildren = {
   ChangePasswordRoute: ChangePasswordRoute,
   ContactRoute: ContactRoute,
   ForgotPasswordRoute: ForgotPasswordRoute,
-  LanesRoute: LanesRouteWithChildren,
   PendingActivationRoute: PendingActivationRoute,
   PortalRoute: PortalRoute,
   QuoteRoute: QuoteRoute,
@@ -787,7 +777,9 @@ const rootRouteChildren: RootRouteChildren = {
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   StaffSignupRoute: StaffSignupRoute,
   TrackingRoute: TrackingRoute,
+  LanesOriginRoute: LanesOriginRoute,
   TrackCodeRoute: TrackCodeRoute,
+  LanesIndexRoute: LanesIndexRoute,
   ApiPublicHooksPollShipmentEtaRoute: ApiPublicHooksPollShipmentEtaRoute,
 }
 export const routeTree = rootRouteImport
