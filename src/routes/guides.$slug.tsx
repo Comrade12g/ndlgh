@@ -8,6 +8,7 @@ import {
   formatGuideDate,
   getCategory,
   getGuide,
+  type Guide,
 } from "@/content/guides";
 import { useReveal } from "@/hooks/use-reveal";
 import { ArrowRight, Clock, CalendarDays } from "lucide-react";
@@ -50,7 +51,7 @@ export const Route = createFileRoute("/guides/$slug")({
 });
 
 function GuidePost() {
-  const { guide } = Route.useLoaderData();
+  const { guide } = Route.useLoaderData() as { guide: Guide };
   const cat = getCategory(guide.category)!;
   const body = useReveal<HTMLDivElement>();
   const related = GUIDES.filter((g) => g.slug !== guide.slug)

@@ -29,6 +29,7 @@ import { Route as LanesIndexRouteImport } from './routes/lanes.index'
 import { Route as GuidesIndexRouteImport } from './routes/guides.index'
 import { Route as TrackCodeRouteImport } from './routes/track.$code'
 import { Route as LanesOriginRouteImport } from './routes/lanes.$origin'
+import { Route as GuidesSlugRouteImport } from './routes/guides.$slug'
 import { Route as AuthenticatedSupportRouteImport } from './routes/_authenticated/support'
 import { Route as AuthenticatedShipmentsRouteImport } from './routes/_authenticated/shipments'
 import { Route as AuthenticatedReportsRouteImport } from './routes/_authenticated/reports'
@@ -144,6 +145,11 @@ const TrackCodeRoute = TrackCodeRouteImport.update({
 const LanesOriginRoute = LanesOriginRouteImport.update({
   id: '/lanes/$origin',
   path: '/lanes/$origin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GuidesSlugRoute = GuidesSlugRouteImport.update({
+  id: '/guides/$slug',
+  path: '/guides/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedSupportRoute = AuthenticatedSupportRouteImport.update({
@@ -262,6 +268,7 @@ export interface FileRoutesByFullPath {
   '/reports': typeof AuthenticatedReportsRoute
   '/shipments': typeof AuthenticatedShipmentsRoute
   '/support': typeof AuthenticatedSupportRoute
+  '/guides/$slug': typeof GuidesSlugRoute
   '/lanes/$origin': typeof LanesOriginRoute
   '/track/$code': typeof TrackCodeRoute
   '/guides/': typeof GuidesIndexRoute
@@ -300,6 +307,7 @@ export interface FileRoutesByTo {
   '/reports': typeof AuthenticatedReportsRoute
   '/shipments': typeof AuthenticatedShipmentsRoute
   '/support': typeof AuthenticatedSupportRoute
+  '/guides/$slug': typeof GuidesSlugRoute
   '/lanes/$origin': typeof LanesOriginRoute
   '/track/$code': typeof TrackCodeRoute
   '/guides': typeof GuidesIndexRoute
@@ -340,6 +348,7 @@ export interface FileRoutesById {
   '/_authenticated/reports': typeof AuthenticatedReportsRoute
   '/_authenticated/shipments': typeof AuthenticatedShipmentsRoute
   '/_authenticated/support': typeof AuthenticatedSupportRoute
+  '/guides/$slug': typeof GuidesSlugRoute
   '/lanes/$origin': typeof LanesOriginRoute
   '/track/$code': typeof TrackCodeRoute
   '/guides/': typeof GuidesIndexRoute
@@ -380,6 +389,7 @@ export interface FileRouteTypes {
     | '/reports'
     | '/shipments'
     | '/support'
+    | '/guides/$slug'
     | '/lanes/$origin'
     | '/track/$code'
     | '/guides/'
@@ -418,6 +428,7 @@ export interface FileRouteTypes {
     | '/reports'
     | '/shipments'
     | '/support'
+    | '/guides/$slug'
     | '/lanes/$origin'
     | '/track/$code'
     | '/guides'
@@ -457,6 +468,7 @@ export interface FileRouteTypes {
     | '/_authenticated/reports'
     | '/_authenticated/shipments'
     | '/_authenticated/support'
+    | '/guides/$slug'
     | '/lanes/$origin'
     | '/track/$code'
     | '/guides/'
@@ -488,6 +500,7 @@ export interface RootRouteChildren {
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   StaffSignupRoute: typeof StaffSignupRoute
   TrackingRoute: typeof TrackingRoute
+  GuidesSlugRoute: typeof GuidesSlugRoute
   LanesOriginRoute: typeof LanesOriginRoute
   TrackCodeRoute: typeof TrackCodeRoute
   GuidesIndexRoute: typeof GuidesIndexRoute
@@ -636,6 +649,13 @@ declare module '@tanstack/react-router' {
       path: '/lanes/$origin'
       fullPath: '/lanes/$origin'
       preLoaderRoute: typeof LanesOriginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/guides/$slug': {
+      id: '/guides/$slug'
+      path: '/guides/$slug'
+      fullPath: '/guides/$slug'
+      preLoaderRoute: typeof GuidesSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/support': {
@@ -817,6 +837,7 @@ const rootRouteChildren: RootRouteChildren = {
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   StaffSignupRoute: StaffSignupRoute,
   TrackingRoute: TrackingRoute,
+  GuidesSlugRoute: GuidesSlugRoute,
   LanesOriginRoute: LanesOriginRoute,
   TrackCodeRoute: TrackCodeRoute,
   GuidesIndexRoute: GuidesIndexRoute,
