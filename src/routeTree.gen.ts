@@ -26,8 +26,10 @@ import { Route as AboutRouteImport } from './routes/about'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as LanesIndexRouteImport } from './routes/lanes.index'
+import { Route as GuidesIndexRouteImport } from './routes/guides.index'
 import { Route as TrackCodeRouteImport } from './routes/track.$code'
 import { Route as LanesOriginRouteImport } from './routes/lanes.$origin'
+import { Route as GuidesSlugRouteImport } from './routes/guides.$slug'
 import { Route as AuthenticatedSupportRouteImport } from './routes/_authenticated/support'
 import { Route as AuthenticatedShipmentsRouteImport } from './routes/_authenticated/shipments'
 import { Route as AuthenticatedReportsRouteImport } from './routes/_authenticated/reports'
@@ -37,6 +39,7 @@ import { Route as AuthenticatedInvoicesRouteImport } from './routes/_authenticat
 import { Route as AuthenticatedEtaBoardRouteImport } from './routes/_authenticated/eta-board'
 import { Route as AuthenticatedDeliveriesRouteImport } from './routes/_authenticated/deliveries'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as GuidesCategoryCategoryRouteImport } from './routes/guides.category.$category'
 import { Route as AuthenticatedTreasuryAccountsRouteImport } from './routes/_authenticated/treasury.accounts'
 import { Route as AuthenticatedSourcingPosRouteImport } from './routes/_authenticated/sourcing.pos'
 import { Route as AuthenticatedCrmContactsRouteImport } from './routes/_authenticated/crm.contacts'
@@ -129,6 +132,11 @@ const LanesIndexRoute = LanesIndexRouteImport.update({
   path: '/lanes/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const GuidesIndexRoute = GuidesIndexRouteImport.update({
+  id: '/guides/',
+  path: '/guides/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TrackCodeRoute = TrackCodeRouteImport.update({
   id: '/track/$code',
   path: '/track/$code',
@@ -137,6 +145,11 @@ const TrackCodeRoute = TrackCodeRouteImport.update({
 const LanesOriginRoute = LanesOriginRouteImport.update({
   id: '/lanes/$origin',
   path: '/lanes/$origin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GuidesSlugRoute = GuidesSlugRouteImport.update({
+  id: '/guides/$slug',
+  path: '/guides/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedSupportRoute = AuthenticatedSupportRouteImport.update({
@@ -183,6 +196,11 @@ const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
   getParentRoute: () => AuthenticatedRoute,
+} as any)
+const GuidesCategoryCategoryRoute = GuidesCategoryCategoryRouteImport.update({
+  id: '/guides/category/$category',
+  path: '/guides/category/$category',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedTreasuryAccountsRoute =
   AuthenticatedTreasuryAccountsRouteImport.update({
@@ -250,8 +268,10 @@ export interface FileRoutesByFullPath {
   '/reports': typeof AuthenticatedReportsRoute
   '/shipments': typeof AuthenticatedShipmentsRoute
   '/support': typeof AuthenticatedSupportRoute
+  '/guides/$slug': typeof GuidesSlugRoute
   '/lanes/$origin': typeof LanesOriginRoute
   '/track/$code': typeof TrackCodeRoute
+  '/guides/': typeof GuidesIndexRoute
   '/lanes/': typeof LanesIndexRoute
   '/admin/audit': typeof AuthenticatedAdminAuditRoute
   '/admin/gallery': typeof AuthenticatedAdminGalleryRoute
@@ -259,6 +279,7 @@ export interface FileRoutesByFullPath {
   '/crm/contacts': typeof AuthenticatedCrmContactsRoute
   '/sourcing/pos': typeof AuthenticatedSourcingPosRoute
   '/treasury/accounts': typeof AuthenticatedTreasuryAccountsRoute
+  '/guides/category/$category': typeof GuidesCategoryCategoryRoute
   '/api/public/hooks/poll-shipment-eta': typeof ApiPublicHooksPollShipmentEtaRoute
 }
 export interface FileRoutesByTo {
@@ -286,8 +307,10 @@ export interface FileRoutesByTo {
   '/reports': typeof AuthenticatedReportsRoute
   '/shipments': typeof AuthenticatedShipmentsRoute
   '/support': typeof AuthenticatedSupportRoute
+  '/guides/$slug': typeof GuidesSlugRoute
   '/lanes/$origin': typeof LanesOriginRoute
   '/track/$code': typeof TrackCodeRoute
+  '/guides': typeof GuidesIndexRoute
   '/lanes': typeof LanesIndexRoute
   '/admin/audit': typeof AuthenticatedAdminAuditRoute
   '/admin/gallery': typeof AuthenticatedAdminGalleryRoute
@@ -295,6 +318,7 @@ export interface FileRoutesByTo {
   '/crm/contacts': typeof AuthenticatedCrmContactsRoute
   '/sourcing/pos': typeof AuthenticatedSourcingPosRoute
   '/treasury/accounts': typeof AuthenticatedTreasuryAccountsRoute
+  '/guides/category/$category': typeof GuidesCategoryCategoryRoute
   '/api/public/hooks/poll-shipment-eta': typeof ApiPublicHooksPollShipmentEtaRoute
 }
 export interface FileRoutesById {
@@ -324,8 +348,10 @@ export interface FileRoutesById {
   '/_authenticated/reports': typeof AuthenticatedReportsRoute
   '/_authenticated/shipments': typeof AuthenticatedShipmentsRoute
   '/_authenticated/support': typeof AuthenticatedSupportRoute
+  '/guides/$slug': typeof GuidesSlugRoute
   '/lanes/$origin': typeof LanesOriginRoute
   '/track/$code': typeof TrackCodeRoute
+  '/guides/': typeof GuidesIndexRoute
   '/lanes/': typeof LanesIndexRoute
   '/_authenticated/admin/audit': typeof AuthenticatedAdminAuditRoute
   '/_authenticated/admin/gallery': typeof AuthenticatedAdminGalleryRoute
@@ -333,6 +359,7 @@ export interface FileRoutesById {
   '/_authenticated/crm/contacts': typeof AuthenticatedCrmContactsRoute
   '/_authenticated/sourcing/pos': typeof AuthenticatedSourcingPosRoute
   '/_authenticated/treasury/accounts': typeof AuthenticatedTreasuryAccountsRoute
+  '/guides/category/$category': typeof GuidesCategoryCategoryRoute
   '/api/public/hooks/poll-shipment-eta': typeof ApiPublicHooksPollShipmentEtaRoute
 }
 export interface FileRouteTypes {
@@ -362,8 +389,10 @@ export interface FileRouteTypes {
     | '/reports'
     | '/shipments'
     | '/support'
+    | '/guides/$slug'
     | '/lanes/$origin'
     | '/track/$code'
+    | '/guides/'
     | '/lanes/'
     | '/admin/audit'
     | '/admin/gallery'
@@ -371,6 +400,7 @@ export interface FileRouteTypes {
     | '/crm/contacts'
     | '/sourcing/pos'
     | '/treasury/accounts'
+    | '/guides/category/$category'
     | '/api/public/hooks/poll-shipment-eta'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -398,8 +428,10 @@ export interface FileRouteTypes {
     | '/reports'
     | '/shipments'
     | '/support'
+    | '/guides/$slug'
     | '/lanes/$origin'
     | '/track/$code'
+    | '/guides'
     | '/lanes'
     | '/admin/audit'
     | '/admin/gallery'
@@ -407,6 +439,7 @@ export interface FileRouteTypes {
     | '/crm/contacts'
     | '/sourcing/pos'
     | '/treasury/accounts'
+    | '/guides/category/$category'
     | '/api/public/hooks/poll-shipment-eta'
   id:
     | '__root__'
@@ -435,8 +468,10 @@ export interface FileRouteTypes {
     | '/_authenticated/reports'
     | '/_authenticated/shipments'
     | '/_authenticated/support'
+    | '/guides/$slug'
     | '/lanes/$origin'
     | '/track/$code'
+    | '/guides/'
     | '/lanes/'
     | '/_authenticated/admin/audit'
     | '/_authenticated/admin/gallery'
@@ -444,6 +479,7 @@ export interface FileRouteTypes {
     | '/_authenticated/crm/contacts'
     | '/_authenticated/sourcing/pos'
     | '/_authenticated/treasury/accounts'
+    | '/guides/category/$category'
     | '/api/public/hooks/poll-shipment-eta'
   fileRoutesById: FileRoutesById
 }
@@ -464,9 +500,12 @@ export interface RootRouteChildren {
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   StaffSignupRoute: typeof StaffSignupRoute
   TrackingRoute: typeof TrackingRoute
+  GuidesSlugRoute: typeof GuidesSlugRoute
   LanesOriginRoute: typeof LanesOriginRoute
   TrackCodeRoute: typeof TrackCodeRoute
+  GuidesIndexRoute: typeof GuidesIndexRoute
   LanesIndexRoute: typeof LanesIndexRoute
+  GuidesCategoryCategoryRoute: typeof GuidesCategoryCategoryRoute
   ApiPublicHooksPollShipmentEtaRoute: typeof ApiPublicHooksPollShipmentEtaRoute
 }
 
@@ -591,6 +630,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LanesIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/guides/': {
+      id: '/guides/'
+      path: '/guides'
+      fullPath: '/guides/'
+      preLoaderRoute: typeof GuidesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/track/$code': {
       id: '/track/$code'
       path: '/track/$code'
@@ -603,6 +649,13 @@ declare module '@tanstack/react-router' {
       path: '/lanes/$origin'
       fullPath: '/lanes/$origin'
       preLoaderRoute: typeof LanesOriginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/guides/$slug': {
+      id: '/guides/$slug'
+      path: '/guides/$slug'
+      fullPath: '/guides/$slug'
+      preLoaderRoute: typeof GuidesSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/support': {
@@ -667,6 +720,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/dashboard'
       preLoaderRoute: typeof AuthenticatedDashboardRouteImport
       parentRoute: typeof AuthenticatedRoute
+    }
+    '/guides/category/$category': {
+      id: '/guides/category/$category'
+      path: '/guides/category/$category'
+      fullPath: '/guides/category/$category'
+      preLoaderRoute: typeof GuidesCategoryCategoryRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/_authenticated/treasury/accounts': {
       id: '/_authenticated/treasury/accounts'
@@ -777,9 +837,12 @@ const rootRouteChildren: RootRouteChildren = {
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   StaffSignupRoute: StaffSignupRoute,
   TrackingRoute: TrackingRoute,
+  GuidesSlugRoute: GuidesSlugRoute,
   LanesOriginRoute: LanesOriginRoute,
   TrackCodeRoute: TrackCodeRoute,
+  GuidesIndexRoute: GuidesIndexRoute,
   LanesIndexRoute: LanesIndexRoute,
+  GuidesCategoryCategoryRoute: GuidesCategoryCategoryRoute,
   ApiPublicHooksPollShipmentEtaRoute: ApiPublicHooksPollShipmentEtaRoute,
 }
 export const routeTree = rootRouteImport

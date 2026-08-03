@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import type {} from "@tanstack/react-start";
+import { GUIDES, GUIDE_CATEGORIES } from "@/content/guides";
 
 const BASE_URL = "https://ndlgh.susuboxgh.com";
 
@@ -24,6 +25,21 @@ export const Route = createFileRoute("/sitemap.xml")({
           { path: "/quote", changefreq: "monthly", priority: "0.8" },
           { path: "/tracking", changefreq: "weekly", priority: "0.8" },
           { path: "/contact", changefreq: "monthly", priority: "0.6" },
+          { path: "/guides", changefreq: "weekly", priority: "0.8" },
+          ...GUIDE_CATEGORIES.map(
+            (c): SitemapEntry => ({
+              path: `/guides/category/${c.slug}`,
+              changefreq: "weekly",
+              priority: "0.6",
+            }),
+          ),
+          ...GUIDES.map(
+            (g): SitemapEntry => ({
+              path: `/guides/${g.slug}`,
+              changefreq: "monthly",
+              priority: "0.7",
+            }),
+          ),
         ];
 
         const urls = entries.map((e) =>

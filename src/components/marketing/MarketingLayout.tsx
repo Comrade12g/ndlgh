@@ -13,7 +13,9 @@ const NAV = [
   { to: "/lanes", label: "Lanes" },
   { to: "/quote", label: "Quote" },
   { to: "/tracking", label: "Track" },
+  { to: "/guides", label: "Guides" },
   { to: "/about", label: "About" },
+
   { to: "/contact", label: "Contact" },
 ] as const;
 
@@ -108,6 +110,7 @@ export function MarketingLayout({ children }: { children: ReactNode }) {
             <ul className="space-y-2 text-sm text-white/80">
               <li><Link to="/services">Services</Link></li>
               <li><Link to="/lanes">Lanes</Link></li>
+              <li><Link to="/guides">Guides &amp; insights</Link></li>
               <li><Link to="/about">About</Link></li>
               <li><Link to="/contact">Contact</Link></li>
             </ul>
