@@ -26,6 +26,7 @@ import { Route as AboutRouteImport } from './routes/about'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as LanesIndexRouteImport } from './routes/lanes.index'
+import { Route as GuidesIndexRouteImport } from './routes/guides.index'
 import { Route as TrackCodeRouteImport } from './routes/track.$code'
 import { Route as LanesOriginRouteImport } from './routes/lanes.$origin'
 import { Route as AuthenticatedSupportRouteImport } from './routes/_authenticated/support'
@@ -127,6 +128,11 @@ const IndexRoute = IndexRouteImport.update({
 const LanesIndexRoute = LanesIndexRouteImport.update({
   id: '/lanes/',
   path: '/lanes/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GuidesIndexRoute = GuidesIndexRouteImport.update({
+  id: '/guides/',
+  path: '/guides/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TrackCodeRoute = TrackCodeRouteImport.update({
@@ -252,6 +258,7 @@ export interface FileRoutesByFullPath {
   '/support': typeof AuthenticatedSupportRoute
   '/lanes/$origin': typeof LanesOriginRoute
   '/track/$code': typeof TrackCodeRoute
+  '/guides/': typeof GuidesIndexRoute
   '/lanes/': typeof LanesIndexRoute
   '/admin/audit': typeof AuthenticatedAdminAuditRoute
   '/admin/gallery': typeof AuthenticatedAdminGalleryRoute
@@ -288,6 +295,7 @@ export interface FileRoutesByTo {
   '/support': typeof AuthenticatedSupportRoute
   '/lanes/$origin': typeof LanesOriginRoute
   '/track/$code': typeof TrackCodeRoute
+  '/guides': typeof GuidesIndexRoute
   '/lanes': typeof LanesIndexRoute
   '/admin/audit': typeof AuthenticatedAdminAuditRoute
   '/admin/gallery': typeof AuthenticatedAdminGalleryRoute
@@ -326,6 +334,7 @@ export interface FileRoutesById {
   '/_authenticated/support': typeof AuthenticatedSupportRoute
   '/lanes/$origin': typeof LanesOriginRoute
   '/track/$code': typeof TrackCodeRoute
+  '/guides/': typeof GuidesIndexRoute
   '/lanes/': typeof LanesIndexRoute
   '/_authenticated/admin/audit': typeof AuthenticatedAdminAuditRoute
   '/_authenticated/admin/gallery': typeof AuthenticatedAdminGalleryRoute
@@ -364,6 +373,7 @@ export interface FileRouteTypes {
     | '/support'
     | '/lanes/$origin'
     | '/track/$code'
+    | '/guides/'
     | '/lanes/'
     | '/admin/audit'
     | '/admin/gallery'
@@ -400,6 +410,7 @@ export interface FileRouteTypes {
     | '/support'
     | '/lanes/$origin'
     | '/track/$code'
+    | '/guides'
     | '/lanes'
     | '/admin/audit'
     | '/admin/gallery'
@@ -437,6 +448,7 @@ export interface FileRouteTypes {
     | '/_authenticated/support'
     | '/lanes/$origin'
     | '/track/$code'
+    | '/guides/'
     | '/lanes/'
     | '/_authenticated/admin/audit'
     | '/_authenticated/admin/gallery'
@@ -466,6 +478,7 @@ export interface RootRouteChildren {
   TrackingRoute: typeof TrackingRoute
   LanesOriginRoute: typeof LanesOriginRoute
   TrackCodeRoute: typeof TrackCodeRoute
+  GuidesIndexRoute: typeof GuidesIndexRoute
   LanesIndexRoute: typeof LanesIndexRoute
   ApiPublicHooksPollShipmentEtaRoute: typeof ApiPublicHooksPollShipmentEtaRoute
 }
@@ -589,6 +602,13 @@ declare module '@tanstack/react-router' {
       path: '/lanes'
       fullPath: '/lanes/'
       preLoaderRoute: typeof LanesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/guides/': {
+      id: '/guides/'
+      path: '/guides'
+      fullPath: '/guides/'
+      preLoaderRoute: typeof GuidesIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/track/$code': {
@@ -779,6 +799,7 @@ const rootRouteChildren: RootRouteChildren = {
   TrackingRoute: TrackingRoute,
   LanesOriginRoute: LanesOriginRoute,
   TrackCodeRoute: TrackCodeRoute,
+  GuidesIndexRoute: GuidesIndexRoute,
   LanesIndexRoute: LanesIndexRoute,
   ApiPublicHooksPollShipmentEtaRoute: ApiPublicHooksPollShipmentEtaRoute,
 }
