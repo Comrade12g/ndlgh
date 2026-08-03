@@ -44,7 +44,7 @@ function TrackPage() {
             </div>
             <div>
               <div className="text-xs uppercase tracking-wider text-white/60">Reference</div>
-              <div className="font-mono text-2xl font-bold">{code}</div>
+              <h1 className="font-mono text-2xl font-bold">Tracking {code}</h1>
             </div>
           </div>
         </div>
