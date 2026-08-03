@@ -38,6 +38,7 @@ import { Route as AuthenticatedInvoicesRouteImport } from './routes/_authenticat
 import { Route as AuthenticatedEtaBoardRouteImport } from './routes/_authenticated/eta-board'
 import { Route as AuthenticatedDeliveriesRouteImport } from './routes/_authenticated/deliveries'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as GuidesCategoryCategoryRouteImport } from './routes/guides.category.$category'
 import { Route as AuthenticatedTreasuryAccountsRouteImport } from './routes/_authenticated/treasury.accounts'
 import { Route as AuthenticatedSourcingPosRouteImport } from './routes/_authenticated/sourcing.pos'
 import { Route as AuthenticatedCrmContactsRouteImport } from './routes/_authenticated/crm.contacts'
@@ -190,6 +191,11 @@ const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const GuidesCategoryCategoryRoute = GuidesCategoryCategoryRouteImport.update({
+  id: '/guides/category/$category',
+  path: '/guides/category/$category',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedTreasuryAccountsRoute =
   AuthenticatedTreasuryAccountsRouteImport.update({
     id: '/treasury/accounts',
@@ -266,6 +272,7 @@ export interface FileRoutesByFullPath {
   '/crm/contacts': typeof AuthenticatedCrmContactsRoute
   '/sourcing/pos': typeof AuthenticatedSourcingPosRoute
   '/treasury/accounts': typeof AuthenticatedTreasuryAccountsRoute
+  '/guides/category/$category': typeof GuidesCategoryCategoryRoute
   '/api/public/hooks/poll-shipment-eta': typeof ApiPublicHooksPollShipmentEtaRoute
 }
 export interface FileRoutesByTo {
@@ -303,6 +310,7 @@ export interface FileRoutesByTo {
   '/crm/contacts': typeof AuthenticatedCrmContactsRoute
   '/sourcing/pos': typeof AuthenticatedSourcingPosRoute
   '/treasury/accounts': typeof AuthenticatedTreasuryAccountsRoute
+  '/guides/category/$category': typeof GuidesCategoryCategoryRoute
   '/api/public/hooks/poll-shipment-eta': typeof ApiPublicHooksPollShipmentEtaRoute
 }
 export interface FileRoutesById {
@@ -342,6 +350,7 @@ export interface FileRoutesById {
   '/_authenticated/crm/contacts': typeof AuthenticatedCrmContactsRoute
   '/_authenticated/sourcing/pos': typeof AuthenticatedSourcingPosRoute
   '/_authenticated/treasury/accounts': typeof AuthenticatedTreasuryAccountsRoute
+  '/guides/category/$category': typeof GuidesCategoryCategoryRoute
   '/api/public/hooks/poll-shipment-eta': typeof ApiPublicHooksPollShipmentEtaRoute
 }
 export interface FileRouteTypes {
@@ -381,6 +390,7 @@ export interface FileRouteTypes {
     | '/crm/contacts'
     | '/sourcing/pos'
     | '/treasury/accounts'
+    | '/guides/category/$category'
     | '/api/public/hooks/poll-shipment-eta'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -418,6 +428,7 @@ export interface FileRouteTypes {
     | '/crm/contacts'
     | '/sourcing/pos'
     | '/treasury/accounts'
+    | '/guides/category/$category'
     | '/api/public/hooks/poll-shipment-eta'
   id:
     | '__root__'
@@ -456,6 +467,7 @@ export interface FileRouteTypes {
     | '/_authenticated/crm/contacts'
     | '/_authenticated/sourcing/pos'
     | '/_authenticated/treasury/accounts'
+    | '/guides/category/$category'
     | '/api/public/hooks/poll-shipment-eta'
   fileRoutesById: FileRoutesById
 }
@@ -480,6 +492,7 @@ export interface RootRouteChildren {
   TrackCodeRoute: typeof TrackCodeRoute
   GuidesIndexRoute: typeof GuidesIndexRoute
   LanesIndexRoute: typeof LanesIndexRoute
+  GuidesCategoryCategoryRoute: typeof GuidesCategoryCategoryRoute
   ApiPublicHooksPollShipmentEtaRoute: typeof ApiPublicHooksPollShipmentEtaRoute
 }
 
@@ -688,6 +701,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/guides/category/$category': {
+      id: '/guides/category/$category'
+      path: '/guides/category/$category'
+      fullPath: '/guides/category/$category'
+      preLoaderRoute: typeof GuidesCategoryCategoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated/treasury/accounts': {
       id: '/_authenticated/treasury/accounts'
       path: '/treasury/accounts'
@@ -801,6 +821,7 @@ const rootRouteChildren: RootRouteChildren = {
   TrackCodeRoute: TrackCodeRoute,
   GuidesIndexRoute: GuidesIndexRoute,
   LanesIndexRoute: LanesIndexRoute,
+  GuidesCategoryCategoryRoute: GuidesCategoryCategoryRoute,
   ApiPublicHooksPollShipmentEtaRoute: ApiPublicHooksPollShipmentEtaRoute,
 }
 export const routeTree = rootRouteImport
