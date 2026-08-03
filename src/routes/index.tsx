@@ -42,6 +42,7 @@ export const Route = createFileRoute("/")({
       { name: "twitter:image", content: `https://ndlgh.susuboxgh.com${IMG.seaTema}` },
     ],
     links: [
+      { rel: "canonical", href: "https://ndlgh.susuboxgh.com/" },
       // Preload the LCP hero image so it paints as fast as possible.
       { rel: "preload", as: "image", href: IMG.seaTema },
     ],
