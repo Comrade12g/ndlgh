@@ -4,7 +4,7 @@ import { Card } from "@/components/ui/card";
 import { ArrowRight } from "lucide-react";
 import { useReveal } from "@/hooks/use-reveal";
 
-export const Route = createFileRoute("/lanes")({
+export const Route = createFileRoute("/lanes/")({
   head: () => ({
     meta: [
       { title: "Shipping Lanes — China, Dubai, Thailand, Canada, US to Ghana" },
@@ -14,6 +14,7 @@ export const Route = createFileRoute("/lanes")({
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],
+    links: [{ rel: "canonical", href: "https://ndlgh.susuboxgh.com/lanes" }],
   }),
   component: LanesPage,
 });

@@ -9,6 +9,12 @@ import { toast } from "sonner";
 import { getErrorMessage } from "@/lib/errors";
 
 export const Route = createFileRoute("/accept-invite")({
+  head: () => ({
+    meta: [
+      { title: "Accept invite — NDL Cargo Ghana" },
+      { name: "robots", content: "noindex, nofollow" },
+    ],
+  }),
   ssr: false,
   component: AcceptInvitePage,
 });

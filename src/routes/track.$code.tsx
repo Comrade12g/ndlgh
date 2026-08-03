@@ -44,7 +44,7 @@ function TrackPage() {
             </div>
             <div>
               <div className="text-xs uppercase tracking-wider text-white/60">Reference</div>
-              <div className="font-mono text-2xl font-bold">{code}</div>
+              <h1 className="font-mono text-2xl font-bold">Tracking {code}</h1>
             </div>
           </div>
         </div>
@@ -84,7 +84,7 @@ function TrackPage() {
         ) : (
           <Card className="p-10 text-center">
             <Clock className="mx-auto h-10 w-10 text-brand-sky" />
-            <h1 className="mt-4 font-display text-xl font-bold text-brand-navy">Tracking not available yet</h1>
+            <h2 className="mt-4 font-display text-xl font-bold text-brand-navy">Tracking not available yet</h2>
             <p className="mx-auto mt-2 max-w-md text-sm text-muted-foreground">
               We couldn't find this reference. It may not be in our system yet, or the code could be mistyped. Sign in to the portal to see all your packages.
             </p>

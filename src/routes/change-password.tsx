@@ -13,6 +13,12 @@ import { toast } from "sonner";
 import { getErrorMessage } from "@/lib/errors";
 
 export const Route = createFileRoute("/change-password")({
+  head: () => ({
+    meta: [
+      { title: "Change password — NDL Cargo Ghana" },
+      { name: "robots", content: "noindex, nofollow" },
+    ],
+  }),
   ssr: false,
   beforeLoad: async () => {
     const { data } = await supabase.auth.getUser();

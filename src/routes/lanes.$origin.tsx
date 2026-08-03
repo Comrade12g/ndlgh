@@ -73,6 +73,14 @@ export const Route = createFileRoute("/lanes/$origin")({
   },
   head: ({ loaderData, params }) => {
     const name = loaderData?.name ?? params.origin;
+    if (!loaderData) {
+      return {
+        meta: [
+          { title: "Lane not found — NDL Cargo Ghana" },
+          { name: "robots", content: "noindex" },
+        ],
+      };
+    }
     return {
       meta: [
         { title: `${name} to Ghana — Shipping lane | NDL Cargo` },
@@ -82,6 +90,7 @@ export const Route = createFileRoute("/lanes/$origin")({
         { property: "og:type", content: "website" },
         { name: "twitter:card", content: "summary" },
       ],
+      links: [{ rel: "canonical", href: `https://ndlgh.susuboxgh.com/lanes/${params.origin}` }],
     };
   },
   component: LaneDetailPage,
