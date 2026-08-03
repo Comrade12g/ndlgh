@@ -10,6 +10,12 @@ import { getErrorMessage } from "@/lib/errors";
 import { ArrowLeft, CheckCircle2 } from "lucide-react";
 
 export const Route = createFileRoute("/staff-signup")({
+  head: () => ({
+    meta: [
+      { title: "Staff sign-up — NDL Cargo Ghana" },
+      { name: "robots", content: "noindex, nofollow" },
+    ],
+  }),
   ssr: false,
   component: StaffSignupPage,
 });

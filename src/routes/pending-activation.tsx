@@ -6,6 +6,12 @@ import { LogoLockup } from "@/components/brand/Logo";
 import { Clock } from "lucide-react";
 
 export const Route = createFileRoute("/pending-activation")({
+  head: () => ({
+    meta: [
+      { title: "Pending activation — NDL Cargo Ghana" },
+      { name: "robots", content: "noindex, nofollow" },
+    ],
+  }),
   ssr: false,
   component: PendingActivationPage,
 });

@@ -22,6 +22,12 @@ import { AlertCircle, ArrowLeft, MessageCircle } from "lucide-react";
 const SIGNUP_WHATSAPP_NUMBER = "+233500229352";
 
 export const Route = createFileRoute("/auth")({
+  head: () => ({
+    meta: [
+      { title: "Sign in — NDL Cargo Ghana" },
+      { name: "robots", content: "noindex, nofollow" },
+    ],
+  }),
   ssr: false,
   validateSearch: (s: Record<string, unknown>): { mode: "signin" | "signup" } => ({
     mode: s.mode === "signup" ? "signup" : "signin",

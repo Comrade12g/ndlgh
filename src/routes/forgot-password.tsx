@@ -19,6 +19,7 @@ export const Route = createFileRoute("/forgot-password")({
   component: ForgotPasswordPage,
   head: () => ({
     meta: [
+      { name: "robots", content: "noindex, nofollow" },
       { title: "Reset your password — NDL Ghana" },
       { name: "description", content: "Reset the password on your NDL Ghana customer account." },
     ],

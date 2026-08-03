@@ -12,6 +12,12 @@ import { toast } from "sonner";
 import { CustomerTrackingCard, type CustomerShipment } from "@/components/tracking/CustomerTrackingCard";
 
 export const Route = createFileRoute("/portal")({
+  head: () => ({
+    meta: [
+      { title: "Customer portal — NDL Cargo Ghana" },
+      { name: "robots", content: "noindex, nofollow" },
+    ],
+  }),
   ssr: false,
   beforeLoad: async () => {
     const { data } = await supabase.auth.getUser();
