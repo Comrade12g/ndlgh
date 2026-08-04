@@ -2,7 +2,9 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { MarketingLayout } from "@/components/marketing/MarketingLayout";
 import { AnimatedBackdrop } from "@/components/marketing/AnimatedBackdrop";
 import { GuideCard } from "@/components/marketing/GuideCard";
-import { GUIDES, GUIDE_CATEGORIES, SITE_URL } from "@/content/guides";
+import { GUIDE_CATEGORIES, SITE_URL, mergeGuides } from "@/content/guides";
+import { listPublishedGuides } from "@/lib/guides.functions";
+import { GuideLeadCta } from "@/components/marketing/GuideLeadCta";
 import { useReveal } from "@/hooks/use-reveal";
 import { ArrowRight } from "lucide-react";
 
@@ -11,6 +13,7 @@ const DESC =
   "Free guides on shipping to Ghana: China to Accra freight costs, Tema Port customs duty explained, sea vs air cargo, shipping marks and tracking milestones.";
 
 export const Route = createFileRoute("/guides/")({
+  loader: async () => ({ guides: mergeGuides(await listPublishedGuides()) }),
   head: () => ({
     meta: [
       { title: TITLE },
@@ -26,6 +29,7 @@ export const Route = createFileRoute("/guides/")({
 });
 
 function GuidesIndex() {
+  const { guides } = Route.useLoaderData();
   const grid = useReveal<HTMLDivElement>();
   const cats = useReveal<HTMLDivElement>();
   const itemList = {
@@ -34,7 +38,7 @@ function GuidesIndex() {
     name: "NDL Cargo Ghana Shipping Guides",
     description: DESC,
     url: `${SITE_URL}/guides`,
-    blogPost: GUIDES.map((g) => ({
+    blogPost: guides.map((g) => ({
       "@type": "BlogPosting",
       headline: g.title,
       description: g.description,
@@ -107,10 +111,14 @@ function GuidesIndex() {
       <section className="mx-auto max-w-7xl px-4 pb-20">
         <h2 className="font-display text-2xl font-bold">Latest guides</h2>
         <div ref={grid} className="reveal mt-6 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {GUIDES.map((g, i) => (
+          {guides.map((g, i) => (
             <GuideCard key={g.slug} guide={g} eager={i < 3} />
           ))}
         </div>
+      </section>
+
+      <section className="mx-auto max-w-5xl px-4 pb-20">
+        <GuideLeadCta sourcePath="/guides" />
       </section>
     </MarketingLayout>
   );

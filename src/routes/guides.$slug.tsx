@@ -3,21 +3,27 @@ import { MarketingLayout } from "@/components/marketing/MarketingLayout";
 import { SmartImage } from "@/components/marketing/SmartImage";
 import { GuideCard } from "@/components/marketing/GuideCard";
 import {
-  GUIDES,
   SITE_URL,
+  mergeGuides,
   formatGuideDate,
   getCategory,
-  getGuide,
   type Guide,
 } from "@/content/guides";
+import { listPublishedGuides } from "@/lib/guides.functions";
+import { GuideLeadCta } from "@/components/marketing/GuideLeadCta";
 import { useReveal } from "@/hooks/use-reveal";
 import { ArrowRight, Clock, CalendarDays } from "lucide-react";
 
 export const Route = createFileRoute("/guides/$slug")({
-  loader: ({ params }) => {
-    const guide = getGuide(params.slug);
+  loader: async ({ params }) => {
+    const all = mergeGuides(await listPublishedGuides());
+    const guide = all.find((g) => g.slug === params.slug);
     if (!guide) throw notFound();
-    return { guide };
+    const related = all
+      .filter((g) => g.slug !== guide.slug)
+      .sort((a, b) => Number(b.category === guide.category) - Number(a.category === guide.category))
+      .slice(0, 3);
+    return { guide, related };
   },
   head: ({ loaderData }) => {
     if (!loaderData) {
@@ -51,12 +57,9 @@ export const Route = createFileRoute("/guides/$slug")({
 });
 
 function GuidePost() {
-  const { guide } = Route.useLoaderData() as { guide: Guide };
+  const { guide, related } = Route.useLoaderData() as { guide: Guide; related: Guide[] };
   const cat = getCategory(guide.category)!;
   const body = useReveal<HTMLDivElement>();
-  const related = GUIDES.filter((g) => g.slug !== guide.slug)
-    .sort((a, b) => Number(b.category === guide.category) - Number(a.category === guide.category))
-    .slice(0, 3);
 
   const url = `${SITE_URL}/guides/${guide.slug}`;
   const jsonLd = [
@@ -243,6 +246,8 @@ function GuidePost() {
                 </div>
               </section>
             )}
+
+            <GuideLeadCta className="mt-14" sourcePath={`/guides/${guide.slug}`} />
 
             <aside className="mt-14 rounded-2xl bg-brand-navy p-7 text-white">
               <h2 className="font-display text-2xl font-bold">Ready to ship?</h2>

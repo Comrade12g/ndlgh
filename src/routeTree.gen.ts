@@ -44,6 +44,7 @@ import { Route as AuthenticatedTreasuryAccountsRouteImport } from './routes/_aut
 import { Route as AuthenticatedSourcingPosRouteImport } from './routes/_authenticated/sourcing.pos'
 import { Route as AuthenticatedCrmContactsRouteImport } from './routes/_authenticated/crm.contacts'
 import { Route as AuthenticatedAdminUsersRouteImport } from './routes/_authenticated/admin.users'
+import { Route as AuthenticatedAdminGuidesRouteImport } from './routes/_authenticated/admin.guides'
 import { Route as AuthenticatedAdminGalleryRouteImport } from './routes/_authenticated/admin.gallery'
 import { Route as AuthenticatedAdminAuditRouteImport } from './routes/_authenticated/admin.audit'
 import { Route as ApiPublicHooksPollShipmentEtaRouteImport } from './routes/api/public/hooks/poll-shipment-eta'
@@ -225,6 +226,12 @@ const AuthenticatedAdminUsersRoute = AuthenticatedAdminUsersRouteImport.update({
   path: '/admin/users',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedAdminGuidesRoute =
+  AuthenticatedAdminGuidesRouteImport.update({
+    id: '/admin/guides',
+    path: '/admin/guides',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 const AuthenticatedAdminGalleryRoute =
   AuthenticatedAdminGalleryRouteImport.update({
     id: '/admin/gallery',
@@ -275,6 +282,7 @@ export interface FileRoutesByFullPath {
   '/lanes/': typeof LanesIndexRoute
   '/admin/audit': typeof AuthenticatedAdminAuditRoute
   '/admin/gallery': typeof AuthenticatedAdminGalleryRoute
+  '/admin/guides': typeof AuthenticatedAdminGuidesRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
   '/crm/contacts': typeof AuthenticatedCrmContactsRoute
   '/sourcing/pos': typeof AuthenticatedSourcingPosRoute
@@ -314,6 +322,7 @@ export interface FileRoutesByTo {
   '/lanes': typeof LanesIndexRoute
   '/admin/audit': typeof AuthenticatedAdminAuditRoute
   '/admin/gallery': typeof AuthenticatedAdminGalleryRoute
+  '/admin/guides': typeof AuthenticatedAdminGuidesRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
   '/crm/contacts': typeof AuthenticatedCrmContactsRoute
   '/sourcing/pos': typeof AuthenticatedSourcingPosRoute
@@ -355,6 +364,7 @@ export interface FileRoutesById {
   '/lanes/': typeof LanesIndexRoute
   '/_authenticated/admin/audit': typeof AuthenticatedAdminAuditRoute
   '/_authenticated/admin/gallery': typeof AuthenticatedAdminGalleryRoute
+  '/_authenticated/admin/guides': typeof AuthenticatedAdminGuidesRoute
   '/_authenticated/admin/users': typeof AuthenticatedAdminUsersRoute
   '/_authenticated/crm/contacts': typeof AuthenticatedCrmContactsRoute
   '/_authenticated/sourcing/pos': typeof AuthenticatedSourcingPosRoute
@@ -396,6 +406,7 @@ export interface FileRouteTypes {
     | '/lanes/'
     | '/admin/audit'
     | '/admin/gallery'
+    | '/admin/guides'
     | '/admin/users'
     | '/crm/contacts'
     | '/sourcing/pos'
@@ -435,6 +446,7 @@ export interface FileRouteTypes {
     | '/lanes'
     | '/admin/audit'
     | '/admin/gallery'
+    | '/admin/guides'
     | '/admin/users'
     | '/crm/contacts'
     | '/sourcing/pos'
@@ -475,6 +487,7 @@ export interface FileRouteTypes {
     | '/lanes/'
     | '/_authenticated/admin/audit'
     | '/_authenticated/admin/gallery'
+    | '/_authenticated/admin/guides'
     | '/_authenticated/admin/users'
     | '/_authenticated/crm/contacts'
     | '/_authenticated/sourcing/pos'
@@ -756,6 +769,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminUsersRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/admin/guides': {
+      id: '/_authenticated/admin/guides'
+      path: '/admin/guides'
+      fullPath: '/admin/guides'
+      preLoaderRoute: typeof AuthenticatedAdminGuidesRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/admin/gallery': {
       id: '/_authenticated/admin/gallery'
       path: '/admin/gallery'
@@ -792,6 +812,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedSupportRoute: typeof AuthenticatedSupportRoute
   AuthenticatedAdminAuditRoute: typeof AuthenticatedAdminAuditRoute
   AuthenticatedAdminGalleryRoute: typeof AuthenticatedAdminGalleryRoute
+  AuthenticatedAdminGuidesRoute: typeof AuthenticatedAdminGuidesRoute
   AuthenticatedAdminUsersRoute: typeof AuthenticatedAdminUsersRoute
   AuthenticatedCrmContactsRoute: typeof AuthenticatedCrmContactsRoute
   AuthenticatedSourcingPosRoute: typeof AuthenticatedSourcingPosRoute
@@ -810,6 +831,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedSupportRoute: AuthenticatedSupportRoute,
   AuthenticatedAdminAuditRoute: AuthenticatedAdminAuditRoute,
   AuthenticatedAdminGalleryRoute: AuthenticatedAdminGalleryRoute,
+  AuthenticatedAdminGuidesRoute: AuthenticatedAdminGuidesRoute,
   AuthenticatedAdminUsersRoute: AuthenticatedAdminUsersRoute,
   AuthenticatedCrmContactsRoute: AuthenticatedCrmContactsRoute,
   AuthenticatedSourcingPosRoute: AuthenticatedSourcingPosRoute,
