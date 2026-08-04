@@ -506,3 +506,15 @@ export function formatGuideDate(iso: string) {
     year: "numeric",
   });
 }
+
+/**
+ * Merge CMS-managed guides with the built-in library. A CMS guide with the same
+ * slug replaces the static one, so editors can revise shipped content without a
+ * redeploy. Newest-updated first.
+ */
+export function mergeGuides(dbGuides: Guide[] = []): Guide[] {
+  const bySlug = new Map<string, Guide>();
+  for (const g of GUIDES) bySlug.set(g.slug, g);
+  for (const g of dbGuides) bySlug.set(g.slug, g);
+  return [...bySlug.values()].sort((a, b) => (a.updated < b.updated ? 1 : -1));
+}

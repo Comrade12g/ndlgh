@@ -408,6 +408,69 @@ export type Database = {
         }
         Relationships: []
       }
+      guides: {
+        Row: {
+          category: string
+          created_at: string
+          created_by: string | null
+          description: string
+          faqs: Json
+          id: string
+          image: string
+          image_alt: string
+          intro: Json
+          keywords: Json
+          published_at: string | null
+          read_minutes: number
+          sections: Json
+          seo_title: string
+          slug: string
+          status: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          category?: string
+          created_at?: string
+          created_by?: string | null
+          description?: string
+          faqs?: Json
+          id?: string
+          image?: string
+          image_alt?: string
+          intro?: Json
+          keywords?: Json
+          published_at?: string | null
+          read_minutes?: number
+          sections?: Json
+          seo_title?: string
+          slug: string
+          status?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          created_by?: string | null
+          description?: string
+          faqs?: Json
+          id?: string
+          image?: string
+          image_alt?: string
+          intro?: Json
+          keywords?: Json
+          published_at?: string | null
+          read_minutes?: number
+          sections?: Json
+          seo_title?: string
+          slug?: string
+          status?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       invite_audit_log: {
         Row: {
           created_at: string
@@ -609,6 +672,42 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      leads: {
+        Row: {
+          created_at: string
+          email: string
+          full_name: string | null
+          id: string
+          lead_type: string
+          message: string | null
+          phone: string | null
+          source_path: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          full_name?: string | null
+          id?: string
+          lead_type?: string
+          message?: string | null
+          phone?: string | null
+          source_path?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          full_name?: string | null
+          id?: string
+          lead_type?: string
+          message?: string | null
+          phone?: string | null
+          source_path?: string | null
+          updated_at?: string
+        }
+        Relationships: []
       }
       packages: {
         Row: {

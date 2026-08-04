@@ -2,15 +2,20 @@ import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { MarketingLayout } from "@/components/marketing/MarketingLayout";
 import { AnimatedBackdrop } from "@/components/marketing/AnimatedBackdrop";
 import { GuideCard } from "@/components/marketing/GuideCard";
-import { GUIDE_CATEGORIES, SITE_URL, getCategory, guidesByCategory, type GuideCategorySlug } from "@/content/guides";
+import { GUIDE_CATEGORIES, SITE_URL, getCategory, mergeGuides, type Guide, type GuideCategorySlug } from "@/content/guides";
+import { listPublishedGuides } from "@/lib/guides.functions";
+import { GuideLeadCta } from "@/components/marketing/GuideLeadCta";
 import { useReveal } from "@/hooks/use-reveal";
 import { ArrowRight } from "lucide-react";
 
 export const Route = createFileRoute("/guides/category/$category")({
-  loader: ({ params }) => {
+  loader: async ({ params }): Promise<{ category: ReturnType<typeof getCategory> & object; guides: Guide[] }> => {
     const category = getCategory(params.category);
     if (!category) throw notFound();
-    return { category };
+    const guides = mergeGuides((await listPublishedGuides()) as Guide[]).filter(
+      (g) => g.category === (category.slug as GuideCategorySlug),
+    );
+    return { category, guides };
   },
   head: ({ loaderData }) => {
     if (!loaderData) {
@@ -36,8 +41,10 @@ export const Route = createFileRoute("/guides/category/$category")({
 });
 
 function CategoryPage() {
-  const { category } = Route.useLoaderData();
-  const posts = guidesByCategory(category.slug as GuideCategorySlug);
+  const { category, guides: posts } = Route.useLoaderData() as {
+    category: { slug: string; name: string; tagline: string; description: string };
+    guides: Guide[];
+  };
   const grid = useReveal<HTMLDivElement>();
 
   const jsonLd = {
@@ -87,6 +94,11 @@ function CategoryPage() {
             <GuideCard key={g.slug} guide={g} eager={i < 3} />
           ))}
         </div>
+
+        <GuideLeadCta
+          className="mt-14"
+          sourcePath={`/guides/category/${category.slug}`}
+        />
 
         <div className="mt-14 border-t pt-8">
           <h2 className="font-display text-xl font-bold">Other topics</h2>
