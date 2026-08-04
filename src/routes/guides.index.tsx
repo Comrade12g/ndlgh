@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { MarketingLayout } from "@/components/marketing/MarketingLayout";
 import { AnimatedBackdrop } from "@/components/marketing/AnimatedBackdrop";
 import { GuideCard } from "@/components/marketing/GuideCard";
-import { GUIDE_CATEGORIES, SITE_URL, mergeGuides } from "@/content/guides";
+import { GUIDE_CATEGORIES, SITE_URL, mergeGuides, type Guide } from "@/content/guides";
 import { listPublishedGuides } from "@/lib/guides.functions";
 import { GuideLeadCta } from "@/components/marketing/GuideLeadCta";
 import { useReveal } from "@/hooks/use-reveal";
@@ -13,7 +13,9 @@ const DESC =
   "Free guides on shipping to Ghana: China to Accra freight costs, Tema Port customs duty explained, sea vs air cargo, shipping marks and tracking milestones.";
 
 export const Route = createFileRoute("/guides/")({
-  loader: async () => ({ guides: mergeGuides(await listPublishedGuides()) }),
+  loader: async (): Promise<{ guides: Guide[] }> => ({
+    guides: mergeGuides((await listPublishedGuides()) as Guide[]),
+  }),
   head: () => ({
     meta: [
       { title: TITLE },

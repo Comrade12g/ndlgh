@@ -2,17 +2,17 @@ import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { MarketingLayout } from "@/components/marketing/MarketingLayout";
 import { AnimatedBackdrop } from "@/components/marketing/AnimatedBackdrop";
 import { GuideCard } from "@/components/marketing/GuideCard";
-import { GUIDE_CATEGORIES, SITE_URL, getCategory, mergeGuides, type GuideCategorySlug } from "@/content/guides";
+import { GUIDE_CATEGORIES, SITE_URL, getCategory, mergeGuides, type Guide, type GuideCategorySlug } from "@/content/guides";
 import { listPublishedGuides } from "@/lib/guides.functions";
 import { GuideLeadCta } from "@/components/marketing/GuideLeadCta";
 import { useReveal } from "@/hooks/use-reveal";
 import { ArrowRight } from "lucide-react";
 
 export const Route = createFileRoute("/guides/category/$category")({
-  loader: async ({ params }) => {
+  loader: async ({ params }): Promise<{ category: ReturnType<typeof getCategory> & object; guides: Guide[] }> => {
     const category = getCategory(params.category);
     if (!category) throw notFound();
-    const guides = mergeGuides(await listPublishedGuides()).filter(
+    const guides = mergeGuides((await listPublishedGuides()) as Guide[]).filter(
       (g) => g.category === (category.slug as GuideCategorySlug),
     );
     return { category, guides };

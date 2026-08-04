@@ -16,7 +16,7 @@ import { ArrowRight, Clock, CalendarDays } from "lucide-react";
 
 export const Route = createFileRoute("/guides/$slug")({
   loader: async ({ params }) => {
-    const all = mergeGuides(await listPublishedGuides());
+    const all = mergeGuides((await listPublishedGuides()) as Guide[]);
     const guide = all.find((g) => g.slug === params.slug);
     if (!guide) throw notFound();
     const related = all

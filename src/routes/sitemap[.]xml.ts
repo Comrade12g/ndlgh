@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import type {} from "@tanstack/react-start";
-import { GUIDE_CATEGORIES, mergeGuides } from "@/content/guides";
+import { GUIDE_CATEGORIES, mergeGuides, type Guide } from "@/content/guides";
 import { listPublishedGuides } from "@/lib/guides.functions";
 
 const BASE_URL = "https://ndlgh.susuboxgh.com";
@@ -15,7 +15,7 @@ export const Route = createFileRoute("/sitemap.xml")({
   server: {
     handlers: {
       GET: async () => {
-        const allGuides = mergeGuides(await listPublishedGuides());
+        const allGuides = mergeGuides((await listPublishedGuides()) as Guide[]);
         const entries: SitemapEntry[] = [
           { path: "/", changefreq: "weekly", priority: "1.0" },
           { path: "/about", changefreq: "monthly", priority: "0.7" },
