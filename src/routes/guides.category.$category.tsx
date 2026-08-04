@@ -41,7 +41,10 @@ export const Route = createFileRoute("/guides/category/$category")({
 });
 
 function CategoryPage() {
-  const { category, guides: posts } = Route.useLoaderData();
+  const { category, guides: posts } = Route.useLoaderData() as {
+    category: { slug: string; name: string; tagline: string; description: string };
+    guides: Guide[];
+  };
   const grid = useReveal<HTMLDivElement>();
 
   const jsonLd = {

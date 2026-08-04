@@ -31,7 +31,7 @@ export const Route = createFileRoute("/guides/")({
 });
 
 function GuidesIndex() {
-  const { guides } = Route.useLoaderData();
+  const { guides } = Route.useLoaderData() as { guides: Guide[] };
   const grid = useReveal<HTMLDivElement>();
   const cats = useReveal<HTMLDivElement>();
   const itemList = {
