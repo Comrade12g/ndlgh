@@ -24,6 +24,7 @@ import {
   Tags,
   Radar,
   MoreVertical,
+  FileText,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
@@ -164,6 +165,7 @@ const NAV: NavItem[] = [
   },
   { to: "/admin/users", label: "Admin", icon: Settings, roles: ["admin"] },
   { to: "/admin/gallery", label: "Gallery", icon: Settings, roles: ["admin"] },
+  { to: "/admin/guides", label: "Guides CMS", icon: FileText, roles: ["admin"] },
   { to: "/admin/audit", label: "Invite log", icon: Settings, roles: ["admin"] },
 ];
 
