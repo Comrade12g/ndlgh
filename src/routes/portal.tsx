@@ -226,30 +226,108 @@ function PortalPage() {
               Ship your goods to our warehouses
             </h2>
           </div>
+          <p className="mb-4 max-w-2xl text-sm text-muted-foreground">
+            Send this warehouse address and your mark to your supplier. Every carton must show the
+            mark exactly as written below.
+          </p>
           <div className="grid gap-4 md:grid-cols-2">
             {warehouses
               ?.filter((w) => w.code !== "GH")
-              .map((w) => (
-                <Card key={w.code} className="p-5">
-                  <div className="mb-2 flex items-center justify-between">
-                    <div className="font-display text-lg font-bold text-brand-navy">{w.name}</div>
-                    <span className="rounded-md bg-brand-orange/10 px-2 py-0.5 text-xs font-semibold uppercase text-brand-orange">
-                      {w.country}
-                    </span>
-                  </div>
-                  <div className="text-sm text-muted-foreground">
-                    <div>
-                      Recipient:{" "}
-                      <span className="font-semibold text-foreground">
-                        NDL {w.code} — {profile?.shipping_mark ?? ""}
+              .map((w) => {
+                const mark = customerMark(w.mark_prefix, profile?.shipping_mark ?? null);
+                const supplierText = [
+                  `${w.name}${w.name_local ? ` (${w.name_local})` : ""}`,
+                  mark ? `Mark: ${mark}` : null,
+                  w.address_local ?? w.address,
+                  w.address_local && w.address ? w.address : null,
+                  w.receiving_hours ? `Hours: ${w.receiving_hours}` : null,
+                  w.phones ? `Tel: ${w.phones}` : null,
+                ]
+                  .filter(Boolean)
+                  .join("\n");
+                return (
+                  <Card key={w.code} className="p-5">
+                    <div className="mb-2 flex items-start justify-between gap-3">
+                      <div>
+                        <div className="font-display text-lg font-bold text-brand-navy">
+                          {w.name}
+                        </div>
+                        {w.name_local && (
+                          <div className="text-sm text-muted-foreground">{w.name_local}</div>
+                        )}
+                      </div>
+                      <span className="shrink-0 rounded-md bg-brand-orange/10 px-2 py-0.5 text-xs font-semibold uppercase text-brand-orange">
+                        {w.city ?? w.country}
                       </span>
                     </div>
-                    {w.address && <div className="whitespace-pre-line">{w.address}</div>}
-                  </div>
-                </Card>
-              ))}
+
+                    {mark && (
+                      <div className="mb-3 rounded-lg border border-dashed border-brand-orange/40 bg-brand-orange/5 p-3">
+                        <div className="text-[11px] uppercase tracking-widest text-muted-foreground">
+                          入库唛头 / Mark
+                        </div>
+                        <div className="font-mono text-lg font-extrabold text-brand-navy">
+                          {mark}
+                        </div>
+                      </div>
+                    )}
+
+                    <div className="space-y-2 text-sm text-muted-foreground">
+                      {w.address_local && (
+                        <div className="whitespace-pre-line text-foreground">{w.address_local}</div>
+                      )}
+                      {w.address && <div className="whitespace-pre-line">{w.address}</div>}
+                      {w.receiving_hours && (
+                        <div>
+                          <span className="font-semibold text-foreground">收货时间 / Hours:</span>{" "}
+                          {w.receiving_hours}
+                        </div>
+                      )}
+                      {w.phones && (
+                        <div>
+                          <span className="font-semibold text-foreground">电话 / Tel:</span>{" "}
+                          {w.phones}
+                        </div>
+                      )}
+                      {w.notes && (
+                        <div className="rounded-md bg-muted p-2 text-xs">⚠️ {w.notes}</div>
+                      )}
+                    </div>
+
+                    <div className="mt-4 flex flex-wrap gap-2">
+                      {mark && (
+                        <Button size="sm" variant="outline" onClick={() => copy(mark)}>
+                          <Copy className="mr-2 h-4 w-4" /> Copy mark
+                        </Button>
+                      )}
+                      <Button
+                        size="sm"
+                        className="bg-brand-navy hover:bg-brand-navy/90"
+                        onClick={() => copy(supplierText)}
+                      >
+                        <Copy className="mr-2 h-4 w-4" /> Copy for supplier
+                      </Button>
+                    </div>
+                  </Card>
+                );
+              })}
           </div>
+
+          {warehouses
+            ?.filter((w) => w.code === "GH")
+            .map((w) => (
+              <Card key={w.code} className="mt-4 border-brand-navy/20 bg-brand-navy/5 p-5">
+                <div className="font-display text-base font-bold text-brand-navy">
+                  Destination warehouse — {w.name}
+                </div>
+                <div className="mt-1 text-sm text-muted-foreground">{w.address}</div>
+                {w.receiving_hours && (
+                  <div className="text-sm text-muted-foreground">{w.receiving_hours}</div>
+                )}
+              </Card>
+            ))}
         </section>
+
 
         {/* Live tracking */}
         {!!myTracking?.length && (
