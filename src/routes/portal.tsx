@@ -54,11 +54,15 @@ function PortalPage() {
     queryFn: async () => {
       const { data } = await supabase
         .from("warehouses")
-        .select("code, name, country, address")
+        .select(
+          "code, name, name_local, country, city, mark_prefix, address, address_local, receiving_hours, phones, notes, sort_order",
+        )
+        .order("sort_order")
         .order("code");
       return data ?? [];
     },
   });
+
 
   // Explicit customer_id filters below are intentional, not redundant with
   // RLS: an account that also holds a staff role (e.g. an employee who
