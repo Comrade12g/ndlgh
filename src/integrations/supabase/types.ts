@@ -1451,24 +1451,51 @@ export type Database = {
       warehouses: {
         Row: {
           address: string | null
+          address_local: string | null
+          city: string | null
           code: string
           country: string
           created_at: string
+          is_public: boolean
+          mark_prefix: string | null
           name: string
+          name_local: string | null
+          notes: string | null
+          phones: string | null
+          receiving_hours: string | null
+          sort_order: number
         }
         Insert: {
           address?: string | null
+          address_local?: string | null
+          city?: string | null
           code: string
           country: string
           created_at?: string
+          is_public?: boolean
+          mark_prefix?: string | null
           name: string
+          name_local?: string | null
+          notes?: string | null
+          phones?: string | null
+          receiving_hours?: string | null
+          sort_order?: number
         }
         Update: {
           address?: string | null
+          address_local?: string | null
+          city?: string | null
           code?: string
           country?: string
           created_at?: string
+          is_public?: boolean
+          mark_prefix?: string | null
           name?: string
+          name_local?: string | null
+          notes?: string | null
+          phones?: string | null
+          receiving_hours?: string | null
+          sort_order?: number
         }
         Relationships: []
       }
