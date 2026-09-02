@@ -10,6 +10,8 @@ import { StatusBadge, statusTone } from "@/components/ops/PageHeader";
 import { LogOut, Package, PackageSearch, MapPin, Copy, Receipt, Radar, Settings } from "lucide-react";
 import { toast } from "sonner";
 import { CustomerTrackingCard, type CustomerShipment } from "@/components/tracking/CustomerTrackingCard";
+import { customerMark } from "@/lib/warehouse-mark";
+
 
 export const Route = createFileRoute("/portal")({
   head: () => ({
