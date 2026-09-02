@@ -75,7 +75,7 @@ function TrackPage() {
                 <p className="text-muted-foreground">
                   Sign in to your customer portal for invoices, package lists, and delivery contact.
                 </p>
-                <Link to="/auth" className="mt-2 inline-block">
+                <Link to="/auth" search={{ mode: "signin" }} className="mt-2 inline-block">
                   <Button size="sm" className="bg-brand-orange hover:bg-brand-orange/90">Sign in to portal</Button>
                 </Link>
               </div>
@@ -89,7 +89,7 @@ function TrackPage() {
               We couldn't find this reference. It may not be in our system yet, or the code could be mistyped. Sign in to the portal to see all your packages.
             </p>
             <div className="mt-6 flex flex-wrap justify-center gap-3">
-              <Link to="/auth">
+              <Link to="/auth" search={{ mode: "signin" }}>
                 <Button className="bg-brand-orange hover:bg-brand-orange/90">Sign in to portal</Button>
               </Link>
               <Link to="/tracking">

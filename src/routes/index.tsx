@@ -6,6 +6,7 @@ import { TrackingLookup } from "@/components/marketing/TrackingLookup";
 import { MilestoneTimeline } from "@/components/tracking/MilestoneTimeline";
 import { StatsBand } from "@/components/marketing/StatsBand";
 import { Testimonials } from "@/components/marketing/Testimonials";
+import { WarehouseLocations } from "@/components/marketing/WarehouseLocations";
 import { LaneMarquee } from "@/components/marketing/LaneMarquee";
 import { HeroCarousel, type CarouselSlide } from "@/components/marketing/HeroCarousel";
 import { SmartImage } from "@/components/marketing/SmartImage";
@@ -78,6 +79,7 @@ function HomePage() {
       <QuoteSection />
       <LanesSection />
       <WhyNDL />
+      <WarehouseLocations />
       <GallerySection />
       <TrackingDemo />
       <Testimonials />

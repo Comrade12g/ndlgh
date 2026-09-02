@@ -47,7 +47,7 @@ export function MarketingLayout({ children }: { children: ReactNode }) {
             ))}
           </nav>
           <div className="hidden items-center gap-2 lg:flex">
-            <Link to="/auth">
+            <Link to="/auth" search={{ mode: "signin" }}>
               <Button variant="outline" size="sm">Sign in</Button>
             </Link>
             <Link to="/quote">
@@ -79,7 +79,7 @@ export function MarketingLayout({ children }: { children: ReactNode }) {
                 </Link>
               ))}
               <div className="mt-2 flex gap-2 p-2">
-                <Link to="/auth" className="flex-1" onClick={() => setOpen(false)}>
+                <Link to="/auth" search={{ mode: "signin" }} className="flex-1" onClick={() => setOpen(false)}>
                   <Button variant="outline" className="w-full">Sign in</Button>
                 </Link>
                 <Link to="/quote" className="flex-1" onClick={() => setOpen(false)}>
@@ -122,7 +122,7 @@ export function MarketingLayout({ children }: { children: ReactNode }) {
             <ul className="space-y-2 text-sm text-white/80">
               <li><Link to="/quote">Freight quote</Link></li>
               <li><Link to="/tracking">Track a shipment</Link></li>
-              <li><Link to="/auth">Sign in</Link></li>
+              <li><Link to="/auth" search={{ mode: "signin" }}>Sign in</Link></li>
               <li><Link to="/portal">Customer portal</Link></li>
             </ul>
           </div>
