@@ -41,6 +41,14 @@ export const WAREHOUSE_HUBS: Hub[] = [
   },
 ];
 
+const OTHER_ORIGINS: { country: string }[] = [
+  { country: "Dubai (UAE)" },
+  { country: "Thailand" },
+  { country: "United Kingdom" },
+  { country: "Canada" },
+  { country: "United States" },
+];
+
 const GHANA_HUB: Hub = {
   code: "GH",
   name: "NDL Accra Warehouse (destination)",
