@@ -237,6 +237,22 @@ function PortalPage() {
               ?.filter((w) => w.code !== "GH")
               .map((w) => {
                 const mark = customerMark(w.mark_prefix, profile?.shipping_mark ?? null);
+                const hasDetails = Boolean(w.mark_prefix && (w.address || w.address_local));
+                if (!hasDetails) {
+                  return (
+                    <Card key={w.code} className="border-dashed p-5">
+                      <div className="mb-2 flex items-start justify-between gap-3">
+                        <div className="font-display text-lg font-bold text-brand-navy">
+                          {w.name}
+                        </div>
+                        <span className="shrink-0 rounded-md bg-muted px-2 py-0.5 text-xs font-semibold uppercase text-muted-foreground">
+                          {w.city ?? w.country}
+                        </span>
+                      </div>
+                      <p className="text-sm text-muted-foreground">Not available</p>
+                    </Card>
+                  );
+                }
                 const supplierText = [
                   `${w.name}${w.name_local ? ` (${w.name_local})` : ""}`,
                   mark ? `Mark: ${mark}` : null,
