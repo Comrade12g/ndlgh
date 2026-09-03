@@ -41,6 +41,14 @@ export const WAREHOUSE_HUBS: Hub[] = [
   },
 ];
 
+const OTHER_ORIGINS: { country: string }[] = [
+  { country: "Dubai (UAE)" },
+  { country: "Thailand" },
+  { country: "United Kingdom" },
+  { country: "Canada" },
+  { country: "United States" },
+];
+
 const GHANA_HUB: Hub = {
   code: "GH",
   name: "NDL Accra Warehouse (destination)",
@@ -121,6 +129,22 @@ export function WarehouseLocations() {
                 special goods in advance — the warehouse does not inspect or identify goods.
                 Cash-on-delivery (COD) parcels are not accepted.
               </p>
+            </Card>
+          ))}
+        </div>
+
+        <div className="mt-4 grid gap-4 md:grid-cols-2">
+          {OTHER_ORIGINS.map((o) => (
+            <Card key={o.country} className="border-dashed p-5">
+              <div className="flex items-center justify-between gap-3">
+                <div className="font-display text-base font-bold text-brand-navy">
+                  NDL {o.country} Warehouse
+                </div>
+                <span className="shrink-0 rounded-md bg-muted px-2 py-0.5 text-xs font-semibold uppercase text-muted-foreground">
+                  {o.country}
+                </span>
+              </div>
+              <p className="mt-2 text-sm text-muted-foreground">Not available</p>
             </Card>
           ))}
         </div>
