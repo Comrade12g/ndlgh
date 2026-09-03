@@ -125,6 +125,22 @@ export function WarehouseLocations() {
           ))}
         </div>
 
+        <div className="mt-4 grid gap-4 md:grid-cols-2">
+          {OTHER_ORIGINS.map((o) => (
+            <Card key={o.country} className="border-dashed p-5">
+              <div className="flex items-center justify-between gap-3">
+                <div className="font-display text-base font-bold text-brand-navy">
+                  NDL {o.country} Warehouse
+                </div>
+                <span className="shrink-0 rounded-md bg-muted px-2 py-0.5 text-xs font-semibold uppercase text-muted-foreground">
+                  {o.country}
+                </span>
+              </div>
+              <p className="mt-2 text-sm text-muted-foreground">Not available</p>
+            </Card>
+          ))}
+        </div>
+
         <Card className="mt-4 border-brand-navy/20 bg-brand-navy/5 p-6">
           <div className="font-display text-lg font-bold text-brand-navy">{GHANA_HUB.name}</div>
           <div className="mt-2 flex gap-2 text-sm text-muted-foreground">
