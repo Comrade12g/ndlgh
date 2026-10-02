@@ -33,7 +33,7 @@ export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       { title: "NDL Cargo Ghana — Sea, Air & Door Freight from China, Dubai, US, Canada & Thailand" },
-      { name: "description", content: "NDL Cargo Ghana ships sea LCL/FCL, air cargo and door-to-door freight from China (Guangzhou, Yiwu, Shenzhen), Dubai, Thailand, Canada and the US into Tema Port and Accra. Live NDL-CN & NDL-GH tracking, in-house customs clearing, groupage consolidation and Ghana-wide last-mile delivery. Get an instant CBM quote in seconds." },
+      { name: "description", content: "NDL Cargo Ghana ships sea LCL/FCL, air cargo and door-to-door freight from China (Guangzhou, Yiwu, Shenzhen), Dubai, Thailand, Canada and the US into Tema Port and Accra. Live NDL-CN & ND tracking, in-house customs clearing, groupage consolidation and Ghana-wide last-mile delivery. Get an instant CBM quote in seconds." },
       { name: "keywords", content: "shipping to Ghana, China to Ghana cargo, Guangzhou Yiwu Ghana freight, Dubai to Ghana shipping, air cargo Ghana, sea freight Tema, LCL FCL Ghana, customs clearing Tema, Ghana logistics, last-mile delivery Ghana, NDL Cargo, groupage Ghana" },
       { property: "og:title", content: "NDL Cargo Ghana — Global freight, delivered to your door" },
       { property: "og:description", content: "Sea LCL/FCL, air, customs clearing and Ghana-wide last-mile delivery from China, Dubai, Thailand, Canada and the US. Instant quotes and live shipment tracking." },
@@ -542,7 +542,7 @@ function TrackingDemo() {
             Every shipment, every stage
           </h2>
           <p className="mx-auto mt-3 max-w-2xl text-white/70">
-            Track your NDL-CN-##### or NDL-GH-##### reference through the full lifecycle — right up to your doorstep.
+            Track your NDL-CN-##### or ND#### reference through the full lifecycle — right up to your doorstep.
           </p>
         </div>
         <div className="mt-10 rounded-2xl border border-white/15 bg-white/95 p-6 text-foreground shadow-2xl">
@@ -644,7 +644,7 @@ const FAQS = [
   },
   {
     q: "How do I track my shipment?",
-    a: "Every shipment gets an NDL-CN-##### (origin) and NDL-GH-##### (Ghana) reference. Enter it on our tracking page or reply to our WhatsApp updates — we push notifications at every milestone: booked, departed, in transit, arrived Tema, customs clearing, out for delivery, delivered.",
+    a: "Every shipment gets an NDL-CN-##### (origin) and ND#### (Ghana) reference. Enter it on our tracking page or reply to our WhatsApp updates — we push notifications at every milestone: booked, departed, in transit, arrived Tema, customs clearing, out for delivery, delivered.",
   },
 ];
 

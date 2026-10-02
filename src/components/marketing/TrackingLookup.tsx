@@ -30,7 +30,7 @@ export function TrackingLookup({ variant = "hero" }: { variant?: "hero" | "page"
         <Input
           value={code}
           onChange={(e) => setCode(e.target.value)}
-          placeholder="Enter NDL-CN-##### or NDL-GH-#####"
+          placeholder="Enter NDL-CN-##### or ND####"
           className="border-0 bg-transparent font-mono uppercase tracking-wider shadow-none focus-visible:ring-0"
         />
       </div>
