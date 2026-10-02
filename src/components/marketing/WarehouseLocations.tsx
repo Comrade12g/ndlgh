@@ -94,7 +94,7 @@ export function WarehouseLocations() {
                     入库唛头 / Intake mark
                   </div>
                   <div className="font-mono text-lg font-extrabold text-brand-navy">
-                    {h.markPrefix} — NDL-GH***
+                    {h.markPrefix} — ND****
                   </div>
                 </div>
               )}

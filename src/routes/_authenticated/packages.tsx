@@ -336,7 +336,7 @@ function IntakePackageDialog({ onDone }: { onDone: () => void }) {
           <div className="grid gap-2 col-span-2">
             <Label>Shipping mark</Label>
             <Input
-              placeholder="NDL-GH-00001"
+              placeholder="ND0001"
               value={form.shipping_mark}
               onChange={(e) => setForm({ ...form, shipping_mark: e.target.value })}
             />

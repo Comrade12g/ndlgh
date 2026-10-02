@@ -1,6 +1,6 @@
 /**
  * Builds the warehouse intake mark a customer gives their supplier, e.g.
- * prefix "GHO0007" + shipping mark "NDL-GH-0005" -> "GHO0007 — NDL-GH005".
+ * prefix "GHO0007" + shipping mark "ND0005" -> "GHO0007 — ND0005".
  * The masked "***" in the warehouse template is replaced by the last three
  * digits of the customer's shipping mark / account id.
  */
@@ -17,6 +17,6 @@ export function customerMark(
 ): string | null {
   const last3 = lastThreeDigits(shippingMark);
   if (!last3) return markPrefix ?? null;
-  const suffix = `NDL-GH${last3}`;
+  const suffix = shippingMark!.toUpperCase();
   return markPrefix ? `${markPrefix} — ${suffix}` : suffix;
 }

@@ -310,9 +310,9 @@ export const GUIDES: Guide[] = [
   {
     slug: "how-to-use-your-ndl-shipping-mark",
     title: "How to use your NDL shipping mark so nothing gets lost",
-    seoTitle: "How to Use Your NDL Shipping Mark (NDL-GH-####)",
+    seoTitle: "How to Use Your NDL Shipping Mark (ND####)",
     description:
-      "Your NDL-GH-#### shipping mark links every carton to your account. Here is exactly how to give it to a supplier, label cartons and confirm intake.",
+      "Your ND#### shipping mark links every carton to your account. Here is exactly how to give it to a supplier, label cartons and confirm intake.",
     category: "how-to-ship",
     updated: "2026-07-22",
     readMinutes: 5,
@@ -325,7 +325,7 @@ export const GUIDES: Guide[] = [
       {
         h: "What the mark looks like",
         p: [
-          "Every NDL customer gets a permanent mark in the format NDL-GH-#### — for example NDL-GH-0005. It never changes, it belongs only to you, and it is what our warehouse team scans at intake.",
+          "Every NDL customer gets a permanent mark in the format ND#### — for example ND0005. It never changes, it belongs only to you, and it is what our warehouse team scans at intake.",
         ],
       },
       {
@@ -361,7 +361,7 @@ export const GUIDES: Guide[] = [
       },
       {
         q: "Can I track cargo using my shipping mark?",
-        a: "Yes. Enter your NDL-GH-#### mark on the tracking page and you will see the current shipment, its milestones and estimated arrival.",
+        a: "Yes. Enter your ND#### mark on the tracking page and you will see the current shipment, its milestones and estimated arrival.",
       },
     ],
     keywords: ["NDL shipping mark", "shipping mark China Ghana", "how to label cargo groupage"],
@@ -404,7 +404,7 @@ export const GUIDES: Guide[] = [
       {
         h: "Tracking with a mark, a code or a reference",
         p: [
-          "The public tracking page accepts your NDL-GH-#### shipping mark, an individual package code, or the shipment reference on your invoice. All three resolve to the same journey view with dates, vessel details, piece count, weight and CBM.",
+          "The public tracking page accepts your ND#### shipping mark, an individual package code, or the shipment reference on your invoice. All three resolve to the same journey view with dates, vessel details, piece count, weight and CBM.",
         ],
       },
     ],

@@ -10,7 +10,7 @@ export const Route = createFileRoute("/tracking")({
   head: () => ({
     meta: [
       { title: "Track your shipment — NDL Cargo Ghana" },
-      { name: "description", content: "Track your NDL Cargo shipment with your NDL-CN-##### or NDL-GH-##### reference number." },
+      { name: "description", content: "Track your NDL Cargo shipment with your NDL-CN-##### or ND#### reference number." },
       { property: "og:title", content: "Track your shipment — NDL Cargo" },
       { property: "og:description", content: "Live milestone tracking for every NDL Cargo shipment." },
       { property: "og:type", content: "website" },
@@ -35,7 +35,7 @@ function TrackingPage() {
           <div className="mt-8">
             <TrackingLookup variant="page" />
           </div>
-          <p className="mt-3 text-xs text-white/50">Example: NDL-CN-00042 or NDL-GH-00108</p>
+          <p className="mt-3 text-xs text-white/50">Example: NDL-CN-00042 or ND0108</p>
         </div>
       </section>
 
