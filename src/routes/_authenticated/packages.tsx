@@ -301,6 +301,11 @@ function IntakePackageDialog({ onDone }: { onDone: () => void }) {
     notes: "",
   });
   const [consolidate, setConsolidate] = useState(false);
+  const [rate, setRate] = useState("275");
+  const [rateTouched, setRateTouched] = useState(false);
+  useEffect(() => {
+    if (!rateTouched) setRate(form.cbm > 0 && form.cbm >= 0.5 ? "230" : "275");
+  }, [form.cbm, rateTouched]);
   const trackingText = form.external_tracking
     .split(/[\n,;]+/)
     .map((s) => s.trim())
