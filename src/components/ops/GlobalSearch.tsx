@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { Link } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
@@ -188,7 +189,10 @@ function CustomerCard({ c, onBack }: { c: Customer; onBack: () => void }) {
         ))}
         {data && !data.packages.length && <div className="p-3 text-muted-foreground">No packages yet.</div>}
       </div>
-      <Button variant="ghost" size="sm" onClick={onBack} className="justify-self-start">← Back to results</Button>
+      <div className="flex justify-between">
+        <Button variant="ghost" size="sm" onClick={onBack}>← Back to results</Button>
+        <Button size="sm" asChild><Link to="/support" search={{ customer: c.id }}>Open full record →</Link></Button>
+      </div>
     </div>
   );
 }

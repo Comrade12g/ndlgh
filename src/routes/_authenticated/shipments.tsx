@@ -542,7 +542,7 @@ function ShipmentDetailDialog({ id, onChanged }: { id: string; onChanged: () => 
         });
       }
       if (seen.size > 1) {
-        toast.info(`Logged ${seen.size} customer notifications — open the Support desk to send the rest.`);
+        toast.info(`Logged ${seen.size} customer notifications — open Customer Service to send the rest.`);
       }
     },
     onError: (e) => toast.error(getErrorMessage(e)),
