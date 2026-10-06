@@ -342,6 +342,7 @@ function IntakePackageDialog({ onDone }: { onDone: () => void }) {
           pieces: form.pieces,
           weight_kg: form.weight_kg,
           cbm: form.cbm || 0,
+          rate_per_cbm: rate === "" ? null : Number(rate),
           external_tracking: trackingText || null,
           notes: [consolidate ? "Consolidated" : "", form.notes].filter(Boolean).join(" — ") || null,
           received_by: u.user?.id,
@@ -500,6 +501,31 @@ function IntakePackageDialog({ onDone }: { onDone: () => void }) {
               value={form.cbm || ""}
               onChange={(e) => setForm({ ...form, cbm: Number(e.target.value) })}
             />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-3 rounded-md border border-brand-orange/40 bg-brand-orange/5 p-3">
+          <div className="grid gap-2">
+            <Label>Rate (USD per CBM)</Label>
+            <Input
+              type="number"
+              step="0.01"
+              min="0"
+              value={rate}
+              onChange={(e) => {
+                setRateTouched(true);
+                setRate(e.target.value);
+              }}
+            />
+            <span className="text-[11px] text-muted-foreground">
+              Suggested: under 0.5 CBM = $275, otherwise $230. You can change it.
+            </span>
+          </div>
+          <div className="grid gap-1 content-center">
+            <span className="text-xs text-muted-foreground">Invoice amount</span>
+            <span className="font-mono text-xl font-bold text-brand-navy">
+              ${((Number(rate) || 0) * (form.cbm || 0)).toFixed(2)}
+            </span>
           </div>
         </div>
 
