@@ -15,6 +15,7 @@ import { Route as AboutRouteImport } from './routes/about'
 import { Route as AcceptInviteRouteImport } from './routes/accept-invite'
 import { Route as AccountRouteImport } from './routes/account'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as BuyFromChinaRouteImport } from './routes/buy-from-china'
 import { Route as ChangePasswordRouteImport } from './routes/change-password'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
@@ -32,6 +33,7 @@ import { Route as AuthenticatedInvoicesRouteImport } from './routes/_authenticat
 import { Route as AuthenticatedPackagesRouteImport } from './routes/_authenticated/packages'
 import { Route as AuthenticatedRatesRouteImport } from './routes/_authenticated/rates'
 import { Route as AuthenticatedReportsRouteImport } from './routes/_authenticated/reports'
+import { Route as AuthenticatedServiceRequestsRouteImport } from './routes/_authenticated/service-requests'
 import { Route as AuthenticatedShipmentsRouteImport } from './routes/_authenticated/shipments'
 import { Route as AuthenticatedSupportRouteImport } from './routes/_authenticated/support'
 import { Route as GuidesIndexRouteImport } from './routes/guides.index'
@@ -76,6 +78,11 @@ const AccountRoute = AccountRouteImport.update({
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BuyFromChinaRoute = BuyFromChinaRouteImport.update({
+  id: '/buy-from-china',
+  path: '/buy-from-china',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ChangePasswordRoute = ChangePasswordRouteImport.update({
@@ -163,6 +170,12 @@ const AuthenticatedReportsRoute = AuthenticatedReportsRouteImport.update({
   path: '/reports',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedServiceRequestsRoute =
+  AuthenticatedServiceRequestsRouteImport.update({
+    id: '/service-requests',
+    path: '/service-requests',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 const AuthenticatedShipmentsRoute = AuthenticatedShipmentsRouteImport.update({
   id: '/shipments',
   path: '/shipments',
@@ -256,6 +269,7 @@ export interface FileRoutesByFullPath {
   '/accept-invite': typeof AcceptInviteRoute
   '/account': typeof AccountRoute
   '/auth': typeof AuthRoute
+  '/buy-from-china': typeof BuyFromChinaRoute
   '/change-password': typeof ChangePasswordRoute
   '/contact': typeof ContactRoute
   '/forgot-password': typeof ForgotPasswordRoute
@@ -273,6 +287,7 @@ export interface FileRoutesByFullPath {
   '/packages': typeof AuthenticatedPackagesRoute
   '/rates': typeof AuthenticatedRatesRoute
   '/reports': typeof AuthenticatedReportsRoute
+  '/service-requests': typeof AuthenticatedServiceRequestsRoute
   '/shipments': typeof AuthenticatedShipmentsRoute
   '/support': typeof AuthenticatedSupportRoute
   '/guides/$slug': typeof GuidesSlugRoute
@@ -296,6 +311,7 @@ export interface FileRoutesByTo {
   '/accept-invite': typeof AcceptInviteRoute
   '/account': typeof AccountRoute
   '/auth': typeof AuthRoute
+  '/buy-from-china': typeof BuyFromChinaRoute
   '/change-password': typeof ChangePasswordRoute
   '/contact': typeof ContactRoute
   '/forgot-password': typeof ForgotPasswordRoute
@@ -313,6 +329,7 @@ export interface FileRoutesByTo {
   '/packages': typeof AuthenticatedPackagesRoute
   '/rates': typeof AuthenticatedRatesRoute
   '/reports': typeof AuthenticatedReportsRoute
+  '/service-requests': typeof AuthenticatedServiceRequestsRoute
   '/shipments': typeof AuthenticatedShipmentsRoute
   '/support': typeof AuthenticatedSupportRoute
   '/guides/$slug': typeof GuidesSlugRoute
@@ -338,6 +355,7 @@ export interface FileRoutesById {
   '/accept-invite': typeof AcceptInviteRoute
   '/account': typeof AccountRoute
   '/auth': typeof AuthRoute
+  '/buy-from-china': typeof BuyFromChinaRoute
   '/change-password': typeof ChangePasswordRoute
   '/contact': typeof ContactRoute
   '/forgot-password': typeof ForgotPasswordRoute
@@ -355,6 +373,7 @@ export interface FileRoutesById {
   '/_authenticated/packages': typeof AuthenticatedPackagesRoute
   '/_authenticated/rates': typeof AuthenticatedRatesRoute
   '/_authenticated/reports': typeof AuthenticatedReportsRoute
+  '/_authenticated/service-requests': typeof AuthenticatedServiceRequestsRoute
   '/_authenticated/shipments': typeof AuthenticatedShipmentsRoute
   '/_authenticated/support': typeof AuthenticatedSupportRoute
   '/guides/$slug': typeof GuidesSlugRoute
@@ -380,6 +399,7 @@ export interface FileRouteTypes {
     | '/accept-invite'
     | '/account'
     | '/auth'
+    | '/buy-from-china'
     | '/change-password'
     | '/contact'
     | '/forgot-password'
@@ -397,6 +417,7 @@ export interface FileRouteTypes {
     | '/packages'
     | '/rates'
     | '/reports'
+    | '/service-requests'
     | '/shipments'
     | '/support'
     | '/guides/$slug'
@@ -420,6 +441,7 @@ export interface FileRouteTypes {
     | '/accept-invite'
     | '/account'
     | '/auth'
+    | '/buy-from-china'
     | '/change-password'
     | '/contact'
     | '/forgot-password'
@@ -437,6 +459,7 @@ export interface FileRouteTypes {
     | '/packages'
     | '/rates'
     | '/reports'
+    | '/service-requests'
     | '/shipments'
     | '/support'
     | '/guides/$slug'
@@ -461,6 +484,7 @@ export interface FileRouteTypes {
     | '/accept-invite'
     | '/account'
     | '/auth'
+    | '/buy-from-china'
     | '/change-password'
     | '/contact'
     | '/forgot-password'
@@ -478,6 +502,7 @@ export interface FileRouteTypes {
     | '/_authenticated/packages'
     | '/_authenticated/rates'
     | '/_authenticated/reports'
+    | '/_authenticated/service-requests'
     | '/_authenticated/shipments'
     | '/_authenticated/support'
     | '/guides/$slug'
@@ -503,6 +528,7 @@ export interface RootRouteChildren {
   AcceptInviteRoute: typeof AcceptInviteRoute
   AccountRoute: typeof AccountRoute
   AuthRoute: typeof AuthRoute
+  BuyFromChinaRoute: typeof BuyFromChinaRoute
   ChangePasswordRoute: typeof ChangePasswordRoute
   ContactRoute: typeof ContactRoute
   ForgotPasswordRoute: typeof ForgotPasswordRoute
@@ -564,6 +590,13 @@ declare module '@tanstack/react-router' {
       path: '/auth'
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/buy-from-china': {
+      id: '/buy-from-china'
+      path: '/buy-from-china'
+      fullPath: '/buy-from-china'
+      preLoaderRoute: typeof BuyFromChinaRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/change-password': {
@@ -683,6 +716,13 @@ declare module '@tanstack/react-router' {
       path: '/reports'
       fullPath: '/reports'
       preLoaderRoute: typeof AuthenticatedReportsRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/service-requests': {
+      id: '/_authenticated/service-requests'
+      path: '/service-requests'
+      fullPath: '/service-requests'
+      preLoaderRoute: typeof AuthenticatedServiceRequestsRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
     '/_authenticated/shipments': {
@@ -808,6 +848,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedPackagesRoute: typeof AuthenticatedPackagesRoute
   AuthenticatedRatesRoute: typeof AuthenticatedRatesRoute
   AuthenticatedReportsRoute: typeof AuthenticatedReportsRoute
+  AuthenticatedServiceRequestsRoute: typeof AuthenticatedServiceRequestsRoute
   AuthenticatedShipmentsRoute: typeof AuthenticatedShipmentsRoute
   AuthenticatedSupportRoute: typeof AuthenticatedSupportRoute
   AuthenticatedAdminAuditRoute: typeof AuthenticatedAdminAuditRoute
@@ -827,6 +868,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedPackagesRoute: AuthenticatedPackagesRoute,
   AuthenticatedRatesRoute: AuthenticatedRatesRoute,
   AuthenticatedReportsRoute: AuthenticatedReportsRoute,
+  AuthenticatedServiceRequestsRoute: AuthenticatedServiceRequestsRoute,
   AuthenticatedShipmentsRoute: AuthenticatedShipmentsRoute,
   AuthenticatedSupportRoute: AuthenticatedSupportRoute,
   AuthenticatedAdminAuditRoute: AuthenticatedAdminAuditRoute,
@@ -849,6 +891,7 @@ const rootRouteChildren: RootRouteChildren = {
   AcceptInviteRoute: AcceptInviteRoute,
   AccountRoute: AccountRoute,
   AuthRoute: AuthRoute,
+  BuyFromChinaRoute: BuyFromChinaRoute,
   ChangePasswordRoute: ChangePasswordRoute,
   ContactRoute: ContactRoute,
   ForgotPasswordRoute: ForgotPasswordRoute,
