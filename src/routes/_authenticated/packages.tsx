@@ -243,6 +243,51 @@ function PackagesPage() {
   );
 }
 
+export function MarkPicker({
+  value,
+  onChange,
+}: {
+  value: string;
+  onChange: (v: string) => void;
+}) {
+  const { data: customers } = useQuery({
+    queryKey: ["mark-picker-customers"],
+    queryFn: async () => {
+      const { data: roles } = await supabase.from("user_roles").select("user_id").eq("role", "customer");
+      const ids = new Set((roles ?? []).map((r) => r.user_id));
+      const { data } = await supabase
+        .from("profiles")
+        .select("id, shipping_mark, full_name, phone")
+        .order("shipping_mark");
+      return (data ?? []).filter((p) => ids.size === 0 || ids.has(p.id));
+    },
+    staleTime: 60_000,
+  });
+  const match = customers?.find((c) => c.shipping_mark === value.trim().toUpperCase());
+  return (
+    <div className="grid gap-1">
+      <Select value={match ? match.shipping_mark : undefined} onValueChange={onChange}>
+        <SelectTrigger>
+          <SelectValue placeholder="Select customer (ND0001)…" />
+        </SelectTrigger>
+        <SelectContent className="max-h-72">
+          {customers?.map((c) => (
+            <SelectItem key={c.id} value={c.shipping_mark}>
+              {c.shipping_mark} — {c.full_name ?? c.phone ?? "Customer"}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+      <Input
+        placeholder="…or type the mark"
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className="h-8 text-xs"
+      />
+    </div>
+  );
+}
+
 function IntakePackageDialog({ onDone }: { onDone: () => void }) {
   const [form, setForm] = useState({
     shipping_mark: "",
@@ -251,9 +296,7 @@ function IntakePackageDialog({ onDone }: { onDone: () => void }) {
     description: "",
     pieces: 1,
     weight_kg: 0,
-    length_cm: 0,
-    width_cm: 0,
-    height_cm: 0,
+    cbm: 0,
     external_tracking: "",
     notes: "",
   });
@@ -281,7 +324,6 @@ function IntakePackageDialog({ onDone }: { onDone: () => void }) {
         customer = data ?? null;
         if (customer_id) await ensureContactShadow(customer_id, data?.full_name, data?.phone);
       }
-      const cbm = (form.length_cm * form.width_cm * form.height_cm) / 1_000_000;
       const { data: u } = await supabase.auth.getUser();
       const { data: inserted, error } = await supabase
         .from("packages")
@@ -293,10 +335,7 @@ function IntakePackageDialog({ onDone }: { onDone: () => void }) {
           description: form.description || null,
           pieces: form.pieces,
           weight_kg: form.weight_kg,
-          length_cm: form.length_cm || null,
-          width_cm: form.width_cm || null,
-          height_cm: form.height_cm || null,
-          cbm,
+          cbm: form.cbm || 0,
           external_tracking: form.external_tracking || null,
           notes: form.notes || null,
           received_by: u.user?.id,
@@ -333,7 +372,6 @@ function IntakePackageDialog({ onDone }: { onDone: () => void }) {
     onError: (e) => toast.error(getErrorMessage(e)),
   });
 
-  const cbm = ((form.length_cm * form.width_cm * form.height_cm) / 1_000_000).toFixed(4);
 
   return (
     <DialogContent className="max-w-2xl">
@@ -352,10 +390,9 @@ function IntakePackageDialog({ onDone }: { onDone: () => void }) {
         <div className="grid grid-cols-3 gap-3">
           <div className="grid gap-2 col-span-2">
             <Label>Shipping mark</Label>
-            <Input
-              placeholder="ND0001"
+            <MarkPicker
               value={form.shipping_mark}
-              onChange={(e) => setForm({ ...form, shipping_mark: e.target.value })}
+              onChange={(v) => setForm({ ...form, shipping_mark: v })}
             />
           </div>
           <div className="grid gap-2">
@@ -403,7 +440,7 @@ function IntakePackageDialog({ onDone }: { onDone: () => void }) {
           />
         </div>
 
-        <div className="grid grid-cols-4 gap-3">
+        <div className="grid grid-cols-3 gap-3">
           <div className="grid gap-2">
             <Label>Pieces</Label>
             <Input
@@ -418,37 +455,20 @@ function IntakePackageDialog({ onDone }: { onDone: () => void }) {
             <Input
               type="number"
               step="0.01"
-              value={form.weight_kg}
+              value={form.weight_kg || ""}
               onChange={(e) => setForm({ ...form, weight_kg: Number(e.target.value) })}
             />
           </div>
-          <div className="grid gap-2 col-span-2">
-            <Label>L × W × H (cm)</Label>
-            <div className="flex gap-1">
-              <Input
-                type="number"
-                placeholder="L"
-                value={form.length_cm || ""}
-                onChange={(e) => setForm({ ...form, length_cm: Number(e.target.value) })}
-              />
-              <Input
-                type="number"
-                placeholder="W"
-                value={form.width_cm || ""}
-                onChange={(e) => setForm({ ...form, width_cm: Number(e.target.value) })}
-              />
-              <Input
-                type="number"
-                placeholder="H"
-                value={form.height_cm || ""}
-                onChange={(e) => setForm({ ...form, height_cm: Number(e.target.value) })}
-              />
-            </div>
+          <div className="grid gap-2">
+            <Label>CBM</Label>
+            <Input
+              type="number"
+              step="0.001"
+              min="0"
+              value={form.cbm || ""}
+              onChange={(e) => setForm({ ...form, cbm: Number(e.target.value) })}
+            />
           </div>
-        </div>
-
-        <div className="rounded-md bg-muted p-3 text-sm">
-          Computed volume: <span className="font-mono font-bold text-brand-navy">{cbm} CBM</span>
         </div>
 
         <div className="grid gap-2">
