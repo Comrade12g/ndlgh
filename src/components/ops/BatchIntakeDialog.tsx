@@ -12,6 +12,7 @@ import { getErrorMessage } from "@/lib/errors";
 import { ensureContactShadow } from "@/lib/ensureContactShadow";
 import { notifyCustomer } from "@/lib/notifications";
 import { waTemplates } from "@/lib/whatsapp";
+import { MarkPicker } from "@/routes/_authenticated/packages";
 
 type Line = { external_tracking: string; pieces: number; weight_kg: number; cbm: number; description: string };
 
@@ -118,7 +119,7 @@ export function BatchIntakeDialog({ onDone }: { onDone: () => void }) {
         <div className="grid grid-cols-3 gap-3">
           <div className="col-span-2 grid gap-2">
             <Label>Customer ID / mark</Label>
-            <Input placeholder="ND0001" value={mark} onChange={(e) => setMark(e.target.value)} />
+            <MarkPicker value={mark} onChange={setMark} />
             <div className="text-xs">
               {markClean.length >= 4 &&
                 (customer ? (
