@@ -20,3 +20,28 @@ export function customerMark(
   const suffix = shippingMark!.toUpperCase();
   return markPrefix ? `${markPrefix} — ${suffix}` : suffix;
 }
+
+export type WarehouseForSupplier = {
+  name: string;
+  name_local?: string | null;
+  mark_prefix?: string | null;
+  address?: string | null;
+  address_local?: string | null;
+  receiving_hours?: string | null;
+  phones?: string | null;
+};
+
+/** Multi-line text a customer can paste to their supplier. */
+export function buildSupplierText(w: WarehouseForSupplier, shippingMark: string | null | undefined): string {
+  const mark = customerMark(w.mark_prefix, shippingMark);
+  return [
+    `${w.name}${w.name_local ? ` (${w.name_local})` : ""}`,
+    mark ? `Mark: ${mark}` : null,
+    w.address_local ?? w.address,
+    w.address_local && w.address ? w.address : null,
+    w.receiving_hours ? `Hours: ${w.receiving_hours}` : null,
+    w.phones ? `Tel: ${w.phones}` : null,
+  ]
+    .filter(Boolean)
+    .join("\n");
+}
