@@ -61,8 +61,21 @@ const trackLink = (code: string) => `${appOrigin()}/track/${encodeURIComponent(c
 const authLink = () => `${appOrigin()}/auth`;
 
 export const waTemplates = {
-  packageReceived: (name: string, trackingCode: string, warehouse: string) =>
-    `Hi ${name}, good news — your package (${trackingCode}) has been received at our ${warehouse} warehouse and is being processed. Track it here: ${trackLink(trackingCode)}\n\nView all your shipments: ${portalLink()}\n${SIGNOFF}`,
+  packageReceived: (
+    name: string,
+    trackingCode: string,
+    warehouse: string,
+    details?: { courier?: string | null; pieces?: number; weightKg?: number; cbm?: number; description?: string | null },
+  ) => {
+    const lines: string[] = [];
+    if (details?.description) lines.push(`Goods: ${details.description}`);
+    if (details?.courier) lines.push(`Courier tracking: ${details.courier}`);
+    if (details?.pieces) lines.push(`Pieces: ${details.pieces}`);
+    if (details?.weightKg) lines.push(`Weight: ${details.weightKg} kg`);
+    if (details?.cbm) lines.push(`CBM: ${details.cbm}`);
+    const extra = lines.length ? `\n\n${lines.join("\n")}` : "";
+    return `Hi ${name}, your goods have been received in our ${warehouse} warehouse.\nNDL code: ${trackingCode}${extra}\n\nFor more info, please check your customer portal: ${portalLink()}\n${SIGNOFF}`;
+  },
 
   shipmentDeparted: (name: string, ref: string, eta: string | null) =>
     `Hi ${name}, your shipment ${ref} has departed origin and is now in transit${eta ? ` — ETA ${eta}` : ""}. Track: ${trackLink(ref)}\n${SIGNOFF}`,
