@@ -157,7 +157,28 @@ function AdminUsersPage() {
                         </div>
                       </td>
                       <td className="px-4 py-3 font-mono text-xs text-brand-orange">
-                        {u.shipping_mark}
+                        <div className="flex items-center gap-2">
+                          <span>{u.shipping_mark}</span>
+                          <button
+                            className="text-[11px] font-sans text-brand-sky underline"
+                            onClick={async () => {
+                              const v = window.prompt(
+                                `Set customer ID for ${u.full_name ?? "this user"} (e.g. ND0044):`,
+                                u.shipping_mark ?? "",
+                              );
+                              if (!v || v.trim() === u.shipping_mark) return;
+                              const { data: saved, error } = await supabase.rpc(
+                                "admin_set_shipping_mark" as never,
+                                { _user_id: u.id, _mark: v } as never,
+                              );
+                              if (error) return toast.error(error.message);
+                              toast.success(`Customer ID set to ${saved as unknown as string}`);
+                              qc.invalidateQueries({ queryKey: ["users-with-roles"] });
+                            }}
+                          >
+                            Edit
+                          </button>
+                        </div>
                       </td>
                       <td className="px-4 py-3 text-muted-foreground">{u.phone ?? "—"}</td>
                       <td className="px-4 py-3">
