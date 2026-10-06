@@ -49,6 +49,7 @@ import { Route as AuthenticatedCrmContactsRouteImport } from './routes/_authenti
 import { Route as AuthenticatedSourcingPosRouteImport } from './routes/_authenticated/sourcing.pos'
 import { Route as AuthenticatedTreasuryAccountsRouteImport } from './routes/_authenticated/treasury.accounts'
 import { Route as GuidesCategoryCategoryRouteImport } from './routes/guides.category.$category'
+import { Route as ApiPublicHooksExcelSyncRouteImport } from './routes/api/public/hooks/excel-sync'
 import { Route as ApiPublicHooksPollShipmentEtaRouteImport } from './routes/api/public/hooks/poll-shipment-eta'
 
 const IndexRoute = IndexRouteImport.update({
@@ -256,6 +257,11 @@ const GuidesCategoryCategoryRoute = GuidesCategoryCategoryRouteImport.update({
   path: '/guides/category/$category',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicHooksExcelSyncRoute = ApiPublicHooksExcelSyncRouteImport.update({
+  id: '/api/public/hooks/excel-sync',
+  path: '/api/public/hooks/excel-sync',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicHooksPollShipmentEtaRoute =
   ApiPublicHooksPollShipmentEtaRouteImport.update({
     id: '/api/public/hooks/poll-shipment-eta',
@@ -303,6 +309,7 @@ export interface FileRoutesByFullPath {
   '/sourcing/pos': typeof AuthenticatedSourcingPosRoute
   '/treasury/accounts': typeof AuthenticatedTreasuryAccountsRoute
   '/guides/category/$category': typeof GuidesCategoryCategoryRoute
+  '/api/public/hooks/excel-sync': typeof ApiPublicHooksExcelSyncRoute
   '/api/public/hooks/poll-shipment-eta': typeof ApiPublicHooksPollShipmentEtaRoute
 }
 export interface FileRoutesByTo {
@@ -345,6 +352,7 @@ export interface FileRoutesByTo {
   '/sourcing/pos': typeof AuthenticatedSourcingPosRoute
   '/treasury/accounts': typeof AuthenticatedTreasuryAccountsRoute
   '/guides/category/$category': typeof GuidesCategoryCategoryRoute
+  '/api/public/hooks/excel-sync': typeof ApiPublicHooksExcelSyncRoute
   '/api/public/hooks/poll-shipment-eta': typeof ApiPublicHooksPollShipmentEtaRoute
 }
 export interface FileRoutesById {
@@ -389,6 +397,7 @@ export interface FileRoutesById {
   '/_authenticated/sourcing/pos': typeof AuthenticatedSourcingPosRoute
   '/_authenticated/treasury/accounts': typeof AuthenticatedTreasuryAccountsRoute
   '/guides/category/$category': typeof GuidesCategoryCategoryRoute
+  '/api/public/hooks/excel-sync': typeof ApiPublicHooksExcelSyncRoute
   '/api/public/hooks/poll-shipment-eta': typeof ApiPublicHooksPollShipmentEtaRoute
 }
 export interface FileRouteTypes {
@@ -433,6 +442,7 @@ export interface FileRouteTypes {
     | '/sourcing/pos'
     | '/treasury/accounts'
     | '/guides/category/$category'
+    | '/api/public/hooks/excel-sync'
     | '/api/public/hooks/poll-shipment-eta'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -475,6 +485,7 @@ export interface FileRouteTypes {
     | '/sourcing/pos'
     | '/treasury/accounts'
     | '/guides/category/$category'
+    | '/api/public/hooks/excel-sync'
     | '/api/public/hooks/poll-shipment-eta'
   id:
     | '__root__'
@@ -518,6 +529,7 @@ export interface FileRouteTypes {
     | '/_authenticated/sourcing/pos'
     | '/_authenticated/treasury/accounts'
     | '/guides/category/$category'
+    | '/api/public/hooks/excel-sync'
     | '/api/public/hooks/poll-shipment-eta'
   fileRoutesById: FileRoutesById
 }
@@ -545,6 +557,7 @@ export interface RootRouteChildren {
   GuidesIndexRoute: typeof GuidesIndexRoute
   LanesIndexRoute: typeof LanesIndexRoute
   GuidesCategoryCategoryRoute: typeof GuidesCategoryCategoryRoute
+  ApiPublicHooksExcelSyncRoute: typeof ApiPublicHooksExcelSyncRoute
   ApiPublicHooksPollShipmentEtaRoute: typeof ApiPublicHooksPollShipmentEtaRoute
 }
 
@@ -830,6 +843,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GuidesCategoryCategoryRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/hooks/excel-sync': {
+      id: '/api/public/hooks/excel-sync'
+      path: '/api/public/hooks/excel-sync'
+      fullPath: '/api/public/hooks/excel-sync'
+      preLoaderRoute: typeof ApiPublicHooksExcelSyncRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/hooks/poll-shipment-eta': {
       id: '/api/public/hooks/poll-shipment-eta'
       path: '/api/public/hooks/poll-shipment-eta'
@@ -908,6 +928,7 @@ const rootRouteChildren: RootRouteChildren = {
   GuidesIndexRoute: GuidesIndexRoute,
   LanesIndexRoute: LanesIndexRoute,
   GuidesCategoryCategoryRoute: GuidesCategoryCategoryRoute,
+  ApiPublicHooksExcelSyncRoute: ApiPublicHooksExcelSyncRoute,
   ApiPublicHooksPollShipmentEtaRoute: ApiPublicHooksPollShipmentEtaRoute,
 }
 export const routeTree = rootRouteImport

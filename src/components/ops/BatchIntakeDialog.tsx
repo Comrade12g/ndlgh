@@ -214,6 +214,8 @@ function CameraScanner({ onCode }: { onCode: (c: string) => void }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [err, setErr] = useState<string | null>(null);
   const last = useRef("");
+  const cb = useRef(onCode);
+  cb.current = onCode;
 
   useEffect(() => {
     const W = window as unknown as { BarcodeDetector?: new () => BarcodeDetectorLike };
@@ -239,7 +241,7 @@ function CameraScanner({ onCode }: { onCode: (c: string) => void }) {
             const v = codes[0]?.rawValue;
             if (v && v !== last.current) {
               last.current = v;
-              onCode(v);
+              cb.current(v);
             }
           } catch {
             /* ignore frame errors */
@@ -251,7 +253,7 @@ function CameraScanner({ onCode }: { onCode: (c: string) => void }) {
       if (timer) clearInterval(timer);
       stream?.getTracks().forEach((t) => t.stop());
     };
-  }, [onCode]);
+  }, []);
 
   if (err) return <p className="text-sm text-destructive">{err}</p>;
   return <video ref={videoRef} muted playsInline className="h-48 w-full rounded-md bg-muted object-cover" />;
