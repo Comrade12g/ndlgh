@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -301,11 +301,7 @@ function IntakePackageDialog({ onDone }: { onDone: () => void }) {
     notes: "",
   });
   const [consolidate, setConsolidate] = useState(false);
-  const [rate, setRate] = useState("275");
-  const [rateTouched, setRateTouched] = useState(false);
-  useEffect(() => {
-    if (!rateTouched) setRate(form.cbm > 0 && form.cbm >= 0.5 ? "230" : "275");
-  }, [form.cbm, rateTouched]);
+  const [rate, setRate] = useState("");
   const trackingText = form.external_tracking
     .split(/[\n,;]+/)
     .map((s) => s.trim())
@@ -322,6 +318,7 @@ function IntakePackageDialog({ onDone }: { onDone: () => void }) {
 
   const mut = useMutation({
     mutationFn: async () => {
+      if (rate === "" || Number(rate) <= 0) throw new Error("Enter the rate (USD per CBM) for this item.");
       // Look up customer by shipping_mark
       let customer_id: string | null = null;
       let customer: { id: string; full_name: string | null; phone: string | null } | null = null;
@@ -517,13 +514,11 @@ function IntakePackageDialog({ onDone }: { onDone: () => void }) {
               step="0.01"
               min="0"
               value={rate}
-              onChange={(e) => {
-                setRateTouched(true);
-                setRate(e.target.value);
-              }}
+              onChange={(e) => setRate(e.target.value)}
+              placeholder="e.g. 275"
             />
             <span className="text-[11px] text-muted-foreground">
-              Suggested: under 0.5 CBM = $275, otherwise $230. You can change it.
+              You decide the rate for every item. It is required before saving.
             </span>
           </div>
           <div className="grid gap-1 content-center">
