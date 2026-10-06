@@ -1600,6 +1600,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      admin_set_shipping_mark: {
+        Args: { _mark: string; _user_id: string }
+        Returns: string
+      }
       fn_autoinvoice_package_manual: {
         Args: { _package_id: string }
         Returns: undefined
