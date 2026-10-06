@@ -1053,6 +1053,57 @@ export type Database = {
           },
         ]
       }
+      service_requests: {
+        Row: {
+          approximate_amount_or_budget: string | null
+          consent_to_contact: boolean
+          created_at: string
+          email: string | null
+          experience_level: string | null
+          full_name: string
+          id: string
+          message: string | null
+          phone: string
+          preferred_contact_time: string | null
+          service_needed: string
+          status: string
+          supplier_location: string | null
+          what_to_buy_or_pay_for: string | null
+        }
+        Insert: {
+          approximate_amount_or_budget?: string | null
+          consent_to_contact: boolean
+          created_at?: string
+          email?: string | null
+          experience_level?: string | null
+          full_name: string
+          id?: string
+          message?: string | null
+          phone: string
+          preferred_contact_time?: string | null
+          service_needed: string
+          status?: string
+          supplier_location?: string | null
+          what_to_buy_or_pay_for?: string | null
+        }
+        Update: {
+          approximate_amount_or_budget?: string | null
+          consent_to_contact?: boolean
+          created_at?: string
+          email?: string | null
+          experience_level?: string | null
+          full_name?: string
+          id?: string
+          message?: string | null
+          phone?: string
+          preferred_contact_time?: string | null
+          service_needed?: string
+          status?: string
+          supplier_location?: string | null
+          what_to_buy_or_pay_for?: string | null
+        }
+        Relationships: []
+      }
       shipment_milestones: {
         Row: {
           carrier: string

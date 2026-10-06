@@ -24,6 +24,7 @@ export const Route = createFileRoute("/sitemap.xml")({
           ...["china", "dubai", "thailand", "canada", "us"].map(
             (o): SitemapEntry => ({ path: `/lanes/${o}`, changefreq: "monthly", priority: "0.7" }),
           ),
+          { path: "/buy-from-china", changefreq: "monthly", priority: "0.8" },
           { path: "/quote", changefreq: "monthly", priority: "0.8" },
           { path: "/tracking", changefreq: "weekly", priority: "0.8" },
           { path: "/contact", changefreq: "monthly", priority: "0.6" },

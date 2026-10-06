@@ -115,6 +115,7 @@ const NAV: NavItem[] = [
     roles: ["admin", "customer_service"],
   },
   { to: "/sourcing/pos", label: "Sourcing", icon: ShoppingBag, roles: ["admin", "sourcing_agent"] },
+  { to: "/service-requests", label: "China requests", icon: ShoppingBag, roles: ["admin", "sourcing_agent", "sales", "customer_service", "sales_accountant"] },
   {
     to: "/treasury/accounts",
     label: "Treasury",

@@ -22,6 +22,7 @@ import {
   type GalleryPhoto,
 } from "@/lib/gallery";
 import { IMG } from "@/assets/gallery";
+import { Wallet as WalletIcon, Search as SearchIcon, GraduationCap } from "lucide-react";
 import {
   Ship, Plane, Truck, Warehouse, ShieldCheck, Globe2,
   ArrowRight, Users, FileCheck, Filter,
@@ -64,6 +65,9 @@ const SERVICES = [
   { icon: Plane,     name: "Air Cargo",               desc: "Express and general air freight into Kotoka International.",  photo: IMG.airCargoPlane },
   { icon: FileCheck, name: "Customs Clearing",        desc: "In-house licensed brokers — no third-party leakage.",         photo: IMG.customsClearing },
   { icon: Warehouse, name: "Warehousing & Delivery",  desc: "Bonded storage plus Ghana-wide last-mile delivery.",          photo: IMG.warehousePallets },
+  { icon: WalletIcon, name: "Supplier Payments",      desc: "Pay your suppliers in China through NDL.",                     photo: IMG.chinaHub },
+  { icon: SearchIcon, name: "Procurement & Sourcing", desc: "We help find products and suppliers in Guangzhou and Yiwu.",   photo: IMG.warehouseInterior },
+  { icon: GraduationCap, name: "Import Training",     desc: "Training on procurement and supplier payments.",              photo: IMG.stackedContainers },
 ];
 
 
@@ -71,9 +75,11 @@ function HomePage() {
   return (
     <MarketingLayout>
       <Hero />
+      <RateStrip />
       <LaneMarquee />
       <TrustStrip />
       <ServicesSection />
+      <BuyFromChinaSection />
       <HowItWorks />
       <StatsBand />
       <QuoteSection />
@@ -627,6 +633,22 @@ function RevealCard({ children, delay = 0, className = "", tilt = true, noPaddin
 
 const FAQS = [
   {
+    q: "What is the sea freight rate from China to Ghana?",
+    a: "Sea freight from China to Ghana is $230 per CBM, with a transit time of 35 to 45 days. Customs clearing is included for groupage/LCL shipments.",
+  },
+  {
+    q: "How can I pay a supplier in China from Ghana?",
+    a: "NDL offers supplier payments to China. Send a request on our Buy from China page and our team will contact you on WhatsApp to arrange it.",
+  },
+  {
+    q: "Can NDL buy goods for me in China?",
+    a: "Yes. NDL offers procurement and sourcing: we help find products, pay suppliers, receive goods at our Guangzhou or Yiwu warehouse and ship them to Ghana.",
+  },
+  {
+    q: "Does NDL teach importing?",
+    a: "Yes. NDL offers training on procurement and supplier payments. Register your interest on our Buy from China page.",
+  },
+  {
     q: "How long does shipping from China to Ghana take?",
     a: "Sea LCL groupage from Guangzhou, Yiwu or Shenzhen to Tema Port typically takes 35–45 days door-to-door including customs clearing. Air cargo from China to Kotoka arrives in 5–9 days. Dubai to Accra by sea is 25–30 days; from the US and Canada expect 40–55 days by sea and 7–12 days by air.",
   },
@@ -798,6 +820,20 @@ function JsonLd() {
     email: NDL_EMAIL,
     url: "https://ndlgh.susuboxgh.com",
     priceRange: "$$",
+    makesOffer: [
+      {
+        "@type": "Offer",
+        name: "Sea freight China to Ghana (LCL)",
+        description: "Sea freight from China to Ghana, 35 to 45 days. Customs clearing included for groupage/LCL.",
+        priceSpecification: {
+          "@type": "UnitPriceSpecification",
+          price: 230,
+          priceCurrency: "USD",
+          unitText: "CBM",
+          referenceQuantity: { "@type": "QuantitativeValue", value: 1, unitText: "CBM" },
+        },
+      },
+    ],
     areaServed: [
       { "@type": "Country", name: "Ghana" },
       { "@type": "City", name: "Accra" },
@@ -821,5 +857,51 @@ function JsonLd() {
       type="application/ld+json"
       dangerouslySetInnerHTML={{ __html: JSON.stringify(org) }}
     />
+  );
+}
+
+function RateStrip() {
+  return (
+    <div className="border-b bg-brand-orange text-white">
+      <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-center gap-x-3 gap-y-1 px-4 py-3 text-center text-sm font-semibold">
+        <Ship className="h-4 w-4" />
+        Sea freight from $230/CBM. Customs clearing included for LCL. 35 to 45 days.
+        <Link to="/quote" className="underline underline-offset-4">Get a quote</Link>
+      </div>
+    </div>
+  );
+}
+
+function BuyFromChinaSection() {
+  const steps = [
+    { icon: SearchIcon, t: "Find products", d: "Tell us what you want to buy." },
+    { icon: WalletIcon, t: "Pay suppliers", d: "We pay your supplier in China." },
+    { icon: Warehouse, t: "Receive in China", d: "Goods arrive at our Guangzhou or Yiwu warehouse." },
+    { icon: Ship, t: "Ship to Ghana", d: "From $230/CBM, 35 to 45 days." },
+  ];
+  return (
+    <section className="bg-brand-navy py-16 text-white md:py-20">
+      <div className="mx-auto max-w-7xl px-4">
+        <div className="text-xs font-semibold uppercase tracking-widest text-brand-orange">Buy from China</div>
+        <h2 className="mt-2 font-display text-3xl font-black md:text-4xl">Order and pay — one process</h2>
+        <p className="mt-3 max-w-2xl text-white/80">
+          NDL can find products, pay your suppliers, receive goods at our China warehouse and ship them to Ghana.
+        </p>
+        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {steps.map((s) => (
+            <div key={s.t} className="rounded-xl border border-white/10 bg-white/5 p-5">
+              <s.icon className="h-6 w-6 text-brand-orange" />
+              <div className="mt-3 font-display font-bold">{s.t}</div>
+              <p className="mt-1 text-sm text-white/75">{s.d}</p>
+            </div>
+          ))}
+        </div>
+        <div className="mt-8">
+          <Link to="/buy-from-china">
+            <Button className="bg-brand-orange hover:bg-brand-orange/90">Buy from China <ArrowRight className="ml-2 h-4 w-4" /></Button>
+          </Link>
+        </div>
+      </div>
+    </section>
   );
 }
