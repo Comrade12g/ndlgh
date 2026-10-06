@@ -300,6 +300,12 @@ function IntakePackageDialog({ onDone }: { onDone: () => void }) {
     external_tracking: "",
     notes: "",
   });
+  const [consolidate, setConsolidate] = useState(false);
+  const trackingText = form.external_tracking
+    .split(/[\n,;]+/)
+    .map((s) => s.trim())
+    .filter(Boolean)
+    .join(", ");
 
   const { data: warehouses } = useQuery({
     queryKey: ["warehouses-all"],
@@ -336,8 +342,8 @@ function IntakePackageDialog({ onDone }: { onDone: () => void }) {
           pieces: form.pieces,
           weight_kg: form.weight_kg,
           cbm: form.cbm || 0,
-          external_tracking: form.external_tracking || null,
-          notes: form.notes || null,
+          external_tracking: trackingText || null,
+          notes: [consolidate ? "Consolidated" : "", form.notes].filter(Boolean).join(" — ") || null,
           received_by: u.user?.id,
           status: "received",
         })
@@ -358,6 +364,13 @@ function IntakePackageDialog({ onDone }: { onDone: () => void }) {
           res.customer.full_name ?? "there",
           res.package.tracking_code,
           res.warehouse,
+          {
+            courier: trackingText,
+            pieces: form.pieces,
+            weightKg: form.weight_kg,
+            cbm: form.cbm,
+            description: form.description,
+          },
         );
         await notifyCustomer({
           customerId: res.customer.id,
@@ -415,6 +428,16 @@ function IntakePackageDialog({ onDone }: { onDone: () => void }) {
           </div>
         </div>
 
+        <label className="flex items-center gap-2 rounded-md border border-brand-orange/40 bg-brand-orange/5 px-3 py-2 text-sm font-medium cursor-pointer">
+          <input
+            type="checkbox"
+            className="h-4 w-4 accent-[hsl(var(--primary))]"
+            checked={consolidate}
+            onChange={(e) => setConsolidate(e.target.checked)}
+          />
+          Consolidate — several items, one total CBM &amp; weight
+        </label>
+
         <div className="grid grid-cols-2 gap-3">
           <div className="grid gap-2">
             <Label>Supplier / sender</Label>
@@ -424,11 +447,20 @@ function IntakePackageDialog({ onDone }: { onDone: () => void }) {
             />
           </div>
           <div className="grid gap-2">
-            <Label>External tracking</Label>
-            <Input
-              value={form.external_tracking}
-              onChange={(e) => setForm({ ...form, external_tracking: e.target.value })}
-            />
+            <Label>{consolidate ? "All tracking numbers (one per line)" : "Tracking number"}</Label>
+            {consolidate ? (
+              <Textarea
+                rows={3}
+                placeholder={"YT7647153201083\nYT7647243795144"}
+                value={form.external_tracking}
+                onChange={(e) => setForm({ ...form, external_tracking: e.target.value })}
+              />
+            ) : (
+              <Input
+                value={form.external_tracking}
+                onChange={(e) => setForm({ ...form, external_tracking: e.target.value })}
+              />
+            )}
           </div>
         </div>
 
