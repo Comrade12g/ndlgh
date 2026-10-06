@@ -3,7 +3,7 @@ import { MarketingLayout } from "@/components/marketing/MarketingLayout";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useReveal } from "@/hooks/use-reveal";
-import { Ship, Plane, FileCheck, Warehouse, Check, ArrowRight } from "lucide-react";
+import { Ship, Plane, FileCheck, Warehouse, Check, ArrowRight, Wallet, Search, GraduationCap } from "lucide-react";
 
 export const Route = createFileRoute("/services")({
   head: () => ({
@@ -28,7 +28,8 @@ const SERVICES = [
     features: [
       "LCL groupage: pay only for the space you use",
       "FCL 20ft / 40ft dedicated containers",
-      "Weekly sailings from China, Dubai, US",
+      "China to Ghana from $230/CBM, 35 to 45 days",
+      "Customs clearing included for LCL",
       "Full documentation & port handling included",
     ],
   },
@@ -64,6 +65,24 @@ const SERVICES = [
       "Nationwide last-mile delivery",
       "Proof of delivery with photo + signature",
     ],
+  },
+  {
+    icon: Wallet,
+    name: "Supplier Payments",
+    tagline: "Pay your suppliers in China.",
+    features: ["Send a payment request online", "Our team follows up on WhatsApp", "Goods received at our China warehouse", "Fees and payment methods: [CONFIRM]"],
+  },
+  {
+    icon: Search,
+    name: "Procurement & Sourcing",
+    tagline: "We help you buy from China.",
+    features: ["Product and supplier search", "Guangzhou and Yiwu teams", "Order coordination with suppliers", "Shipped to Ghana with your mark"],
+  },
+  {
+    icon: GraduationCap,
+    name: "Import Training",
+    tagline: "Learn to import from China.",
+    features: ["Procurement basics", "How supplier payments work", "Shipping and customs overview", "Next session dates: [CONFIRM]"],
   },
 ];
 

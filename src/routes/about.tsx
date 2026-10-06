@@ -69,6 +69,11 @@ function AboutPage() {
           </div>
         </div>
 
+        <div className="mt-16 grid gap-4 rounded-2xl border bg-card p-6 text-sm md:grid-cols-2">
+          <div><span className="font-semibold text-brand-navy">Opening days: </span>Monday to Saturday. Hours: [CONFIRM]. Closed Sunday.</div>
+          <div><span className="font-semibold text-brand-navy">Licence/registration details: </span>[CONFIRM]</div>
+        </div>
+
         <div className="mt-16 rounded-2xl bg-brand-navy p-10 text-white">
           <h2 className="font-display text-2xl font-black">Work with us</h2>
           <p className="mt-2 max-w-xl text-white/80">
