@@ -51,7 +51,7 @@ export async function uploadBackupToOneDrive(bytes: Uint8Array) {
       "X-Connection-Api-Key": connKey,
       "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
     },
-    body: bytes,
+    body: new Blob([bytes as BlobPart]),
   });
   if (!res.ok) {
     const body = await res.text();
