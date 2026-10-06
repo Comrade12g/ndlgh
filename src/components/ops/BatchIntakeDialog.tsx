@@ -89,6 +89,12 @@ export function BatchIntakeDialog({ onDone }: { onDone: () => void }) {
             customer.full_name ?? "there",
             data.map((d) => d.tracking_code).join(", "),
             wh,
+            {
+              courier: lines.map((l) => l.external_tracking).join(", "),
+              pieces: lines.reduce((s, l) => s + l.pieces, 0),
+              weightKg: Number(lines.reduce((s, l) => s + l.weight_kg, 0).toFixed(2)),
+              cbm: Number(lines.reduce((s, l) => s + l.cbm, 0).toFixed(3)),
+            },
           ),
           packageId: data[0].id,
         });
