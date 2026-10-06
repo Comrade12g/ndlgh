@@ -336,6 +336,30 @@ export type Database = {
           },
         ]
       }
+      excel_sync_log: {
+        Row: {
+          created_at: string
+          error: string | null
+          id: string
+          rows_synced: number | null
+          status: string
+        }
+        Insert: {
+          created_at?: string
+          error?: string | null
+          id?: string
+          rows_synced?: number | null
+          status: string
+        }
+        Update: {
+          created_at?: string
+          error?: string | null
+          id?: string
+          rows_synced?: number | null
+          status?: string
+        }
+        Relationships: []
+      }
       fx_rates: {
         Row: {
           created_at: string
@@ -468,6 +492,24 @@ export type Database = {
           status?: string
           title?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      internal_cron_tokens: {
+        Row: {
+          created_at: string
+          name: string
+          token: string
+        }
+        Insert: {
+          created_at?: string
+          name: string
+          token?: string
+        }
+        Update: {
+          created_at?: string
+          name?: string
+          token?: string
         }
         Relationships: []
       }
