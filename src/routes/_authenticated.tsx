@@ -30,6 +30,8 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
+import { GlobalSearch } from "@/components/ops/GlobalSearch";
+import { BackupButton } from "@/components/ops/BackupButton";
 
 const STAFF_ROLES = [
   "admin",
@@ -229,6 +231,9 @@ function StaffLayout() {
           </div>
         </Link>
       </div>
+      <div className="px-3 pt-3">
+        <GlobalSearch />
+      </div>
       <nav className="flex-1 space-y-1 overflow-y-auto p-3">
         {visible.map((item) => {
           const active = pathname.startsWith(item.to.split("/").slice(0, 2).join("/"));
@@ -250,6 +255,7 @@ function StaffLayout() {
         })}
       </nav>
       <div className="border-t border-sidebar-border p-4">
+        {roles.includes("admin") && <BackupButton />}
         <div className="mb-3 text-xs">
           <div className="font-semibold text-white">
             {profile?.full_name ?? profile?.email ?? "Staff"}

@@ -24,7 +24,8 @@ import {
 } from "@/components/ui/select";
 import { PageHeader, EmptyState, StatusBadge, statusTone } from "@/components/ops/PageHeader";
 import { openWhatsApp, waTemplates, copyToClipboard } from "@/lib/whatsapp";
-import { Plus, Search, Package as PackageIcon, MessageCircle, Copy, Pencil } from "lucide-react";
+import { Plus, Search, Package as PackageIcon, MessageCircle, Copy, Pencil, ScanLine } from "lucide-react";
+import { BatchIntakeDialog } from "@/components/ops/BatchIntakeDialog";
 import { toast } from "sonner";
 import { getErrorMessage } from "@/lib/errors";
 import { ensureContactShadow } from "@/lib/ensureContactShadow";
@@ -39,6 +40,7 @@ function PackagesPage() {
   const qc = useQueryClient();
   const [search, setSearch] = useState("");
   const [open, setOpen] = useState(false);
+  const [batchOpen, setBatchOpen] = useState(false);
   const [editId, setEditId] = useState<string | null>(null);
 
   const { data: packages, isLoading } = useQuery({
@@ -77,6 +79,20 @@ function PackagesPage() {
         title="Packages"
         description="Every parcel received at our overseas hubs. Weigh, measure, photograph, and consolidate into shipments."
         actions={
+          <div className="flex gap-2">
+          <Dialog open={batchOpen} onOpenChange={setBatchOpen}>
+            <DialogTrigger asChild>
+              <Button variant="outline">
+                <ScanLine className="mr-2 h-4 w-4" /> Batch scan
+              </Button>
+            </DialogTrigger>
+            <BatchIntakeDialog
+              onDone={() => {
+                setBatchOpen(false);
+                qc.invalidateQueries({ queryKey: ["packages"] });
+              }}
+            />
+          </Dialog>
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
               <Button className="bg-brand-orange hover:bg-brand-orange/90">
@@ -90,6 +106,7 @@ function PackagesPage() {
               }}
             />
           </Dialog>
+          </div>
         }
       />
 
