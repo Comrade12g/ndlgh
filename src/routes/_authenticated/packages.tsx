@@ -487,7 +487,7 @@ function EditPackageDialog({ id, onDone }: { id: string; onDone: () => void }) {
       const { data, error } = await supabase
         .from("packages")
         .select(
-          "id, tracking_code, shipping_mark, warehouse_code, supplier_name, description, pieces, weight_kg, length_cm, width_cm, height_cm, external_tracking, notes, status",
+          "id, tracking_code, shipping_mark, warehouse_code, supplier_name, description, pieces, weight_kg, cbm, external_tracking, notes, status",
         )
         .eq("id", id)
         .single();
@@ -503,9 +503,7 @@ function EditPackageDialog({ id, onDone }: { id: string; onDone: () => void }) {
     description: string;
     pieces: number;
     weight_kg: number;
-    length_cm: number;
-    width_cm: number;
-    height_cm: number;
+    cbm: number;
     external_tracking: string;
     notes: string;
   } | null>(null);
@@ -519,9 +517,7 @@ function EditPackageDialog({ id, onDone }: { id: string; onDone: () => void }) {
       description: pkg.description ?? "",
       pieces: pkg.pieces,
       weight_kg: Number(pkg.weight_kg),
-      length_cm: Number(pkg.length_cm ?? 0),
-      width_cm: Number(pkg.width_cm ?? 0),
-      height_cm: Number(pkg.height_cm ?? 0),
+      cbm: Number(pkg.cbm ?? 0),
       external_tracking: pkg.external_tracking ?? "",
       notes: pkg.notes ?? "",
     });
@@ -544,7 +540,6 @@ function EditPackageDialog({ id, onDone }: { id: string; onDone: () => void }) {
         customer_id = data?.id ?? null;
         if (customer_id) await ensureContactShadow(customer_id, data?.full_name, data?.phone);
       }
-      const cbm = (form.length_cm * form.width_cm * form.height_cm) / 1_000_000;
       const patch = {
         shipping_mark: form.shipping_mark.trim().toUpperCase() || null,
         warehouse_code: form.warehouse_code,
@@ -552,10 +547,7 @@ function EditPackageDialog({ id, onDone }: { id: string; onDone: () => void }) {
         description: form.description || null,
         pieces: form.pieces,
         weight_kg: form.weight_kg,
-        length_cm: form.length_cm || null,
-        width_cm: form.width_cm || null,
-        height_cm: form.height_cm || null,
-        cbm,
+        cbm: form.cbm || 0,
         external_tracking: form.external_tracking || null,
         notes: form.notes || null,
         ...(customer_id !== undefined ? { customer_id } : {}),
@@ -578,7 +570,6 @@ function EditPackageDialog({ id, onDone }: { id: string; onDone: () => void }) {
     );
   }
 
-  const cbm = ((form.length_cm * form.width_cm * form.height_cm) / 1_000_000).toFixed(4);
 
   return (
     <DialogContent className="max-w-2xl">
@@ -604,9 +595,9 @@ function EditPackageDialog({ id, onDone }: { id: string; onDone: () => void }) {
           <div className="grid grid-cols-3 gap-3">
             <div className="grid gap-2 col-span-2">
               <Label>Shipping mark</Label>
-              <Input
+              <MarkPicker
                 value={form.shipping_mark}
-                onChange={(e) => setForm({ ...form, shipping_mark: e.target.value })}
+                onChange={(v) => setForm({ ...form, shipping_mark: v })}
               />
             </div>
             <div className="grid gap-2">
@@ -651,7 +642,7 @@ function EditPackageDialog({ id, onDone }: { id: string; onDone: () => void }) {
               onChange={(e) => setForm({ ...form, description: e.target.value })}
             />
           </div>
-          <div className="grid grid-cols-4 gap-3">
+          <div className="grid grid-cols-3 gap-3">
             <div className="grid gap-2">
               <Label>Pieces</Label>
               <Input
@@ -670,32 +661,16 @@ function EditPackageDialog({ id, onDone }: { id: string; onDone: () => void }) {
                 onChange={(e) => setForm({ ...form, weight_kg: Number(e.target.value) })}
               />
             </div>
-            <div className="grid gap-2 col-span-2">
-              <Label>L × W × H (cm)</Label>
-              <div className="flex gap-1">
-                <Input
-                  type="number"
-                  placeholder="L"
-                  value={form.length_cm || ""}
-                  onChange={(e) => setForm({ ...form, length_cm: Number(e.target.value) })}
-                />
-                <Input
-                  type="number"
-                  placeholder="W"
-                  value={form.width_cm || ""}
-                  onChange={(e) => setForm({ ...form, width_cm: Number(e.target.value) })}
-                />
-                <Input
-                  type="number"
-                  placeholder="H"
-                  value={form.height_cm || ""}
-                  onChange={(e) => setForm({ ...form, height_cm: Number(e.target.value) })}
-                />
-              </div>
+            <div className="grid gap-2">
+              <Label>CBM</Label>
+              <Input
+                type="number"
+                step="0.001"
+                min="0"
+                value={form.cbm}
+                onChange={(e) => setForm({ ...form, cbm: Number(e.target.value) })}
+              />
             </div>
-          </div>
-          <div className="rounded-md bg-muted p-3 text-sm">
-            Computed volume: <span className="font-mono font-bold text-brand-navy">{cbm} CBM</span>
           </div>
           <div className="grid gap-2">
             <Label>Notes</Label>
