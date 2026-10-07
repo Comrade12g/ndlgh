@@ -16,9 +16,10 @@ export function customerMark(
   shippingMark: string | null | undefined,
 ): string | null {
   const last3 = lastThreeDigits(shippingMark);
-  if (!last3) return markPrefix ?? null;
+  if (!last3) return null;
   const suffix = shippingMark!.toUpperCase();
-  return markPrefix ? `${markPrefix} — ${suffix}` : suffix;
+  void markPrefix;
+  return suffix;
 }
 
 export type WarehouseForSupplier = {
