@@ -29,9 +29,50 @@ export const getPublicShipmentStatus = createServerFn({ method: "GET" })
       // SECURITY DEFINER RPC while keeping public tracking working.
       const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
       const { data: rows, error } = await supabaseAdmin.rpc("get_public_shipment_status", { _ref: data.ref });
-      if (error) return null;
-      const row = Array.isArray(rows) ? rows[0] : rows;
-      return row ?? null;
+      const row = !error ? (Array.isArray(rows) ? rows[0] : rows) : null;
+      if (row) return row;
+
+      // Fallback: package received at warehouse but not yet loaded into a shipment.
+      const ref = data.ref.replace(/[^A-Z0-9-]/g, "");
+      if (!ref) return null;
+      const { data: pkg } = await supabaseAdmin
+        .from("packages")
+        .select("tracking_code, external_tracking, shipping_mark, pieces, weight_kg, cbm, received_at, updated_at, warehouse_code")
+        .or(`tracking_code.ilike.${ref},external_tracking.ilike.${ref}`)
+        .order("received_at", { ascending: false, nullsFirst: false })
+        .limit(1)
+        .maybeSingle();
+      if (!pkg) return null;
+      let originName: string | null = pkg.warehouse_code;
+      if (pkg.warehouse_code) {
+        const { data: w } = await supabaseAdmin.from("warehouses").select("name").eq("code", pkg.warehouse_code).maybeSingle();
+        originName = w?.name ?? pkg.warehouse_code;
+      }
+      return {
+        ndl_reference: pkg.tracking_code,
+        origin_city: originName,
+        destination_city: "Tema, Ghana",
+        current_milestone: "picked_up",
+        current_eta: null,
+        eta_last_changed_at: null,
+        eta_recently_changed: false,
+        mode: null,
+        matched_mark: pkg.shipping_mark,
+        etd: null,
+        original_eta: null,
+        actual_departure: null,
+        actual_arrival: null,
+        last_checked_at: pkg.updated_at,
+        vessel_or_flight: null,
+        carrier: null,
+        pieces: pkg.pieces,
+        weight_kg: pkg.weight_kg,
+        cbm: pkg.cbm,
+        package_count: 1,
+        received_at: pkg.received_at,
+        awaiting_loading: true,
+      };
+
     } catch (e) {
       console.error("getPublicShipmentStatus failed", e);
       return null;

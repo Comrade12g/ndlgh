@@ -25,6 +25,7 @@ export type CustomerShipment = {
   cbm?: number | string | null;
   package_count?: number | null;
   received_at?: string | null;
+  awaiting_loading?: boolean;
 };
 
 function timeAgo(iso: string): string {
@@ -126,7 +127,9 @@ export function CustomerTrackingCard({ s }: { s: CustomerShipment }) {
       <div className="mt-5 rounded-lg border bg-card/60 p-3">
         <div className="mb-1 text-[11px] uppercase tracking-wider text-muted-foreground">
           Current status:{" "}
-          <span className="font-semibold text-brand-navy">{milestoneLabel(s.current_milestone)}</span>
+          <span className="font-semibold text-brand-navy">
+            {s.awaiting_loading ? "Received at warehouse — awaiting loading" : milestoneLabel(s.current_milestone)}
+          </span>
         </div>
         <MilestoneTimeline current={s.current_milestone} />
       </div>
