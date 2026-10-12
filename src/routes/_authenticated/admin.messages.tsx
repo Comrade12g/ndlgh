@@ -9,6 +9,7 @@ import { PageHeader, EmptyState, StatusBadge } from "@/components/ops/PageHeader
 import { getSmsBalance, sendSms, SMS_CODES } from "@/lib/sms.functions";
 import { openWhatsApp } from "@/lib/whatsapp";
 import { toast } from "sonner";
+import { AiSmsDrafter } from "@/components/ops/AiSmsDrafter";
 import { format } from "date-fns";
 
 export const Route = createFileRoute("/_authenticated/admin/messages")({
@@ -125,6 +126,8 @@ function MessageLogPage() {
           <Button onClick={sendTest} disabled={testBusy}>{testBusy ? "Sending…" : "Send test"}</Button>
         </div>
       </Card>
+
+      <AiSmsDrafter onSent={() => qc.invalidateQueries()} />
 
       <div className="flex flex-wrap items-center gap-2">
         {(["all", "failed", "sent", "pending"] as const).map((f) => (
