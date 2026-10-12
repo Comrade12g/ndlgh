@@ -31,7 +31,7 @@ export function TrackingLookup({ variant = "hero" }: { variant?: "hero" | "page"
           value={code}
           onChange={(e) => setCode(e.target.value)}
           placeholder="NDL-CN-#####, ND#### or supplier tracking no."
-          className="border-0 bg-transparent font-mono uppercase tracking-wider shadow-none focus-visible:ring-0"
+          className="border-0 bg-transparent font-mono uppercase tracking-wider text-brand-navy caret-brand-orange placeholder:normal-case placeholder:text-brand-navy/50 shadow-none focus-visible:ring-0"
         />
       </div>
       <Button type="submit" className="bg-brand-orange text-white hover:bg-brand-orange/90">
