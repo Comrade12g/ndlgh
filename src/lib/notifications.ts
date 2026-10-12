@@ -12,6 +12,7 @@
 import { supabase } from "@/integrations/supabase/client";
 import { openWhatsApp } from "@/lib/whatsapp";
 import { toast } from "sonner";
+import { sendSms } from "@/lib/sms.functions";
 
 export type NotificationEvent =
   | "package_received"
@@ -71,7 +72,18 @@ export async function notifyCustomer(input: NotifyInput): Promise<string | null>
     console.error("notifyCustomer log failed", error);
   }
 
-  if (input.autoOpen !== false && input.phone) {
+  // Automatic SMS via BulkSMS Ghana (logged + status updated on the row).
+  if (input.phone) {
+    sendSms({ data: { notificationId: data?.id, phone: input.phone, message: input.message } })
+      .then((r) => {
+        if (r.ok) toast.success("SMS sent to customer");
+        else toast.error(`SMS failed: ${r.reason}`);
+      })
+      .catch((e) => console.error("SMS send failed", e));
+  }
+
+  // WhatsApp is now opt-in (SMS is automatic).
+  if (input.autoOpen === true && input.phone) {
     const opened = openWhatsApp(input.phone, input.message);
     if (opened && data?.id) {
       // Mark clicked (best effort)
