@@ -37,6 +37,20 @@ function MessageLogPage() {
   const [filter, setFilter] = useState<"all" | "failed" | "sent" | "pending">("all");
   const [q, setQ] = useState("");
   const [busy, setBusy] = useState<string | null>(null);
+  const [testPhone, setTestPhone] = useState("0500229352");
+  const [testMsg, setTestMsg] = useState("NDL test message — your SMS notifications are working.");
+  const [testBusy, setTestBusy] = useState(false);
+
+  async function sendTest() {
+    if (!testPhone.trim()) return toast.error("Enter a phone number");
+    setTestBusy(true);
+    try {
+      const res = await sendSms({ data: { phone: testPhone.trim(), message: testMsg } });
+      res.ok
+        ? toast.success(`Test SMS sent to ${testPhone} (code ${res.code})`)
+        : toast.error(`Failed: ${res.reason} (code ${res.code})`);
+    } finally { setTestBusy(false); }
+  }
 
   const balance = useQuery({ queryKey: ["sms-balance"], queryFn: () => getSmsBalance() });
   const { data, isLoading } = useQuery({
