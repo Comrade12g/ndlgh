@@ -170,6 +170,7 @@ const NAV: NavItem[] = [
   { to: "/admin/gallery", label: "Gallery", icon: Settings, roles: ["admin"] },
   { to: "/admin/guides", label: "Guides CMS", icon: FileText, roles: ["admin"] },
   { to: "/admin/audit", label: "Invite log", icon: Settings, roles: ["admin"] },
+  { to: "/admin/messages", label: "Message log", icon: Settings, roles: ["admin"] },
 ];
 
 function StaffLayout() {
