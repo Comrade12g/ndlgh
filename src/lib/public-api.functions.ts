@@ -30,7 +30,15 @@ export const getPublicShipmentStatus = createServerFn({ method: "GET" })
       const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
       const { data: rows, error } = await supabaseAdmin.rpc("get_public_shipment_status", { _ref: data.ref });
       const row = !error ? (Array.isArray(rows) ? rows[0] : rows) : null;
-      if (row) return row;
+      if (row) {
+        // A container holds many customers' cargo: never send the number of
+        // packages loaded, nor the container's combined weight/volume, which
+        // is only what the whole groupage lot adds up to.
+        const { package_count: _package_count, ...safe } = row;
+        void _package_count;
+        if (!safe.matched_mark) return { ...safe, pieces: null, weight_kg: null, cbm: null };
+        return safe;
+      }
 
       // Fallback: package received at warehouse but not yet loaded into a shipment.
       const ref = data.ref.replace(/[^A-Z0-9-]/g, "");
@@ -68,7 +76,6 @@ export const getPublicShipmentStatus = createServerFn({ method: "GET" })
         pieces: pkg.pieces,
         weight_kg: pkg.weight_kg,
         cbm: pkg.cbm,
-        package_count: 1,
         received_at: pkg.received_at,
         awaiting_loading: true,
       };

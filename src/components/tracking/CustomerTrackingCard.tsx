@@ -23,7 +23,6 @@ export type CustomerShipment = {
   pieces?: number | null;
   weight_kg?: number | string | null;
   cbm?: number | string | null;
-  package_count?: number | null;
   received_at?: string | null;
   awaiting_loading?: boolean;
 };
@@ -148,7 +147,6 @@ export function CustomerTrackingCard({ s }: { s: CustomerShipment }) {
           <Field label="Arrived destination" value={fmtDate(s.actual_arrival)} />
           <Field label={s.mode === "air" ? "Flight" : "Vessel / voyage"} value={s.vessel_or_flight || "—"} />
           <Field label="Carrier" value={s.carrier || "NDL Cargo"} />
-          <Field label="Packages in shipment" value={s.package_count ? String(s.package_count) : "—"} />
           <Field label="Pieces" value={s.pieces ? String(s.pieces) : "—"} />
           <Field label="Weight" value={num(s.weight_kg) === "—" ? "—" : `${num(s.weight_kg)} kg`} />
           <Field label="Volume" value={num(s.cbm, 3) === "—" ? "—" : `${num(s.cbm, 3)} CBM`} />
