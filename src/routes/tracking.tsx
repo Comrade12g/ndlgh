@@ -35,7 +35,7 @@ function TrackingPage() {
           <div className="mt-8">
             <TrackingLookup variant="page" />
           </div>
-          <p className="mt-3 text-xs text-white/50">Example: NDL-CN-00042 or ND0108</p>
+          <p className="mt-3 text-xs text-white/50">Example: NDL-CN-00042, ND0108 or your China courier tracking number</p>
         </div>
       </section>
 
