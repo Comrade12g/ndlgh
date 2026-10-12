@@ -1,0 +1,13 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1791806716321,
+      "tag": "0000_sync_milestone_and_fix_excel_cron",
+      "breakpoints": true
+    }
+  ]
+}
