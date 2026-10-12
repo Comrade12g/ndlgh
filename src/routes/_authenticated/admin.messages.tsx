@@ -114,6 +114,18 @@ function MessageLogPage() {
         </Card>
       </div>
 
+      <Card className="p-4 space-y-3">
+        <div className="font-medium text-brand-navy">Send a test SMS</div>
+        <p className="text-sm text-muted-foreground">
+          Verify the BulkSMS connection and the approved NDL sender ID before relying on automated notifications. This sends a real text and uses one credit.
+        </p>
+        <div className="flex flex-wrap gap-2">
+          <Input placeholder="Phone e.g. 0500229352" value={testPhone} onChange={(e) => setTestPhone(e.target.value)} className="max-w-[220px]" />
+          <Input placeholder="Message" value={testMsg} onChange={(e) => setTestMsg(e.target.value)} className="flex-1 min-w-[240px]" />
+          <Button onClick={sendTest} disabled={testBusy}>{testBusy ? "Sending…" : "Send test"}</Button>
+        </div>
+      </Card>
+
       <div className="flex flex-wrap items-center gap-2">
         {(["all", "failed", "sent", "pending"] as const).map((f) => (
           <Button key={f} size="sm" variant={filter === f ? "default" : "outline"} onClick={() => setFilter(f)} className="capitalize">{f}</Button>
