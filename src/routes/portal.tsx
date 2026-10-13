@@ -236,7 +236,9 @@ function PortalPage() {
             {warehouses
               ?.filter((w) => w.code !== "GH")
               .map((w) => {
-                const mark = customerMark(w.mark_prefix, profile?.shipping_mark ?? null);
+                const isAir = w.code === "WP";
+                const baseMark = customerMark(w.mark_prefix, profile?.shipping_mark ?? null);
+                const mark = isAir && baseMark ? `【WP-${baseMark}】` : baseMark;
                 const hasDetails = Boolean(w.mark_prefix && (w.address || w.address_local));
                 if (!hasDetails) {
                   return (
@@ -253,7 +255,14 @@ function PortalPage() {
                     </Card>
                   );
                 }
-                const supplierText = [
+                const supplierText = isAir
+                  ? [
+                      `${mark ?? "【WP-ND####】"} ${profile?.full_name ?? "CLIENT NAME"} ${w.phones ?? ""}`.trim(),
+                      w.address_local,
+                    ]
+                      .filter(Boolean)
+                      .join("\n")
+                  : [
                   `${w.name}${w.name_local ? ` (${w.name_local})` : ""}`,
                   mark ? `Mark: ${mark}` : null,
                   w.address_local ?? w.address,
