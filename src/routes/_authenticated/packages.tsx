@@ -302,6 +302,9 @@ function IntakePackageDialog({ onDone }: { onDone: () => void }) {
   });
   const [consolidate, setConsolidate] = useState(false);
   const [rate, setRate] = useState("");
+  const [airCategory, setAirCategory] = useState<"normal" | "special">("normal");
+  const isAir = form.warehouse_code === "WP";
+  const airRate = airCategory === "special" ? 25 : 20;
   const trackingText = form.external_tracking
     .split(/[\n,;]+/)
     .map((s) => s.trim())
@@ -318,7 +321,8 @@ function IntakePackageDialog({ onDone }: { onDone: () => void }) {
 
   const mut = useMutation({
     mutationFn: async () => {
-      if (rate === "" || Number(rate) <= 0) throw new Error("Enter the rate (USD per CBM) for this item.");
+      if (isAir && !(form.weight_kg > 0)) throw new Error("Enter the weight (kg) for this air parcel.");
+      if (!isAir && (rate === "" || Number(rate) <= 0)) throw new Error("Enter the rate (USD per CBM) for this item.");
       // Look up customer by shipping_mark
       let customer_id: string | null = null;
       let customer: { id: string; full_name: string | null; phone: string | null } | null = null;
@@ -363,7 +367,11 @@ function IntakePackageDialog({ onDone }: { onDone: () => void }) {
       );
       // Auto-trigger WhatsApp notification for the customer
       if (res.matched && res.customer && res.package) {
-        const msg = waTemplates.packageReceived(
+        const first = (res.customer.full_name ?? "there").split(" ")[0];
+        const mark = form.shipping_mark.trim().toUpperCase();
+        const msg = isAir
+          ? `Hello ${first}, your air cargo parcel has arrived at NDL Accra! Weight: ${form.weight_kg} kg (${airCategory === "special" ? "Special" : "Normal"} goods). Total: $${(airRate * form.weight_kg).toFixed(2)}. Mark: ${mark}. Ref: ${res.package.tracking_code}. WhatsApp 0500229352 for collection or delivery. - NDL`
+          : waTemplates.packageReceived(
           res.customer.full_name ?? "there",
           res.package.tracking_code,
           res.warehouse,
@@ -506,6 +514,31 @@ function IntakePackageDialog({ onDone }: { onDone: () => void }) {
           </div>
         </div>
 
+        {isAir ? (
+          <div className="grid grid-cols-2 gap-3 rounded-md border border-brand-sky/40 bg-brand-sky/5 p-3">
+            <div className="grid gap-2">
+              <Label>Air cargo type</Label>
+              <Select value={airCategory} onValueChange={(v) => setAirCategory(v as "normal" | "special")}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="normal">Normal goods — $20/kg</SelectItem>
+                  <SelectItem value="special">Special goods — $25/kg</SelectItem>
+                </SelectContent>
+              </Select>
+              <span className="text-[11px] text-muted-foreground">
+                Air parcels are recorded on arrival in Accra. Customer gets an SMS right away.
+              </span>
+            </div>
+            <div className="grid gap-1 content-center">
+              <span className="text-xs text-muted-foreground">Invoice amount</span>
+              <span className="font-mono text-xl font-bold text-brand-navy">
+                ${(airRate * (form.weight_kg || 0)).toFixed(2)}
+              </span>
+            </div>
+          </div>
+        ) : (
         <div className="grid grid-cols-2 gap-3 rounded-md border border-brand-orange/40 bg-brand-orange/5 p-3">
           <div className="grid gap-2">
             <Label>Rate (USD per CBM)</Label>
@@ -528,6 +561,7 @@ function IntakePackageDialog({ onDone }: { onDone: () => void }) {
             </span>
           </div>
         </div>
+        )}
 
         <div className="grid gap-2">
           <Label>Notes</Label>
