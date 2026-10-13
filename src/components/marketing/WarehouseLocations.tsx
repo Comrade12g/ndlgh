@@ -104,8 +104,10 @@ export function WarehouseLocations() {
                   <div className="text-[11px] uppercase tracking-widest text-muted-foreground">
                     入库唛头 / Intake mark
                   </div>
-                  <div className="font-mono text-lg font-extrabold text-brand-navy">
-                    {h.code === "WP" ? "【WP-ND****】 CLIENT NAME 13428888064" : "ND****"}
+                  <div className="font-mono text-sm font-extrabold leading-snug text-brand-navy">
+                    {h.code === "WP"
+                      ? "【WP-ND****】CLIENT NAME 13428888064 广东省广州市越秀区广园西路94号迦南地国际采购中心1楼1037铺"
+                      : "ND****"}
                   </div>
                 </div>
               )}

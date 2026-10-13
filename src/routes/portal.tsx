@@ -269,11 +269,12 @@ function PortalPage() {
                 }
                 const supplierText = isAir
                   ? [
-                      `${mark ?? "【WP-ND####】"} ${profile?.full_name ?? "CLIENT NAME"} ${w.phones ?? ""}`.trim(),
+                      `${mark ?? "【WP-ND####】"}${profile?.full_name ?? "CLIENT NAME"}`,
+                      w.phones,
                       w.address_local,
                     ]
                       .filter(Boolean)
-                      .join("\n")
+                      .join(" ")
                   : [
                   `${w.name}${w.name_local ? ` (${w.name_local})` : ""}`,
                   mark ? `Mark: ${mark}` : null,
