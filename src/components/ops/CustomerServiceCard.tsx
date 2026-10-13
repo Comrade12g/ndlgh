@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { StatusBadge, statusTone } from "@/components/ops/PageHeader";
 import { PendingNotifications, eventLabel } from "@/components/ops/PendingNotifications";
-import { buildSupplierText, customerMark } from "@/lib/warehouse-mark";
+import { buildSupplierText, customerMark, airMark } from "@/lib/warehouse-mark";
 import { notifyCustomer } from "@/lib/notifications";
 import { copyToClipboard } from "@/lib/whatsapp";
 import { toast } from "sonner";
@@ -123,7 +123,7 @@ export function CustomerServiceCard({ c, onBack }: { c: CsCustomer; onBack: () =
       label: "Warehouse address",
       text: () =>
         `Hi ${name}, here is our China warehouse address. Please give it to your supplier with your mark:\n\n${(data?.warehouses ?? [])
-          .map((w) => buildSupplierText(w, c.shipping_mark))
+          .map((w) => buildSupplierText(w, c.shipping_mark, c.full_name))
           .join("\n\n")}\n${SIGNOFF}`,
     },
     { label: "Ready for pickup", text: () => `Hi ${name}, your goods are ready for pickup/delivery in Accra. Reply here to arrange.\n${SIGNOFF}` },
@@ -296,12 +296,24 @@ export function CustomerServiceCard({ c, onBack }: { c: CsCustomer; onBack: () =
               )}
               <div className="rounded-lg border border-dashed border-brand-orange/40 bg-brand-orange/5 p-3">
                 <div className="font-semibold text-brand-navy">{w.name}</div>
-                <div className="font-mono text-sm font-bold text-brand-orange">{customerMark(w.mark_prefix, c.shipping_mark)}</div>
+                <div className="font-mono text-sm font-bold text-brand-orange">
+                  {w.code === "WP" ? airMark(c.shipping_mark) : customerMark(w.mark_prefix, c.shipping_mark)}
+                </div>
                 <div className="mt-2 flex gap-2">
-                  <Button size="sm" variant="outline" onClick={() => copy(customerMark(w.mark_prefix, c.shipping_mark) ?? "")}>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() =>
+                      copy(w.code === "WP" ? airMark(c.shipping_mark) : (customerMark(w.mark_prefix, c.shipping_mark) ?? ""))
+                    }
+                  >
                     <Copy className="mr-1 h-4 w-4" /> Copy mark
                   </Button>
-                  <Button size="sm" className="bg-brand-navy hover:bg-brand-navy/90" onClick={() => copy(buildSupplierText(w, c.shipping_mark))}>
+                  <Button
+                    size="sm"
+                    className="bg-brand-navy hover:bg-brand-navy/90"
+                    onClick={() => copy(buildSupplierText(w, c.shipping_mark, c.full_name))}
+                  >
                     <Copy className="mr-1 h-4 w-4" /> Copy for supplier
                   </Button>
                 </div>
