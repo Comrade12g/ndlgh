@@ -351,6 +351,10 @@ function PortalPage() {
                 );
               })}
           </div>
+          </div>
+            );
+          })}
+
 
           {warehouses
             ?.filter((w) => w.code === "GH")
