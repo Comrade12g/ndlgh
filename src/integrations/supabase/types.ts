@@ -753,6 +753,7 @@ export type Database = {
       }
       packages: {
         Row: {
+          air_category: string | null
           cbm: number
           created_at: string
           customer_id: string | null
@@ -780,6 +781,7 @@ export type Database = {
           width_cm: number | null
         }
         Insert: {
+          air_category?: string | null
           cbm?: number
           created_at?: string
           customer_id?: string | null
@@ -807,6 +809,7 @@ export type Database = {
           width_cm?: number | null
         }
         Update: {
+          air_category?: string | null
           cbm?: number
           created_at?: string
           customer_id?: string | null

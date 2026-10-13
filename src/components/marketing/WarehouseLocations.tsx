@@ -39,6 +39,17 @@ export const WAREHOUSE_HUBS: Hub[] = [
     hours: "Mon–Sat, 9:00–18:00 (holidays notified separately)",
     phones: "伊妙 18857959183 / 小陈 15557941791",
   },
+  {
+    code: "WP",
+    name: "NDL Air Cargo — Guangzhou",
+    nameLocal: "迦南地国际采购中心",
+    city: "Air · Guangzhou",
+    markPrefix: "WP",
+    addressLocal: "广东省广州市越秀区广园西路94号迦南地国际采购中心1楼1037铺",
+    address:
+      "Shop 1037, 1st Floor, Canaan International Procurement Center, 94 Guangyuan West Road, Yuexiu District, Guangzhou. Air rates: Normal goods $20/kg, Special goods $25/kg, 10–14 days.",
+    phones: "13428888064",
+  },
 ];
 
 const OTHER_ORIGINS: { country: string }[] = [
@@ -94,7 +105,7 @@ export function WarehouseLocations() {
                     入库唛头 / Intake mark
                   </div>
                   <div className="font-mono text-lg font-extrabold text-brand-navy">
-                    ND****
+                    {h.code === "WP" ? "【WP-ND****】 CLIENT NAME 13428888064" : "ND****"}
                   </div>
                 </div>
               )}
