@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { StatusBadge, statusTone } from "@/components/ops/PageHeader";
 import { PendingNotifications, eventLabel } from "@/components/ops/PendingNotifications";
-import { buildSupplierText, customerMark } from "@/lib/warehouse-mark";
+import { buildSupplierText, customerMark, airMark } from "@/lib/warehouse-mark";
 import { notifyCustomer } from "@/lib/notifications";
 import { copyToClipboard } from "@/lib/whatsapp";
 import { toast } from "sonner";
@@ -123,7 +123,7 @@ export function CustomerServiceCard({ c, onBack }: { c: CsCustomer; onBack: () =
       label: "Warehouse address",
       text: () =>
         `Hi ${name}, here is our China warehouse address. Please give it to your supplier with your mark:\n\n${(data?.warehouses ?? [])
-          .map((w) => buildSupplierText(w, c.shipping_mark))
+          .map((w) => buildSupplierText(w, c.shipping_mark, c.full_name))
           .join("\n\n")}\n${SIGNOFF}`,
     },
     { label: "Ready for pickup", text: () => `Hi ${name}, your goods are ready for pickup/delivery in Accra. Reply here to arrange.\n${SIGNOFF}` },
