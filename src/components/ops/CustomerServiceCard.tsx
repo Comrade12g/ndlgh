@@ -285,8 +285,16 @@ export function CustomerServiceCard({ c, onBack }: { c: CsCustomer; onBack: () =
         <Card className="p-4">
           <SectionTitle icon={MapPin} title="Warehouse address for supplier" />
           <div className="space-y-3">
-            {(data?.warehouses ?? []).map((w) => (
-              <div key={w.code} className="rounded-lg border border-dashed border-brand-orange/40 bg-brand-orange/5 p-3">
+            {[...(data?.warehouses ?? []).filter((w) => w.code !== "WP"), ...(data?.warehouses ?? []).filter((w) => w.code === "WP")].map((w) => (
+              <div key={w.code}>
+              {w.code === "WP" && (
+                <div className="my-4 flex items-center gap-3">
+                  <div className="h-px flex-1 bg-border" />
+                  <span className="text-xs font-bold uppercase tracking-widest text-brand-orange">✈ Air cargo</span>
+                  <div className="h-px flex-1 bg-border" />
+                </div>
+              )}
+              <div className="rounded-lg border border-dashed border-brand-orange/40 bg-brand-orange/5 p-3">
                 <div className="font-semibold text-brand-navy">{w.name}</div>
                 <div className="font-mono text-sm font-bold text-brand-orange">{customerMark(w.mark_prefix, c.shipping_mark)}</div>
                 <div className="mt-2 flex gap-2">
@@ -297,6 +305,7 @@ export function CustomerServiceCard({ c, onBack }: { c: CsCustomer; onBack: () =
                     <Copy className="mr-1 h-4 w-4" /> Copy for supplier
                   </Button>
                 </div>
+              </div>
               </div>
             ))}
           </div>

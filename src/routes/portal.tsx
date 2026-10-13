@@ -232,10 +232,22 @@ function PortalPage() {
             Send this warehouse address and your mark to your supplier. Every carton must show the
             mark exactly as written below.
           </p>
+          {[false, true].map((airGroup) => {
+            const list = (warehouses ?? []).filter((w) => w.code !== "GH" && (w.code === "WP") === airGroup);
+            if (!list.length) return null;
+            return (
+          <div key={String(airGroup)}>
+          {airGroup ? (
+            <div className="my-8 flex items-center gap-3">
+              <div className="h-px flex-1 bg-border" />
+              <span className="font-display text-sm font-bold uppercase tracking-widest text-brand-orange">✈ Air cargo address</span>
+              <div className="h-px flex-1 bg-border" />
+            </div>
+          ) : (
+            <div className="mb-3 text-sm font-bold uppercase tracking-widest text-brand-navy">🚢 Sea freight warehouses</div>
+          )}
           <div className="grid gap-4 md:grid-cols-2">
-            {warehouses
-              ?.filter((w) => w.code !== "GH")
-              .map((w) => {
+            {list.map((w) => {
                 const isAir = w.code === "WP";
                 const baseMark = customerMark(w.mark_prefix, profile?.shipping_mark ?? null);
                 const mark = isAir && baseMark ? `【WP-${baseMark}】` : baseMark;
@@ -339,6 +351,10 @@ function PortalPage() {
                 );
               })}
           </div>
+          </div>
+            );
+          })}
+
 
           {warehouses
             ?.filter((w) => w.code === "GH")
