@@ -306,6 +306,7 @@ export function CustomerServiceCard({ c, onBack }: { c: CsCustomer; onBack: () =
                   </Button>
                 </div>
               </div>
+              </div>
             ))}
           </div>
         </Card>
