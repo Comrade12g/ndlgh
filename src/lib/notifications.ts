@@ -26,7 +26,8 @@ export type NotificationEvent =
   | "delivery_delivered"
   | "delivery_failed"
   | "payment_received"
-  | "custom_message";
+  | "custom_message"
+  | "customer_onboarded";
 
 export type NotifyInput = {
   customerId: string | null | undefined;

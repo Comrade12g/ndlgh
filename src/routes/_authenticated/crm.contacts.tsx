@@ -28,6 +28,7 @@ import { recordInviteWhatsapp } from "@/lib/invite-audit";
 import { Plus, Search, Mail, Phone, KeyRound, MessageCircle } from "lucide-react";
 import { toast } from "sonner";
 import { getErrorMessage } from "@/lib/errors";
+import { notifyCustomer } from "@/lib/notifications";
 
 export const Route = createFileRoute("/_authenticated/crm/contacts")({
   component: ContactsPage,
@@ -199,11 +200,18 @@ function CreateCustomerLoginDialog({
       });
       if (error) throw error;
       if (data?.error) throw new Error(data.error);
-      return data as { phone: string; tempPassword: string; shippingMark: string | null; auditId: string | null };
+      return data as { userId: string; phone: string; tempPassword: string; shippingMark: string | null; auditId: string | null };
     },
     onSuccess: (data) => {
       toast.success("Login created");
       setResult(data);
+      const local = data.phone.replace(/^\+233/, "0");
+      void notifyCustomer({
+        customerId: data.userId,
+        phone: data.phone,
+        event: "customer_onboarded",
+        message: `Thank you for registering with NDL (Next Day Logistics)!\nEntry number: ${data.shippingMark ?? "-"}\nLogin: https://ndlgh.susuboxgh.com/auth\nPhone: ${local}\nTemporary password: ${data.tempPassword}\nContact 0500229352 on WhatsApp for any assistance.`,
+      });
     },
     onError: (e) => toast.error(getErrorMessage(e)),
   });
