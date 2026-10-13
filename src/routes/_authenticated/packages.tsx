@@ -348,11 +348,12 @@ function IntakePackageDialog({ onDone }: { onDone: () => void }) {
           pieces: form.pieces,
           weight_kg: form.weight_kg,
           cbm: form.cbm || 0,
-          rate_per_cbm: rate === "" ? null : Number(rate),
+          rate_per_cbm: isAir || rate === "" ? null : Number(rate),
+          air_category: isAir ? airCategory : null,
           external_tracking: trackingText || null,
           notes: [consolidate ? "Consolidated" : "", form.notes].filter(Boolean).join(" — ") || null,
           received_by: u.user?.id,
-          status: "received",
+          status: isAir ? "arrived_gh" : "received",
         })
         .select("id, tracking_code")
         .single();
