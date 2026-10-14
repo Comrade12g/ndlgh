@@ -276,15 +276,13 @@ function PortalPage() {
                       .filter(Boolean)
                       .join(" ")
                   : [
-                  `${w.name}${w.name_local ? ` (${w.name_local})` : ""}`,
-                  mark ? `Mark: ${mark}` : null,
+                  `${w.name.replace(/^NDL\s+/i, "")}${w.name_local ? ` (${w.name_local})` : ""}`,
+                  `Mark: ${mark ?? "ND####"} ${profile?.full_name ?? "CLIENT NAME"}`,
                   w.address_local ?? w.address,
-                  w.address_local && w.address ? w.address : null,
-                  w.receiving_hours ? `Hours: ${w.receiving_hours}` : null,
                   w.phones ? `Tel: ${w.phones}` : null,
                 ]
                   .filter(Boolean)
-                  .join("\n");
+                  .join("\n\n");
                 return (
                   <Card key={w.code} className="p-5">
                     <div className="mb-2 flex items-start justify-between gap-3">
