@@ -54,15 +54,20 @@ export function buildSupplierText(
     const rest = [w.phones, w.address_local ?? w.address].filter(Boolean).join(" ");
     return rest ? `${mark}${name} ${rest}` : `${mark}${name}`;
   }
-  const mark = customerMark(w.mark_prefix, shippingMark);
+  // Exact client format:
+  // Guangzhou / Foshan Warehouse (广州伊妙仓库)
+  // Mark: ND0060 customer name
+  // <Chinese address>
+  // Tel: <phones>
+  const mark = customerMark(w.mark_prefix, shippingMark) ?? "ND####";
+  const title = w.name.replace(/^NDL\s+/i, "");
+  const name = clientName?.trim() || "CLIENT NAME";
   return [
-    `${w.name}${w.name_local ? ` (${w.name_local})` : ""}`,
-    mark ? `Mark: ${mark}` : null,
+    `${title}${w.name_local ? ` (${w.name_local})` : ""}`,
+    `Mark: ${mark} ${name}`,
     w.address_local ?? w.address,
-    w.address_local && w.address ? w.address : null,
-    w.receiving_hours ? `Hours: ${w.receiving_hours}` : null,
     w.phones ? `Tel: ${w.phones}` : null,
   ]
     .filter(Boolean)
-    .join("\n");
+    .join("\n\n");
 }
