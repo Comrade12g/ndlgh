@@ -210,14 +210,14 @@ function CreateCustomerLoginDialog({
         customerId: data.userId,
         phone: data.phone,
         event: "customer_onboarded",
-        message: `Thank you for registering with NDL (Next Day Logistics)!\nEntry number: ${data.shippingMark ?? "-"}\nLogin: https://www.ndlgh.com/auth\nPhone: ${local}\nTemporary password: ${data.tempPassword}\nContact 0500229352 on WhatsApp for any assistance.`,
+        message: `Thank you for registering with NDL (Next Day Logistics)!\nEntry number: ${data.shippingMark ?? "-"}\nLogin: https://www.ndlgh.com/auth\nPhone: ${local}\nTemporary password: ${data.tempPassword}\n\n— NDL (Next Day Logistics)\nPortal: https://www.ndlgh.com/portal\nWhatsApp: 0500229352`,
       });
     },
     onError: (e) => toast.error(getErrorMessage(e)),
   });
 
   if (result) {
-    const message = `Hi ${contact.full_name}, welcome to NDL Ghana! Your shipping mark is ${result.shippingMark ?? "—"}.\n\nLog in to your customer portal with:\nPhone: ${result.phone}\nPassword: ${result.tempPassword}\n\nPlease change your password after your first login. — NDL Global Shipping`;
+    const message = `Hi ${contact.full_name}, welcome to NDL Ghana! Your shipping mark is ${result.shippingMark ?? "—"}.\n\nLog in to your customer portal with:\nPhone: ${result.phone}\nPassword: ${result.tempPassword}\n\nPlease change your password after your first login.\n\n— NDL (Next Day Logistics)\nPortal: https://www.ndlgh.com/portal\nWhatsApp: 0500229352`;
     return (
       <DialogContent className="max-w-md">
         <DialogHeader>

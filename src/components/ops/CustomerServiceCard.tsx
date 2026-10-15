@@ -14,7 +14,7 @@ import { ArrowLeft, Copy, MessageCircle, Phone, Package, Receipt, Ship, Truck, M
 
 export type CsCustomer = { id: string; full_name: string | null; phone: string | null; shipping_mark: string };
 
-const SIGNOFF = "— NDL Global Shipping";
+const SIGNOFF = "— NDL (Next Day Logistics)\nPortal: https://www.ndlgh.com/portal\nWhatsApp: 0500229352";
 
 export function CustomerServiceCard({ c, onBack }: { c: CsCustomer; onBack: () => void }) {
   const qc = useQueryClient();

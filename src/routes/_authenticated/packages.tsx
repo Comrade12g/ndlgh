@@ -371,7 +371,7 @@ function IntakePackageDialog({ onDone }: { onDone: () => void }) {
         const first = (res.customer.full_name ?? "there").split(" ")[0];
         const mark = form.shipping_mark.trim().toUpperCase();
         const msg = isAir
-          ? `Hello ${first}, your air cargo parcel has arrived at NDL Accra! Weight: ${form.weight_kg} kg (${airCategory === "special" ? "Special" : "Normal"} goods). Total: $${(airRate * form.weight_kg).toFixed(2)}. Mark: ${mark}. Ref: ${res.package.tracking_code}. WhatsApp 0500229352 for collection or delivery. - NDL`
+          ? `Hello ${first}, your air cargo parcel has arrived at NDL Accra! Weight: ${form.weight_kg} kg (${airCategory === "special" ? "Special" : "Normal"} goods). Total: $${(airRate * form.weight_kg).toFixed(2)}. Mark: ${mark}. Ref: ${res.package.tracking_code}. Reply on WhatsApp to arrange collection or delivery.\n\n— NDL (Next Day Logistics)\nPortal: https://www.ndlgh.com/portal\nWhatsApp: 0500229352`
           : waTemplates.packageReceived(
           res.customer.full_name ?? "there",
           res.package.tracking_code,

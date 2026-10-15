@@ -48,7 +48,7 @@ export async function copyToClipboard(text: string): Promise<boolean> {
   }
 }
 
-const SIGNOFF = "— NDL Global Shipping";
+export const SIGNOFF = "— NDL (Next Day Logistics)\nPortal: https://www.ndlgh.com/portal\nWhatsApp: 0500229352";
 
 /** Customer-facing links always use the official domain, whatever address staff work from. */
 function appOrigin(): string {
