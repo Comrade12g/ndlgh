@@ -80,6 +80,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { name: "google-site-verification", content: "EjsUT4_PS35Pz0djhdJd8Z8i7LYL4-di-5yStfVaB10" },
+      { name: "google-site-verification", content: "S9cAwK3V0XhiqJyaB6tswU3_Ke-B4iL5pObFtK2PR78" },
       { title: "NDL Cargo Ghana — China, Dubai, Thailand, Canada & US to Ghana Shipping" },
       {
         name: "description",
