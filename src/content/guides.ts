@@ -485,7 +485,7 @@ export const GUIDES: Guide[] = [
   },
 ];
 
-export const SITE_URL = "https://ndlgh.susuboxgh.com";
+export const SITE_URL = "https://www.ndlgh.com";
 
 export function getGuide(slug: string) {
   return GUIDES.find((g) => g.slug === slug);

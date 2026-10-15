@@ -3,7 +3,7 @@ import type {} from "@tanstack/react-start";
 import { GUIDE_CATEGORIES, mergeGuides, type Guide } from "@/content/guides";
 import { listPublishedGuides } from "@/lib/guides.functions";
 
-const BASE_URL = "https://ndlgh.susuboxgh.com";
+const BASE_URL = "https://www.ndlgh.com";
 
 interface SitemapEntry {
   path: string;

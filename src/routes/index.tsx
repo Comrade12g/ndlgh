@@ -39,12 +39,12 @@ export const Route = createFileRoute("/")({
       { property: "og:title", content: "NDL Cargo Ghana — Global freight, delivered to your door" },
       { property: "og:description", content: "Sea LCL/FCL, air, customs clearing and Ghana-wide last-mile delivery from China, Dubai, Thailand, Canada and the US. Instant quotes and live shipment tracking." },
       { property: "og:type", content: "website" },
-      { property: "og:image", content: `https://ndlgh.susuboxgh.com${IMG.seaTema}` },
+      { property: "og:image", content: `https://www.ndlgh.com${IMG.seaTema}` },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:image", content: `https://ndlgh.susuboxgh.com${IMG.seaTema}` },
+      { name: "twitter:image", content: `https://www.ndlgh.com${IMG.seaTema}` },
     ],
     links: [
-      { rel: "canonical", href: "https://ndlgh.susuboxgh.com/" },
+      { rel: "canonical", href: "https://www.ndlgh.com/" },
       // Preload the LCP hero image so it paints as fast as possible.
       { rel: "preload", as: "image", href: IMG.seaTema },
     ],
@@ -156,7 +156,7 @@ function GallerySection() {
     const origin =
       typeof window !== "undefined"
         ? window.location.origin
-        : "https://ndlgh.susuboxgh.com";
+        : "https://www.ndlgh.com";
     return {
       "@context": "https://schema.org",
       "@type": "ImageGallery",
@@ -802,13 +802,13 @@ function JsonLd() {
   const org = {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
-    "@id": "https://ndlgh.susuboxgh.com/#business",
+    "@id": "https://www.ndlgh.com/#business",
     name: "NDL Cargo Ghana",
     alternateName: "NDL Ghana",
     description:
       "Licensed freight forwarder shipping sea LCL/FCL, air cargo and door-to-door parcels from China, Dubai, Thailand, Canada and the US to Ghana, with in-house customs clearing at Tema Port.",
-    image: "https://ndlgh.susuboxgh.com/favicon.png",
-    logo: "https://ndlgh.susuboxgh.com/favicon.png",
+    image: "https://www.ndlgh.com/favicon.png",
+    logo: "https://www.ndlgh.com/favicon.png",
     address: {
       "@type": "PostalAddress",
       streetAddress: NDL_ADDRESS,
@@ -818,7 +818,7 @@ function JsonLd() {
     },
     telephone: NDL_PHONE,
     email: NDL_EMAIL,
-    url: "https://ndlgh.susuboxgh.com",
+    url: "https://www.ndlgh.com",
     priceRange: "$$",
     makesOffer: [
       {
@@ -832,6 +832,18 @@ function JsonLd() {
           unitText: "CBM",
           referenceQuantity: { "@type": "QuantitativeValue", value: 1, unitText: "CBM" },
         },
+      },
+      {
+        "@type": "Offer",
+        name: "Air freight China to Ghana — normal goods",
+        description: "Air cargo from Guangzhou to Accra, 10 to 14 days.",
+        priceSpecification: { "@type": "UnitPriceSpecification", price: 20, priceCurrency: "USD", unitText: "KGM" },
+      },
+      {
+        "@type": "Offer",
+        name: "Air freight China to Ghana — special goods",
+        description: "Air cargo from Guangzhou to Accra for special goods, 10 to 14 days.",
+        priceSpecification: { "@type": "UnitPriceSpecification", price: 25, priceCurrency: "USD", unitText: "KGM" },
       },
     ],
     areaServed: [

@@ -14,7 +14,7 @@ export const Route = createFileRoute("/quote")({
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],
-    links: [{ rel: "canonical", href: "https://ndlgh.susuboxgh.com/quote" }],
+    links: [{ rel: "canonical", href: "https://www.ndlgh.com/quote" }],
   }),
   component: QuotePage,
 });

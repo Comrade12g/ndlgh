@@ -15,7 +15,7 @@ export const Route = createFileRoute("/about")({
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],
-    links: [{ rel: "canonical", href: "https://ndlgh.susuboxgh.com/about" }],
+    links: [{ rel: "canonical", href: "https://www.ndlgh.com/about" }],
   }),
   component: AboutPage,
 });
