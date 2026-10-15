@@ -171,7 +171,7 @@ export function Testimonials() {
                 )}
                 aria-hidden={idx !== i}
               >
-                <div className="flex gap-0.5" aria-label={`Rated ${it.rating} out of 5`}>
+                <div className="flex gap-0.5" role="img" aria-label={`Rated ${it.rating} out of 5`}>
                   {Array.from({ length: 5 }).map((_, k) => (
                     <Star
                       key={k}

@@ -97,9 +97,9 @@ export function QuoteEngine({ compact = false }: { compact?: boolean }) {
 
       <form onSubmit={submit} className="grid gap-3 md:grid-cols-2">
         <div className="md:col-span-2">
-          <Label>Origin</Label>
+          <Label htmlFor="q-origin">Origin</Label>
           <Select value={origin} onValueChange={setOrigin}>
-            <SelectTrigger><SelectValue /></SelectTrigger>
+            <SelectTrigger id="q-origin" aria-label="Origin"><SelectValue /></SelectTrigger>
             <SelectContent>
               {ORIGINS.map((o) => (
                 <SelectItem key={o.code} value={o.code}>{o.label}</SelectItem>
@@ -108,9 +108,9 @@ export function QuoteEngine({ compact = false }: { compact?: boolean }) {
           </Select>
         </div>
         <div className="md:col-span-2">
-          <Label>Mode</Label>
+          <Label htmlFor="q-mode">Mode</Label>
           <Select value={mode} onValueChange={setMode}>
-            <SelectTrigger><SelectValue /></SelectTrigger>
+            <SelectTrigger id="q-mode" aria-label="Shipping mode"><SelectValue /></SelectTrigger>
             <SelectContent>
               {MODES.map((m) => (
                 <SelectItem key={m.value} value={m.value}>{m.label}</SelectItem>
@@ -119,24 +119,24 @@ export function QuoteEngine({ compact = false }: { compact?: boolean }) {
           </Select>
         </div>
         <div>
-          <Label>Weight (kg)</Label>
-          <Input type="number" min="0" step="0.1" value={weight} onChange={(e) => setWeight(e.target.value)} placeholder="e.g. 50" />
+          <Label htmlFor="q-weight">Weight (kg)</Label>
+          <Input type="number" min="0" step="0.1" id="q-weight" value={weight} onChange={(e) => setWeight(e.target.value)} placeholder="e.g. 50" />
         </div>
         <div>
-          <Label>Pieces</Label>
-          <Input type="number" min="1" step="1" value={pieces} onChange={(e) => setPieces(e.target.value)} />
+          <Label htmlFor="q-pieces">Pieces</Label>
+          <Input type="number" min="1" step="1" id="q-pieces" value={pieces} onChange={(e) => setPieces(e.target.value)} />
         </div>
         <div>
-          <Label>Length (cm)</Label>
-          <Input type="number" min="0" step="1" value={length} onChange={(e) => setLength(e.target.value)} />
+          <Label htmlFor="q-length">Length (cm)</Label>
+          <Input type="number" min="0" step="1" id="q-length" value={length} onChange={(e) => setLength(e.target.value)} />
         </div>
         <div>
-          <Label>Width (cm)</Label>
-          <Input type="number" min="0" step="1" value={width} onChange={(e) => setWidth(e.target.value)} />
+          <Label htmlFor="q-width">Width (cm)</Label>
+          <Input type="number" min="0" step="1" id="q-width" value={width} onChange={(e) => setWidth(e.target.value)} />
         </div>
         <div>
-          <Label>Height (cm)</Label>
-          <Input type="number" min="0" step="1" value={height} onChange={(e) => setHeight(e.target.value)} />
+          <Label htmlFor="q-height">Height (cm)</Label>
+          <Input type="number" min="0" step="1" id="q-height" value={height} onChange={(e) => setHeight(e.target.value)} />
         </div>
         <div className="rounded-md bg-secondary/60 p-2 text-center text-sm md:col-span-1">
           <div className="text-[10px] uppercase tracking-wider text-muted-foreground">Volume</div>
