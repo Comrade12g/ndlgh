@@ -210,7 +210,7 @@ function CreateCustomerLoginDialog({
         customerId: data.userId,
         phone: data.phone,
         event: "customer_onboarded",
-        message: `Thank you for registering with NDL (Next Day Logistics)!\nEntry number: ${data.shippingMark ?? "-"}\nLogin: https://ndlgh.susuboxgh.com/auth\nPhone: ${local}\nTemporary password: ${data.tempPassword}\nContact 0500229352 on WhatsApp for any assistance.`,
+        message: `Thank you for registering with NDL (Next Day Logistics)!\nEntry number: ${data.shippingMark ?? "-"}\nLogin: https://www.ndlgh.com/auth\nPhone: ${local}\nTemporary password: ${data.tempPassword}\nContact 0500229352 on WhatsApp for any assistance.`,
       });
     },
     onError: (e) => toast.error(getErrorMessage(e)),

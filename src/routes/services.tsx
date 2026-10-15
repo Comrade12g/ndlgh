@@ -15,7 +15,7 @@ export const Route = createFileRoute("/services")({
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],
-    links: [{ rel: "canonical", href: "https://ndlgh.susuboxgh.com/services" }],
+    links: [{ rel: "canonical", href: "https://www.ndlgh.com/services" }],
   }),
   component: ServicesPage,
 });

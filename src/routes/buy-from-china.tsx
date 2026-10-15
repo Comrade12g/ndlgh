@@ -5,7 +5,7 @@ import { ServiceRequestForm } from "@/components/marketing/ServiceRequestForm";
 import { Button } from "@/components/ui/button";
 import { Wallet, Search, GraduationCap, Warehouse, Ship, ChevronDown, ArrowRight } from "lucide-react";
 
-const BASE = "https://ndlgh.susuboxgh.com";
+const BASE = "https://www.ndlgh.com";
 const TITLE = "Pay Suppliers in China & Buy from China | NDL Cargo Ghana";
 const DESC =
   "Pay Chinese suppliers, source products and learn to import. NDL Cargo handles procurement, supplier payments and shipping to Ghana.";

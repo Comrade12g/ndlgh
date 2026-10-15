@@ -15,7 +15,7 @@ export const Route = createFileRoute("/contact")({
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],
-    links: [{ rel: "canonical", href: "https://ndlgh.susuboxgh.com/contact" }],
+    links: [{ rel: "canonical", href: "https://www.ndlgh.com/contact" }],
   }),
   component: ContactPage,
 });

@@ -84,8 +84,8 @@ export function Testimonials() {
       "@context": "https://schema.org",
       "@type": "LocalBusiness",
       name: "NDL Cargo Ghana",
-      image: "https://ndlgh.susuboxgh.com/favicon.png",
-      url: "https://ndlgh.susuboxgh.com",
+      image: "https://www.ndlgh.com/favicon.png",
+      url: "https://www.ndlgh.com",
       aggregateRating: {
         "@type": "AggregateRating",
         ratingValue: avgLabel,

@@ -53,7 +53,7 @@ const SIGNOFF = "— NDL Global Shipping";
 /** Returns the app origin at call time. Falls back to the production URL during SSR. */
 function appOrigin(): string {
   if (typeof window !== "undefined" && window.location?.origin) return window.location.origin;
-  return "https://ndlgh.susuboxgh.com";
+  return "https://www.ndlgh.com";
 }
 
 const portalLink = () => `${appOrigin()}/portal`;

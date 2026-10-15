@@ -14,7 +14,7 @@ export const Route = createFileRoute("/lanes/")({
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],
-    links: [{ rel: "canonical", href: "https://ndlgh.susuboxgh.com/lanes" }],
+    links: [{ rel: "canonical", href: "https://www.ndlgh.com/lanes" }],
   }),
   component: LanesPage,
 });
