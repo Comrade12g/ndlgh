@@ -21,7 +21,7 @@ import {
   fetchActiveGallery, FALLBACK_GALLERY, FALLBACK_HERO_SLIDES, GALLERY_CATEGORIES,
   type GalleryPhoto,
 } from "@/lib/gallery";
-import { IMG } from "@/assets/gallery";
+import { IMG, small } from "@/assets/gallery";
 import { Wallet as WalletIcon, Search as SearchIcon, GraduationCap } from "lucide-react";
 import {
   Ship, Plane, Truck, Warehouse, ShieldCheck, Globe2,
@@ -39,9 +39,9 @@ export const Route = createFileRoute("/")({
       { property: "og:title", content: "NDL Cargo Ghana — Global freight, delivered to your door" },
       { property: "og:description", content: "Sea LCL/FCL, air, customs clearing and Ghana-wide last-mile delivery from China, Dubai, Thailand, Canada and the US. Instant quotes and live shipment tracking." },
       { property: "og:type", content: "website" },
-      { property: "og:image", content: `https://www.ndlgh.com${IMG.seaTema}` },
+      { property: "og:image", content: `https://www.ndlgh.com/gallery/sea-tema.jpg` },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:image", content: `https://www.ndlgh.com${IMG.seaTema}` },
+      { name: "twitter:image", content: `https://www.ndlgh.com/gallery/sea-tema.jpg` },
     ],
     links: [
       { rel: "canonical", href: "https://www.ndlgh.com/" },
