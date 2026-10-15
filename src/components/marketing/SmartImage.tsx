@@ -18,8 +18,8 @@ type Props = {
 
 /** Local gallery photos ship in 1600w + 800w variants. */
 function responsive(src: string) {
-  if (!src.startsWith("/gallery/") || src.includes("-800.jpg")) return undefined;
-  return `${src.replace(/\.jpg$/, "-800.jpg")} 800w, ${src} 1600w`;
+  if (!src.startsWith("/gallery/") || src.includes("-800.")) return undefined;
+  return `${src.replace(/\.(jpg|webp)$/, "-800.webp")} 800w, ${src} 1600w`;
 }
 
 /**
@@ -43,7 +43,8 @@ export function SmartImage({
   const [loaded, setLoaded] = useState(false);
   const [errored, setErrored] = useState(false);
   const ref = useRef<HTMLImageElement | null>(null);
-  const lqip = LQIP[src] ?? LQIP[src.replace("-800.jpg", ".jpg")];
+  const key = src.replace(/-800\.(jpg|webp)$/, ".jpg").replace(/\.webp$/, ".jpg");
+  const lqip = LQIP[key];
   const srcSet = responsive(src);
 
   useEffect(() => {
