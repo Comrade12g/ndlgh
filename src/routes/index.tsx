@@ -45,8 +45,15 @@ export const Route = createFileRoute("/")({
     ],
     links: [
       { rel: "canonical", href: "https://www.ndlgh.com/" },
-      // Preload the LCP hero image so it paints as fast as possible.
-      { rel: "preload", as: "image", href: IMG.seaTema },
+      // Preload the LCP hero image (mobile gets the 800w WebP).
+      {
+        rel: "preload",
+        as: "image",
+        href: IMG.seaTema,
+        imageSrcSet: `${small(IMG.seaTema)} 800w, ${IMG.seaTema} 1600w`,
+        imageSizes: "(max-width: 768px) 100vw, 720px",
+        fetchPriority: "high",
+      } as any,
     ],
   }),
   component: HomePage,
