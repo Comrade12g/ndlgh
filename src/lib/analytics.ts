@@ -1,7 +1,7 @@
 // Google Analytics (gtag.js) — client-only, initialized once at app startup.
-const measurementId = import.meta.env.VITE_LOVABLE_CONNECTOR_GOOGLE_ANALYTICS_API_KEY as
-  | string
-  | undefined;
+const measurementId =
+  (import.meta.env.VITE_LOVABLE_CONNECTOR_GOOGLE_ANALYTICS_API_KEY as string | undefined) ||
+  "G-J7697QE6M3";
 
 declare global {
   interface Window {
@@ -21,9 +21,11 @@ export function initAnalytics() {
   script.src = `https://www.googletagmanager.com/gtag/js?id=${measurementId}`;
   document.head.appendChild(script);
 
-  window.dataLayer = window.dataLayer ?? [];
-  window.gtag = function gtag(...args: unknown[]) {
-    window.dataLayer?.push(args);
+  window.dataLayer = window.dataLayer || [];
+  // gtag.js requires the Arguments object, not a plain array.
+  window.gtag = function gtag() {
+    // eslint-disable-next-line prefer-rest-params
+    window.dataLayer!.push(arguments);
   };
   window.gtag("set", "developer_id.dZjgwMW", true);
   window.gtag("js", new Date());
