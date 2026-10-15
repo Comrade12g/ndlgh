@@ -64,6 +64,7 @@ const ROUTE_ROLES: Array<{ prefix: string; roles: readonly string[] }> = [
 ];
 
 export const Route = createFileRoute("/_authenticated")({
+  head: () => ({ meta: [{ name: "robots", content: "noindex, nofollow" }] }),
   ssr: false,
   beforeLoad: async ({ location }) => {
     const { data, error } = await supabase.auth.getUser();
