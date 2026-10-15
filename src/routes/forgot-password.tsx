@@ -70,8 +70,8 @@ function ForgotPasswordPage() {
             Reset your password
           </h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            Enter the phone number on your NDL account. Your account manager will reset your
-            password on WhatsApp within one business day.
+            Enter the phone number on your NDL account. We'll send a temporary password to that
+            number by SMS within a minute.
           </p>
 
           {!submitted ? (
@@ -98,18 +98,18 @@ function ForgotPasswordPage() {
           ) : (
             <div className="mt-6 space-y-4">
               <div className="rounded-md border bg-muted/40 p-4 text-sm">
-                <div className="font-semibold text-brand-navy">Request received</div>
+                <div className="font-semibold text-brand-navy">Check your phone</div>
                 <p className="mt-1 text-muted-foreground">
-                  Tap the button below to message NDL Ghana on WhatsApp. Include the phone number
-                  <span className="font-mono"> {submitted}</span> so we can verify your identity
-                  and issue a temporary password.
+                  If <span className="font-mono">{submitted}</span> is registered with NDL, an SMS
+                  with a temporary password is on its way. Sign in with it and you'll choose a new
+                  password.
                 </p>
               </div>
-              <Button
-                onClick={contactSupport}
-                className="h-11 w-full bg-emerald-600 hover:bg-emerald-700"
-              >
-                <MessageCircle className="mr-2 h-5 w-5" /> Continue on WhatsApp
+              <Button asChild className="h-11 w-full bg-brand-orange hover:bg-brand-orange/90">
+                <Link to="/auth" search={{ mode: "signin" } as never}>Go to sign in</Link>
+              </Button>
+              <Button onClick={contactSupport} variant="outline" className="h-11 w-full">
+                <MessageCircle className="mr-2 h-5 w-5" /> No SMS? Ask us on WhatsApp
               </Button>
             </div>
           )}
