@@ -833,6 +833,18 @@ function JsonLd() {
           referenceQuantity: { "@type": "QuantitativeValue", value: 1, unitText: "CBM" },
         },
       },
+      {
+        "@type": "Offer",
+        name: "Air freight China to Ghana — normal goods",
+        description: "Air cargo from Guangzhou to Accra, 10 to 14 days.",
+        priceSpecification: { "@type": "UnitPriceSpecification", price: 20, priceCurrency: "USD", unitText: "KGM" },
+      },
+      {
+        "@type": "Offer",
+        name: "Air freight China to Ghana — special goods",
+        description: "Air cargo from Guangzhou to Accra for special goods, 10 to 14 days.",
+        priceSpecification: { "@type": "UnitPriceSpecification", price: 25, priceCurrency: "USD", unitText: "KGM" },
+      },
     ],
     areaServed: [
       { "@type": "Country", name: "Ghana" },

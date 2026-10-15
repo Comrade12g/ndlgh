@@ -1,28 +1,30 @@
-# NDL Cargo Ghana
+# NDL Cargo Ghana (Next Day Logistics)
 
-> NDL Cargo Ghana is a Ghanaian-owned freight and logistics company that ships sea LCL/FCL, air cargo, and door-to-door parcels from China, Dubai, Thailand, Canada, and the United States into Ghana. The platform offers instant quotes, live shipment tracking, in-house customs clearing, warehousing, and Ghana-wide last-mile delivery.
+> NDL Cargo Ghana is a Ghanaian freight and logistics company shipping sea and air cargo from China to Ghana, with customs clearing, supplier payments to China, product sourcing and live online tracking. Website: https://www.ndlgh.com
 
-NDL Cargo operates its own origin teams and warehouses in Yiwu, Guangzhou, Taizhou, Dubai, Bangkok, Toronto, New York, and Los Angeles. Customers can get indicative freight quotes, track shipments by NDL-CN or NDL-GH reference, and manage orders through a customer portal.
+## Key facts
+
+- Sea freight China to Ghana (LCL/groupage): $230 per CBM (USD), 35 to 45 days. Customs clearing included for LCL.
+- Air freight China to Ghana: Normal goods $20 per kg, Special goods $25 per kg, 10 to 14 days.
+- China sea warehouses: Guangzhou/Foshan and Yiwu. Air cargo hub: Guangzhou.
+- Every customer gets a personal shipping mark (format ND0001) to give suppliers.
+- Extra services: paying suppliers in China, product sourcing/procurement, import training.
+- Customers track parcels by NDL reference, package code, or supplier/courier tracking number.
+- Open Monday to Saturday, closed Sunday. WhatsApp: 0500229352.
 
 ## Pages
 
-- [/](/): Home — freight services overview, shipping lanes, instant quote engine, live tracking demo, gallery, and customer testimonials.
-- [/about](/about): About NDL Cargo — company background, operations teams, customs brokerage, values, and contact calls-to-action.
-- [/contact](/contact): Contact page with office address, phone, email, WhatsApp chat, opening hours, and an embedded map.
-- [/services](/services): Detailed service cards for sea freight (FCL & LCL), air cargo, customs clearing, and warehousing with last-mile delivery.
-- [/lanes](/lanes): Origin-to-Ghana shipping lanes from China, Dubai, Thailand, Canada, and the United States, with transit times and cutoff schedules.
-- [/lanes/china](/lanes/china): Example lane detail page showing hub cities, transit modes, and typical cargo types for a specific origin.
-- [/quote](/quote): Instant freight quote calculator using live tariffs and volumetric-weight logic.
-- [/tracking](/tracking): Public shipment tracking lookup by NDL reference number.
-- [/track/NDL-CN-00042](/track/NDL-CN-00042): Example tracking result page showing shipment milestones and ETA updates.
-
-## Tools
-
-- [Quote engine](/quote): Calculate indicative shipping cost from weight, dimensions, origin, and mode.
-- [Shipment tracking](/tracking): Look up milestone status for any NDL-CN or NDL-GH reference.
-- [Customer portal](/auth): Sign-in portal for customers to view packages, invoices, and delivery details.
+- [Home](https://www.ndlgh.com/): Services, rates, warehouses and tracking.
+- [Services](https://www.ndlgh.com/services): Sea freight, air cargo, customs clearing, warehousing and delivery.
+- [Buy from China](https://www.ndlgh.com/buy-from-china): Sourcing and supplier payments in China.
+- [Shipping lanes](https://www.ndlgh.com/lanes): Origin-to-Ghana routes.
+- [China lane](https://www.ndlgh.com/lanes/china): China to Ghana details.
+- [Quote](https://www.ndlgh.com/quote): Instant shipping cost calculator.
+- [Tracking](https://www.ndlgh.com/tracking): Track a shipment or parcel.
+- [Guides](https://www.ndlgh.com/guides): Importing guides for Ghanaian buyers.
+- [About](https://www.ndlgh.com/about): About NDL.
+- [Contact](https://www.ndlgh.com/contact): Phone, WhatsApp and address.
 
 ## Optional
 
-- [/auth](/auth): Authentication entry point for customers and staff to sign in or reset passwords.
-- [/sitemap.xml](/sitemap.xml): Machine-readable list of public routes for search engines.
+- [Sitemap](https://www.ndlgh.com/sitemap.xml): All public pages.
