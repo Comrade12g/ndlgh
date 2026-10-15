@@ -4,7 +4,9 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { QuoteEngine } from "@/components/marketing/QuoteEngine";
 import { useReveal } from "@/hooks/use-reveal";
-import { ArrowLeft, MapPin, Clock, Package, ArrowRight } from "lucide-react";
+import { ArrowLeft, MapPin, Clock, Package, ArrowRight, MessageCircle } from "lucide-react";
+import { BUSINESS, WHATSAPP_URL } from "@/config/business";
+import { LANE_SEO, LANE_FAQ, ChinaLaneContent } from "@/components/marketing/LaneSeoContent";
 
 type LaneDetail = {
   name: string;
@@ -25,10 +27,8 @@ const DETAILS: Record<string, LaneDetail> = {
       { city: "Taizhou", specialty: "Hardware, plumbing, machinery, tools" },
     ],
     transit: [
-      { mode: "Sea LCL (groupage)", time: "25–35 days" },
-      { mode: "Sea FCL (20ft / 40ft)", time: "22–30 days" },
-      { mode: "Air cargo", time: "5–7 days" },
-      { mode: "Express air", time: "3–5 days" },
+      { mode: "Sea LCL (groupage)", time: `${BUSINESS.seaLclDays} days` },
+      { mode: "Air cargo", time: `${BUSINESS.airDays} days` },
     ],
     cargo: ["Small commodities & gifts", "Electronics & phones", "Cosmetics & beauty", "Fashion & textiles", "Hardware & industrial", "Machinery & spare parts"],
   },
@@ -81,16 +81,49 @@ export const Route = createFileRoute("/lanes/$origin")({
         ],
       };
     }
+    const seo = LANE_SEO[params.origin];
+    const url = `${BUSINESS.domain}/lanes/${params.origin}`;
+    const faq = LANE_FAQ[params.origin] ?? [];
+    const scripts: any[] = [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          itemListElement: [
+            { "@type": "ListItem", position: 1, name: "Home", item: `${BUSINESS.domain}/` },
+            { "@type": "ListItem", position: 2, name: "Lanes", item: `${BUSINESS.domain}/lanes` },
+            { "@type": "ListItem", position: 3, name, item: url },
+          ],
+        }),
+      },
+    ];
+    if (faq.length) {
+      scripts.push({
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: faq.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
+        }),
+      });
+    }
     return {
       meta: [
-        { title: `${name} to Ghana — Shipping lane | NDL Cargo` },
-        { name: "description", content: `Ship from ${name} to Ghana with NDL Cargo. Sea LCL, FCL and air freight with in-house customs clearing.` },
-        { property: "og:title", content: `${name} → Ghana with NDL Cargo` },
-        { property: "og:description", content: `Weekly consolidation from ${name} into Tema Port and Kotoka International.` },
+        { title: seo.title },
+        { name: "description", content: seo.description },
+        { property: "og:title", content: seo.ogTitle },
+        { property: "og:description", content: seo.ogDescription },
         { property: "og:type", content: "website" },
-        { name: "twitter:card", content: "summary" },
+        { property: "og:url", content: url },
+        { property: "og:image", content: seo.image },
+        { name: "twitter:card", content: "summary_large_image" },
+        { name: "twitter:title", content: seo.ogTitle },
+        { name: "twitter:description", content: seo.ogDescription },
+        { name: "twitter:image", content: seo.image },
       ],
-      links: [{ rel: "canonical", href: `https://www.ndlgh.com/lanes/${params.origin}` }],
+      links: [{ rel: "canonical", href: url }],
+      scripts,
     };
   },
   component: LaneDetailPage,
@@ -107,18 +140,32 @@ export const Route = createFileRoute("/lanes/$origin")({
 
 function LaneDetailPage() {
   const d: LaneDetail = Route.useLoaderData();
+  const { origin } = Route.useParams();
+  const seo = LANE_SEO[origin];
+  const faq = LANE_FAQ[origin] ?? [];
 
   const ref = useReveal<HTMLDivElement>();
   return (
     <MarketingLayout>
       <section className="border-b bg-gradient-to-b from-brand-navy to-[#0d2551] py-14 text-white md:py-20">
         <div className="mx-auto max-w-7xl px-4">
-          <Link to="/lanes" className="inline-flex items-center gap-1 text-sm text-white/70 hover:text-white">
-            <ArrowLeft className="h-4 w-4" /> All lanes
-          </Link>
+          <nav aria-label="Breadcrumb" className="flex items-center gap-1 text-sm text-white/70">
+            <Link to="/" className="hover:text-white">Home</Link><span>›</span>
+            <Link to="/lanes" className="inline-flex items-center gap-1 hover:text-white"><ArrowLeft className="h-4 w-4" /> Lanes</Link><span>›</span>
+            <span className="text-white">{d.name}</span>
+          </nav>
           <div className="mt-4 text-xs font-semibold uppercase tracking-widest text-brand-orange">{d.region}</div>
-          <h1 className="mt-2 font-display text-4xl font-black md:text-5xl">{d.name} → Ghana</h1>
-          <p className="mt-4 max-w-2xl text-white/80">{d.intro}</p>
+          <h1 className="mt-2 font-display text-4xl font-black md:text-5xl">{seo.h1}</h1>
+          <p className="mt-4 max-w-2xl text-white/80">{origin === "china" ? `NDL Cargo ships goods from China to Ghana by sea and air every week. We have teams and warehouses in Yiwu, Guangzhou and Taizhou, so your cargo is received, consolidated and loaded by our own people. Our licensed brokers clear it at Tema, and we deliver to your door anywhere in Ghana.` : d.intro}</p>
+          {origin === "china" && (
+            <>
+              <p className="mt-4 font-semibold text-brand-orange">Sea freight from ${BUSINESS.seaLclFromUsdPerCbm} per CBM. Customs clearing included for LCL shipments.</p>
+              <div className="mt-6 flex flex-wrap gap-3">
+                <Link to="/quote"><Button className="bg-brand-orange hover:bg-brand-orange/90">Get an instant quote <ArrowRight className="ml-2 h-4 w-4" /></Button></Link>
+                <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer"><Button variant="outline" className="border-white/40 bg-transparent text-white hover:bg-white/10"><MessageCircle className="mr-2 h-4 w-4" />Chat on WhatsApp</Button></a>
+              </div>
+            </>
+          )}
         </div>
       </section>
 
@@ -157,13 +204,29 @@ function LaneDetailPage() {
           </div>
         </Card>
 
+        {origin === "china" && <ChinaLaneContent />}
+
+        {faq.length > 0 && (
+          <div className="mt-12">
+            <h2 className="font-display text-2xl font-black text-brand-navy md:text-3xl">Frequently asked questions</h2>
+            <div className="mt-6 space-y-5">
+              {faq.map((f) => (
+                <div key={f.q}>
+                  <h3 className="font-semibold text-brand-navy">{f.q}</h3>
+                  <p className="mt-1 text-muted-foreground">{f.a}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         <div className="mt-10 grid gap-6 lg:grid-cols-[1fr_1fr]">
           <div className="rounded-2xl bg-brand-navy p-8 text-white">
             <h2 className="font-display text-2xl font-black">Ready to ship from {d.name}?</h2>
-            <p className="mt-2 text-white/75">Get an indicative rate right now or reach us on WhatsApp.</p>
+            <p className="mt-2 text-white/75">Get your rate in seconds or talk to our team.</p>
             <div className="mt-6 flex flex-wrap gap-3">
               <Link to="/quote"><Button className="bg-brand-orange hover:bg-brand-orange/90">Instant quote <ArrowRight className="ml-2 h-4 w-4" /></Button></Link>
-              <Link to="/contact"><Button variant="outline" className="border-white/40 bg-transparent text-white hover:bg-white/10">Contact team</Button></Link>
+              <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer"><Button variant="outline" className="border-white/40 bg-transparent text-white hover:bg-white/10">Chat on WhatsApp</Button></a>
             </div>
           </div>
           <QuoteEngine compact />
