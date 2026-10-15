@@ -7,7 +7,7 @@ import { useReveal } from "@/hooks/use-reveal";
 export const Route = createFileRoute("/lanes/")({
   head: () => ({
     meta: [
-      { title: "Shipping Lanes — China, Dubai, Thailand, Canada, US to Ghana" },
+      { title: "Shipping Lanes to Ghana | China, Dubai, USA & More | NDL Cargo" },
       { name: "description", content: "Weekly consolidation from Yiwu, Guangzhou, Taizhou, Dubai, Bangkok, Toronto and New York into Tema, Ghana." },
       { property: "og:title", content: "NDL Cargo Shipping Lanes" },
       { property: "og:description", content: "Weekly consolidation lanes from China, Dubai, Thailand, Canada and the US into Ghana." },

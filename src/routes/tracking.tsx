@@ -9,8 +9,8 @@ import { PackageSearch, ShieldCheck } from "lucide-react";
 export const Route = createFileRoute("/tracking")({
   head: () => ({
     meta: [
-      { title: "Track your shipment — NDL Cargo Ghana" },
-      { name: "description", content: "Track your NDL Cargo shipment with your NDL-CN-##### or ND#### reference number." },
+      { title: "Track Your Shipment | NDL Cargo Ghana" },
+      { name: "description", content: "Track your NDL-CN or ND shipment from pickup to delivery in Ghana, with WhatsApp updates at every stage." },
       { property: "og:title", content: "Track your shipment — NDL Cargo" },
       { property: "og:description", content: "Live milestone tracking for every NDL Cargo shipment." },
       { property: "og:type", content: "website" },

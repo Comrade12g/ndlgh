@@ -36,7 +36,6 @@ export const Route = createFileRoute("/guides/$slug")({
       meta: [
         { title: g.seoTitle },
         { name: "description", content: g.description },
-        { name: "keywords", content: g.keywords.join(", ") },
         { name: "author", content: "NDL Cargo Ghana" },
         { property: "og:title", content: g.seoTitle },
         { property: "og:description", content: g.description },

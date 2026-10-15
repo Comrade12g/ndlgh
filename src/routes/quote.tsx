@@ -7,8 +7,8 @@ import { Calculator, Zap, ShieldCheck, MessageCircle } from "lucide-react";
 export const Route = createFileRoute("/quote")({
   head: () => ({
     meta: [
-      { title: "Instant Freight Quote — NDL Cargo Ghana" },
-      { name: "description", content: "Calculate your shipping cost from China, Dubai, Thailand, Canada or the US to Ghana in seconds. Live tariffs, volumetric weight, chargeable rates." },
+      { title: "Instant Freight Quote to Ghana | NDL Cargo" },
+      { name: "description", content: "Calculate your sea or air freight cost to Ghana in seconds. Enter weight and dimensions for an instant indicative rate." },
       { property: "og:title", content: "Get an instant freight quote — NDL Cargo" },
       { property: "og:description", content: "Live tariff calculator with volumetric weight & CBM auto-calc." },
       { property: "og:type", content: "website" },

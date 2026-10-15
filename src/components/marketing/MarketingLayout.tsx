@@ -96,7 +96,14 @@ export function MarketingLayout({ children }: { children: ReactNode }) {
 
       <main>{children}</main>
 
-      <footer className="mt-20 border-t bg-brand-navy text-white">
+      <nav aria-label="Popular shipping links" className="mx-auto mt-20 max-w-7xl px-4 text-center text-sm text-muted-foreground">
+        <Link to="/lanes/$origin" params={{ origin: "china" }} className="hover:text-brand-orange">China to Ghana shipping</Link>{" | "}
+        <Link to="/lanes/$origin" params={{ origin: "dubai" }} className="hover:text-brand-orange">Dubai to Ghana shipping</Link>{" | "}
+        <Link to="/services" className="hover:text-brand-orange">Air freight to Ghana</Link>{" | "}
+        <Link to="/services" className="hover:text-brand-orange">Customs clearing at Tema</Link>{" | "}
+        <Link to="/buy-from-china" className="hover:text-brand-orange">Buy from China</Link>
+      </nav>
+      <footer className="mt-6 border-t bg-brand-navy text-white">
         <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 md:grid-cols-4">
           <div>
             <LogoLockup compact />
