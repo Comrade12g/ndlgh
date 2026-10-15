@@ -881,7 +881,7 @@ function JsonLd() {
 
 function RateStrip() {
   return (
-    <div className="border-b bg-brand-orange text-white">
+    <div className="border-b bg-brand-orange text-brand-navy">
       <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-center gap-x-3 gap-y-1 px-4 py-3 text-center text-sm font-semibold">
         <Ship className="h-4 w-4" />
         Sea freight from $230/CBM. Customs clearing included for LCL. 35 to 45 days.
