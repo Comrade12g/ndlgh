@@ -129,9 +129,9 @@ export function CustomerServiceCard({ c, onBack }: { c: CsCustomer; onBack: () =
     { label: "Ready for pickup", text: () => `Hi ${name}, your goods are ready for pickup/delivery in Accra. Reply here to arrange.\n${SIGNOFF}` },
   ];
 
-  async function sendMsg() {
+  async function sendMsg(openWhatsApp = false) {
     if (!msg.trim()) return;
-    await notifyCustomer({ customerId: c.id, phone: c.phone, event: "custom_message", message: msg.trim() });
+    await notifyCustomer({ customerId: c.id, phone: c.phone, event: "custom_message", message: msg.trim(), autoOpen: openWhatsApp });
     setMsg("");
     qc.invalidateQueries({ queryKey: ["cs-360", c.id] });
   }
@@ -191,8 +191,11 @@ export function CustomerServiceCard({ c, onBack }: { c: CsCustomer; onBack: () =
         </div>
         <Textarea rows={5} value={msg} onChange={(e) => setMsg(e.target.value)} placeholder="Pick a template or type your reply…" />
         <div className="mt-3 flex gap-2">
-          <Button onClick={sendMsg} disabled={!msg.trim() || !c.phone} className="bg-brand-orange hover:bg-brand-orange/90">
-            <MessageCircle className="mr-1 h-4 w-4" /> Open in WhatsApp
+          <Button onClick={() => sendMsg(false)} disabled={!msg.trim() || !c.phone} className="bg-brand-orange hover:bg-brand-orange/90">
+            <MessageCircle className="mr-1 h-4 w-4" /> Send SMS
+          </Button>
+          <Button onClick={() => sendMsg(true)} disabled={!msg.trim() || !c.phone} variant="secondary">
+            <MessageCircle className="mr-1 h-4 w-4" /> SMS + WhatsApp
           </Button>
           <Button variant="outline" onClick={() => copy(msg)} disabled={!msg.trim()}>
             <Copy className="mr-1 h-4 w-4" /> Copy
