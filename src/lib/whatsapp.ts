@@ -50,9 +50,8 @@ export async function copyToClipboard(text: string): Promise<boolean> {
 
 const SIGNOFF = "— NDL Global Shipping";
 
-/** Returns the app origin at call time. Falls back to the production URL during SSR. */
+/** Customer-facing links always use the official domain, whatever address staff work from. */
 function appOrigin(): string {
-  if (typeof window !== "undefined" && window.location?.origin) return window.location.origin;
   return "https://www.ndlgh.com";
 }
 
