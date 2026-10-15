@@ -58,7 +58,7 @@ export const requestCustomerPasswordReset = createServerFn({ method: "POST" })
     await supabaseAdmin.from("profiles").update({ must_change_password: true }).eq("id", prof.id);
 
     const local = "0" + e164.replace(/^\+233/, "");
-    const msg = `NDL (Next Day Logistics) password reset.\nEntry number: ${prof.shipping_mark ?? "-"}\nLogin: https://www.ndlgh.com/auth\nPhone: ${local}\nTemporary password: ${pw}\nYou will set a new password after login. Contact 0500229352 on WhatsApp for any assistance.`;
+    const msg = `NDL (Next Day Logistics) password reset.\nEntry number: ${prof.shipping_mark ?? "-"}\nLogin: https://www.ndlgh.com/auth\nPhone: ${local}\nTemporary password: ${pw}\nYou will set a new password after login.\n\n— NDL (Next Day Logistics)\nPortal: https://www.ndlgh.com/portal\nWhatsApp: 0500229352`;
 
     const to = e164.replace(/\D/g, "");
     let code = "1002";
