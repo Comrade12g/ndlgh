@@ -16,10 +16,16 @@ export function initAnalytics() {
   if (typeof window === "undefined" || initialized || !measurementId) return;
   initialized = true;
 
-  const script = document.createElement("script");
-  script.async = true;
-  script.src = `https://www.googletagmanager.com/gtag/js?id=${measurementId}`;
-  document.head.appendChild(script);
+  // Load gtag.js only after the page has painted, so it doesn't delay LCP.
+  const load = () => {
+    const script = document.createElement("script");
+    script.async = true;
+    script.src = `https://www.googletagmanager.com/gtag/js?id=${measurementId}`;
+    document.head.appendChild(script);
+  };
+  const ric = (window as unknown as { requestIdleCallback?: (cb: () => void, o?: { timeout: number }) => void }).requestIdleCallback;
+  if (ric) ric(load, { timeout: 4000 });
+  else setTimeout(load, 2500);
 
   window.dataLayer = window.dataLayer || [];
   // gtag.js requires the Arguments object, not a plain array.
