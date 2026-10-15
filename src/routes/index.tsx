@@ -695,13 +695,13 @@ function HowItWorks() {
       </div>
       <ol className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {steps.map((s, i) => (
-          <RevealCard key={s.title} delay={i * 80}>
+          <li key={s.title} className="list-none"><RevealCard delay={i * 80}>
             <div className="rounded-lg bg-brand-orange/10 p-2.5 w-fit text-brand-orange">
               <s.icon className="h-5 w-5" />
             </div>
             <h3 className="mt-4 font-display text-lg font-bold text-brand-navy">{s.title}</h3>
             <p className="mt-2 text-sm text-muted-foreground">{s.desc}</p>
-          </RevealCard>
+          </RevealCard></li>
         ))}
       </ol>
     </section>

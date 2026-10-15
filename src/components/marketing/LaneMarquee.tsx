@@ -14,7 +14,7 @@ export function LaneMarquee() {
           <div key={i} className="flex items-center gap-3 font-mono text-sm font-semibold uppercase tracking-widest text-white/70">
             <span className="text-brand-orange">◆</span>
             {h}
-            <span className="text-white/25">→ Tema</span>
+            <span className="text-white/70">→ Tema</span>
           </div>
         ))}
       </div>
