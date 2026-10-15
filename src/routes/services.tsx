@@ -8,8 +8,8 @@ import { Ship, Plane, FileCheck, Warehouse, Check, ArrowRight, Wallet, Search, G
 export const Route = createFileRoute("/services")({
   head: () => ({
     meta: [
-      { title: "Services — Sea, Air, Customs & Warehousing | NDL Cargo" },
-      { name: "description", content: "NDL Cargo services: Sea FCL & LCL, Air cargo, in-house customs clearing and warehousing plus Ghana-wide delivery." },
+      { title: "Freight Services in Ghana | Sea, Air, Customs | NDL Cargo" },
+      { name: "description", content: "Sea LCL/FCL, air cargo, customs clearing, bonded warehousing, supplier payments and sourcing from China. See all NDL Cargo services." },
       { property: "og:title", content: "NDL Cargo Services" },
       { property: "og:description", content: "Sea FCL/LCL, Air cargo, customs clearing, warehousing and last-mile delivery." },
       { property: "og:type", content: "website" },

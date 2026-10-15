@@ -8,8 +8,8 @@ import { Users, FileCheck, Warehouse, ShieldCheck, Globe2, Handshake } from "luc
 export const Route = createFileRoute("/about")({
   head: () => ({
     meta: [
-      { title: "About NDL Cargo — Ghana's trusted freight partner" },
-      { name: "description", content: "NDL Cargo is a Ghanaian-owned freight and customs company operating from China, Dubai and North America into Tema Port." },
+      { title: "About NDL Cargo Ghana | Freight Forwarder in Accra" },
+      { name: "description", content: "NDL Cargo Ghana is an Accra-based freight forwarder with in-house customs brokers, China hubs and Ghana-wide delivery." },
       { property: "og:title", content: "About NDL Cargo" },
       { property: "og:description", content: "Ghanaian-owned, globally connected freight and customs specialists." },
       { property: "og:type", content: "website" },

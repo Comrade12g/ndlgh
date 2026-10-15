@@ -5,3 +5,14 @@
 - [ ] Publish latest fixes to live site
 
 - [x] Air cargo: WP Guangzhou hub, $20/$25 per kg, Accra arrival intake + SMS, portal air mark
+
+## SEO brief (Oct 2026)
+- [x] Business config file, robots.txt, homepage title/H1/meta, keyword tags removed
+- [x] Fake reviews + unverified counters removed
+- [x] China lane full copy + FAQ/breadcrumb schema; all lane + page titles/descriptions
+- [ ] Other lane pages full original copy
+- [ ] Hide "Not available" warehouse cards; About page team/licence [CONFIRM]
+- [ ] New guides (Alibaba, customs duty, air vs sea) + Article schema
+- [ ] Prerendering of public pages
+- [ ] Google review button (needs review link)
+- [ ] Confirm: Accra warehouse address, FCL/express transit, clearance days

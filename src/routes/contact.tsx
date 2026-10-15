@@ -8,8 +8,8 @@ import { openWhatsApp } from "@/lib/whatsapp";
 export const Route = createFileRoute("/contact")({
   head: () => ({
     meta: [
-      { title: "Contact NDL Cargo Ghana — Accra office, WhatsApp & phone" },
-      { name: "description", content: `Contact NDL Cargo: ${NDL_ADDRESS}. Phone/WhatsApp ${NDL_PHONE}, email ${NDL_EMAIL}.` },
+      { title: "Contact NDL Cargo Ghana | Accra Office & WhatsApp" },
+      { name: "description", content: "Visit us at Derby Avenue, Ferro Bel Plaza, Accra, call 0500229352 or email info@ndlgh.com for a freight quote." },
       { property: "og:title", content: "Contact NDL Cargo Ghana" },
       { property: "og:description", content: `NDL Cargo office: ${NDL_ADDRESS}. Phone/WhatsApp ${NDL_PHONE}.` },
       { property: "og:type", content: "website" },

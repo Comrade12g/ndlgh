@@ -4,8 +4,6 @@ import { HeroMap } from "@/components/marketing/HeroMap";
 import { QuoteEngine } from "@/components/marketing/QuoteEngine";
 import { TrackingLookup } from "@/components/marketing/TrackingLookup";
 import { MilestoneTimeline } from "@/components/tracking/MilestoneTimeline";
-import { StatsBand } from "@/components/marketing/StatsBand";
-import { Testimonials } from "@/components/marketing/Testimonials";
 import { WarehouseLocations } from "@/components/marketing/WarehouseLocations";
 import { LaneMarquee } from "@/components/marketing/LaneMarquee";
 import { HeroCarousel, type CarouselSlide } from "@/components/marketing/HeroCarousel";
@@ -33,11 +31,10 @@ import {
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "NDL Cargo Ghana — Sea, Air & Door Freight from China, Dubai, US, Canada & Thailand" },
-      { name: "description", content: "NDL Cargo Ghana ships sea LCL/FCL, air cargo and door-to-door freight from China (Guangzhou, Yiwu, Shenzhen), Dubai, Thailand, Canada and the US into Tema Port and Accra. Live NDL-CN & ND tracking, in-house customs clearing, groupage consolidation and Ghana-wide last-mile delivery. Get an instant CBM quote in seconds." },
-      { name: "keywords", content: "shipping to Ghana, China to Ghana cargo, Guangzhou Yiwu Ghana freight, Dubai to Ghana shipping, air cargo Ghana, sea freight Tema, LCL FCL Ghana, customs clearing Tema, Ghana logistics, last-mile delivery Ghana, NDL Cargo, groupage Ghana" },
-      { property: "og:title", content: "NDL Cargo Ghana — Global freight, delivered to your door" },
-      { property: "og:description", content: "Sea LCL/FCL, air, customs clearing and Ghana-wide last-mile delivery from China, Dubai, Thailand, Canada and the US. Instant quotes and live shipment tracking." },
+      { title: "China to Ghana Shipping | Sea, Air & Customs | NDL Cargo" },
+      { name: "description", content: "Ship from China, Dubai, Thailand, Canada & the US to Ghana. Sea LCL/FCL, air cargo, customs clearing at Tema and door delivery. Get an instant quote." },
+      { property: "og:title", content: "NDL Cargo Ghana | Sea & Air Freight to Ghana" },
+      { property: "og:description", content: "Ship from China, Dubai, Thailand, Canada & the US to Ghana. Sea LCL/FCL, air cargo, customs clearing at Tema and door delivery. Get an instant quote." },
       { property: "og:type", content: "website" },
       { property: "og:image", content: `https://www.ndlgh.com/gallery/sea-tema.jpg` },
       { name: "twitter:card", content: "summary_large_image" },
@@ -88,14 +85,12 @@ function HomePage() {
       <ServicesSection />
       <BuyFromChinaSection />
       <HowItWorks />
-      <StatsBand />
       <QuoteSection />
       <LanesSection />
       <WhyNDL />
       <WarehouseLocations />
       <GallerySection />
       <TrackingDemo />
-      <Testimonials />
       <FaqSection />
       <TeamSection />
       <ContactCTA />
@@ -336,7 +331,7 @@ function Hero() {
   const { data: photos } = useGalleryPhotos();
   const slides = useMemo(() => heroSlidesFromDb(photos), [photos]);
 
-  const headline = "Global freight, delivered to your door in Ghana.".split(" ");
+  const headline = "China to Ghana Shipping and Global Freight, Delivered to Your Door".split(" ");
   return (
     <section className="relative overflow-hidden bg-gradient-to-b from-brand-navy via-[#0d2551] to-brand-navy text-white">
       <div className="absolute inset-0 opacity-20" style={{ backgroundImage: "radial-gradient(circle at 25% 30%, rgba(247,148,29,0.35), transparent 40%), radial-gradient(circle at 75% 60%, rgba(46,134,222,0.35), transparent 45%)" }} />
@@ -352,14 +347,14 @@ function Hero() {
               <span
                 key={i}
                 style={{ animationDelay: `${i * 90}ms` }}
-                className={w === "delivered" ? "text-gradient-brand mr-2" : "mr-2"}
+                className={w === "Delivered" ? "text-gradient-brand mr-2" : "mr-2"}
               >
                 {w}
               </span>
             ))}
           </h1>
           <p className="mt-5 max-w-lg text-lg text-white/80">
-            Sea LCL/FCL, air cargo, customs clearing and Ghana-wide last-mile delivery — from China, Dubai, Thailand, Canada and the US to Tema and every region of Ghana.
+            Sea LCL/FCL, air cargo, customs clearing and Ghana-wide last-mile delivery — from <Link to="/lanes/$origin" params={{ origin: "china" }} className="font-semibold text-brand-orange underline">China to Ghana shipping</Link> to Dubai, Thailand, Canada and the US, into Tema and every region of Ghana.
           </p>
           <ul className="mt-6 grid max-w-lg gap-2 text-sm text-white/85 sm:grid-cols-2">
             {[

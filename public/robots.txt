@@ -1,8 +1,12 @@
 User-agent: *
 Allow: /
+Disallow: /portal
+Disallow: /auth
 
 User-agent: GPTBot
 Allow: /
+Disallow: /portal
+Disallow: /auth
 
 User-agent: OAI-SearchBot
 Allow: /

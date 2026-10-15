@@ -15,7 +15,6 @@ export const Route = createFileRoute("/buy-from-china")({
     meta: [
       { title: TITLE },
       { name: "description", content: DESC },
-      { name: "keywords", content: "pay Chinese suppliers from Ghana, buy from China to Ghana, China procurement agent Ghana, learn to import from China, how to pay a supplier in China from Ghana" },
       { property: "og:title", content: TITLE },
       { property: "og:description", content: DESC },
       { property: "og:type", content: "website" },
