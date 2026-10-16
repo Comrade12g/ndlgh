@@ -4,6 +4,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { MapPin, Phone, Mail, MessageCircle, Clock } from "lucide-react";
 import { openWhatsApp } from "@/lib/whatsapp";
+import { SocialCards, SOCIALS } from "@/components/marketing/SocialLinks";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
@@ -89,6 +90,15 @@ function ContactPage() {
             </div>
           </Card>
         </div>
+
+        <div className="mt-16">
+          <div className="text-xs font-semibold uppercase tracking-widest text-brand-orange">Follow NDL</div>
+          <h2 className="mt-2 font-display text-3xl font-black text-brand-navy">Join the NDL family</h2>
+          <p className="mt-3 max-w-2xl text-sm text-muted-foreground">
+            Container loading dates, promotions and tips on importing from China to Ghana — we post them on every platform first.
+          </p>
+          <SocialCards className="mt-6" />
+        </div>
       </section>
 
       <script
@@ -101,6 +111,7 @@ function ContactPage() {
             address: { "@type": "PostalAddress", streetAddress: NDL_ADDRESS, addressLocality: "Accra", addressCountry: "GH" },
             telephone: NDL_PHONE,
             email: NDL_EMAIL,
+            sameAs: SOCIALS.map((s) => s.href),
             openingHours: ["Mo-Fr 08:00-18:00", "Sa 09:00-14:00"],
           }),
         }}

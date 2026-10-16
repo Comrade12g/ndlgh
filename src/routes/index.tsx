@@ -21,6 +21,7 @@ import {
 } from "@/lib/gallery";
 import { IMG, small } from "@/assets/gallery";
 import { Wallet as WalletIcon, Search as SearchIcon, GraduationCap } from "lucide-react";
+import { SOCIALS } from "@/components/marketing/SocialLinks";
 import {
   Ship, Plane, Truck, Warehouse, ShieldCheck, Globe2,
   ArrowRight, Users, FileCheck, Filter,
@@ -864,7 +865,7 @@ function JsonLd() {
       "Cargo from Dubai to Accra",
       "Last-mile delivery Ghana",
     ],
-    sameAs: ["https://ndlgh.lovable.app", "https://ndlgh.com"],
+    sameAs: SOCIALS.map((s) => s.href),
   };
   return (
     <script

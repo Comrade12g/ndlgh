@@ -15,4 +15,5 @@
 - [x] 8 new guides + Article schema + guide↔lane links
 - [ ] Prerendering of public pages
 - [ ] Google review button (needs review link)
+- [x] Social handles site-wide (footer, contact, about, schema sameAs, llms.txt)
 - [ ] Confirm: Accra warehouse address, FCL/express transit, clearance days

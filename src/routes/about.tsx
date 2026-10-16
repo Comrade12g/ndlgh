@@ -3,6 +3,7 @@ import { MarketingLayout } from "@/components/marketing/MarketingLayout";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useReveal } from "@/hooks/use-reveal";
+import { SocialCards, SocialIconRow } from "@/components/marketing/SocialLinks";
 import { Users, FileCheck, Warehouse, ShieldCheck, Globe2, Handshake } from "lucide-react";
 
 export const Route = createFileRoute("/about")({
@@ -82,6 +83,13 @@ function AboutPage() {
           <div className="mt-6 flex flex-wrap gap-3">
             <Link to="/contact"><Button className="bg-brand-orange hover:bg-brand-orange/90">Contact us</Button></Link>
             <Link to="/quote"><Button variant="outline" className="border-white/40 bg-transparent text-white hover:bg-white/10">Get a quote</Button></Link>
+          </div>
+          <div className="mt-8 border-t border-white/10 pt-6">
+            <div className="text-xs font-semibold uppercase tracking-widest text-brand-orange">Follow us</div>
+            <p className="mt-2 max-w-xl text-sm text-white/70">
+              Shipping updates, container loading dates and importing tips — on every platform.
+            </p>
+            <SocialIconRow className="mt-3" />
           </div>
         </div>
       </section>
