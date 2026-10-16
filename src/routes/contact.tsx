@@ -111,6 +111,7 @@ function ContactPage() {
             address: { "@type": "PostalAddress", streetAddress: NDL_ADDRESS, addressLocality: "Accra", addressCountry: "GH" },
             telephone: NDL_PHONE,
             email: NDL_EMAIL,
+            sameAs: SOCIALS.map((s) => s.href),
             openingHours: ["Mo-Fr 08:00-18:00", "Sa 09:00-14:00"],
           }),
         }}
