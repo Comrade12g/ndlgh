@@ -12,7 +12,7 @@
 - [x] China lane full copy + FAQ/breadcrumb schema; all lane + page titles/descriptions
 - [ ] Other lane pages full original copy
 - [ ] Hide "Not available" warehouse cards; About page team/licence [CONFIRM]
-- [ ] New guides (Alibaba, customs duty, air vs sea) + Article schema
+- [x] 8 new guides + Article schema + guide↔lane links
 - [ ] Prerendering of public pages
 - [ ] Google review button (needs review link)
 - [ ] Confirm: Accra warehouse address, FCL/express transit, clearance days
