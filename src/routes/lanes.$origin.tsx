@@ -220,6 +220,15 @@ function LaneDetailPage() {
           </div>
         )}
 
+        {origin !== "china" && (
+          <p className="mt-10 text-sm text-muted-foreground">
+            Useful links: <Link to="/buy-from-china" className="text-brand-sky underline">buy from China</Link> ·{" "}
+            <Link to="/lanes/$origin" params={{ origin: "china" }} className="text-brand-sky underline">China to Ghana shipping</Link> ·{" "}
+            <Link to="/guides/$slug" params={{ slug: "clearing-goods-at-tema-port" }} className="text-brand-sky underline">clearing goods at Tema Port</Link> ·{" "}
+            <Link to="/guides/$slug" params={{ slug: "lcl-vs-fcl-shipping-to-ghana" }} className="text-brand-sky underline">LCL vs FCL shipping</Link>
+          </p>
+        )}
+
         <div className="mt-10 grid gap-6 lg:grid-cols-[1fr_1fr]">
           <div className="rounded-2xl bg-brand-navy p-8 text-white">
             <h2 className="font-display text-2xl font-black">Ready to ship from {d.name}?</h2>
