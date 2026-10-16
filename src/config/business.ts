@@ -54,5 +54,10 @@ export const LOCAL_BUSINESS_LD = {
     addressCountry: "GH",
   },
   openingHours: BUSINESS.openingHoursSchema,
-  sameAs: [BUSINESS.socials.instagram, BUSINESS.socials.facebook, BUSINESS.socials.tiktok],
+  sameAs: [
+    BUSINESS.socials.whatsappChannel,
+    BUSINESS.socials.tiktok,
+    BUSINESS.socials.instagram,
+    BUSINESS.socials.facebook,
+  ],
 };

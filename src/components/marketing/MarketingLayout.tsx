@@ -5,6 +5,7 @@ import { LogoLockup } from "@/components/brand/Logo";
 import { Button } from "@/components/ui/button";
 import { Menu, X, MessageCircle, MapPin, Phone, Mail } from "lucide-react";
 import { openWhatsApp } from "@/lib/whatsapp";
+import { SocialIconRow } from "@/components/marketing/SocialLinks";
 import { cn } from "@/lib/utils";
 
 const NAV = [
@@ -110,6 +111,12 @@ export function MarketingLayout({ children }: { children: ReactNode }) {
             <p className="mt-4 max-w-xs text-sm text-white/70">
               End-to-end logistics from China, Dubai, Thailand, Canada and the US to your door in Ghana.
             </p>
+            <div className="mt-5">
+              <div className="mb-2 text-xs font-semibold uppercase tracking-widest text-brand-orange">
+                Follow us
+              </div>
+              <SocialIconRow />
+            </div>
           </div>
           <div>
             <div className="mb-3 text-xs font-semibold uppercase tracking-widest text-brand-orange">
