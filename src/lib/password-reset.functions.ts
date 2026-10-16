@@ -41,25 +41,22 @@ export const requestCustomerPasswordReset = createServerFn({ method: "POST" })
     const dayAgo = new Date(Date.now() - 86400000).toISOString();
     const { data: recent } = await supabaseAdmin
       .from("customer_notifications")
-      .select("created_at")
+      .select("created_at, status")
       .eq("customer_id", prof.id)
       .eq("event_type", "password_reset")
       .gte("created_at", dayAgo);
-    const list = recent ?? [];
+    // Only count attempts that actually delivered — a failed SMS (bad balance,
+    // network blip) must not cost the customer their retry window.
+    const list = (recent ?? []).filter((r) => r.status === "sent");
     if (list.length >= 3) return generic;
     if (list.some((r) => Date.now() - new Date(r.created_at).getTime() < 600000)) return generic;
 
     const pw = tempPassword();
-    const { error: upErr } = await supabaseAdmin.auth.admin.updateUserById(prof.id, { password: pw });
-    if (upErr) {
-      console.error("reset update failed", upErr);
-      return generic;
-    }
-    await supabaseAdmin.from("profiles").update({ must_change_password: true }).eq("id", prof.id);
-
     const local = "0" + e164.replace(/^\+233/, "");
     const msg = `NDL (Next Day Logistics) password reset.\nEntry number: ${prof.shipping_mark ?? "-"}\nLogin: https://www.ndlgh.com/auth\nPhone: ${local}\nTemporary password: ${pw}\nYou will set a new password after login.\n\n— NDL (Next Day Logistics)\nPortal: https://www.ndlgh.com/portal\nWhatsApp: 0500229352`;
 
+    // Send the SMS BEFORE touching the account: if delivery fails, the
+    // customer's existing password must keep working.
     const to = e164.replace(/\D/g, "");
     let code = "1002";
     try {
@@ -70,7 +67,39 @@ export const requestCustomerPasswordReset = createServerFn({ method: "POST" })
     } catch {
       code = "1002";
     }
-    const ok = code === "1000" || code === "1007";
+    const sent = code === "1000" || code === "1007";
+
+    if (!sent) {
+      // Delivery failed — leave the password untouched so the customer is
+      // never locked out.
+      await supabaseAdmin.from("customer_notifications").insert({
+        customer_id: prof.id,
+        event_type: "password_reset",
+        channel: "sms",
+        phone: to,
+        message: msg.replace(pw, "••••••••"),
+        status: `failed:${code}`,
+      });
+      return generic;
+    }
+
+    const { error: upErr } = await supabaseAdmin.auth.admin.updateUserById(prof.id, { password: pw });
+    if (upErr) {
+      console.error("reset update failed", upErr);
+      // The SMS already went out with this password, but the account wasn't
+      // updated — log it clearly so support can spot and resolve it.
+      await supabaseAdmin.from("customer_notifications").insert({
+        customer_id: prof.id,
+        event_type: "password_reset",
+        channel: "sms",
+        phone: to,
+        message: msg.replace(pw, "••••••••"),
+        status: "failed:update_error",
+      });
+      return generic;
+    }
+    await supabaseAdmin.from("profiles").update({ must_change_password: true }).eq("id", prof.id);
+
     // Log without the password itself.
     await supabaseAdmin.from("customer_notifications").insert({
       customer_id: prof.id,
@@ -78,7 +107,7 @@ export const requestCustomerPasswordReset = createServerFn({ method: "POST" })
       channel: "sms",
       phone: to,
       message: msg.replace(pw, "••••••••"),
-      status: ok ? "sent" : `failed:${code}`,
+      status: "sent",
     });
     return generic;
   });
