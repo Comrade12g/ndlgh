@@ -3,6 +3,7 @@ import { MarketingLayout } from "@/components/marketing/MarketingLayout";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useReveal } from "@/hooks/use-reveal";
+import { SocialCards } from "@/components/marketing/SocialLinks";
 import { Users, FileCheck, Warehouse, ShieldCheck, Globe2, Handshake } from "lucide-react";
 
 export const Route = createFileRoute("/about")({

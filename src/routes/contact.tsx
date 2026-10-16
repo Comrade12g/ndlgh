@@ -90,6 +90,15 @@ function ContactPage() {
             </div>
           </Card>
         </div>
+
+        <div className="mt-16">
+          <div className="text-xs font-semibold uppercase tracking-widest text-brand-orange">Follow NDL</div>
+          <h2 className="mt-2 font-display text-3xl font-black text-brand-navy">Join the NDL family</h2>
+          <p className="mt-3 max-w-2xl text-sm text-muted-foreground">
+            Container loading dates, promotions and tips on importing from China to Ghana — we post them on every platform first.
+          </p>
+          <SocialCards className="mt-6" />
+        </div>
       </section>
 
       <script
