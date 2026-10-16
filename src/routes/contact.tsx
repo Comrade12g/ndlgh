@@ -4,7 +4,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { MapPin, Phone, Mail, MessageCircle, Clock } from "lucide-react";
 import { openWhatsApp } from "@/lib/whatsapp";
-import { SocialCards } from "@/components/marketing/SocialLinks";
+import { SocialCards, SOCIALS } from "@/components/marketing/SocialLinks";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
