@@ -151,7 +151,10 @@ export function ChinaLaneContent() {
       <p className="mt-6 text-sm text-muted-foreground">
         Also see: <Link to="/services" className="text-brand-sky underline">all services</Link> ·{" "}
         <Link to="/lanes/$origin" params={{ origin: "dubai" }} className="text-brand-sky underline">Dubai to Ghana shipping</Link> ·{" "}
-        <Link to="/guides" className="text-brand-sky underline">import guides</Link>
+        <Link to="/guides/$slug" params={{ slug: "how-to-import-from-alibaba-to-ghana" }} className="text-brand-sky underline">how to import from Alibaba to Ghana</Link> ·{" "}
+        <Link to="/guides/$slug" params={{ slug: "ghana-customs-duty-import-guide" }} className="text-brand-sky underline">Ghana customs duty guide</Link> ·{" "}
+        <Link to="/guides/$slug" params={{ slug: "air-freight-vs-sea-freight-china-ghana" }} className="text-brand-sky underline">air vs sea freight from China</Link> ·{" "}
+        <Link to="/guides/$slug" params={{ slug: "clearing-goods-at-tema-port" }} className="text-brand-sky underline">clearing goods at Tema</Link>
       </p>
     </div>
   );

@@ -1,4 +1,5 @@
 import { IMG } from "@/assets/gallery";
+import { SEO_GUIDES } from "./guides-seo";
 
 export type GuideSection = {
   h: string;
@@ -18,6 +19,10 @@ export type Guide = {
   description: string;
   category: GuideCategorySlug;
   updated: string; // ISO date
+  /** ISO publish date (defaults to updated). */
+  published?: string;
+  /** Matching lane page slug for internal links. */
+  lane?: string;
   readMinutes: number;
   image: string;
   imageAlt: string;
@@ -72,7 +77,7 @@ export const GUIDE_CATEGORIES: GuideCategory[] = [
   },
 ];
 
-export const GUIDES: Guide[] = [
+const BASE_GUIDES: Guide[] = [
   {
     slug: "cost-of-shipping-from-guangzhou-to-accra",
     title: "The real cost of shipping from Guangzhou to Accra in 2026",
@@ -484,6 +489,8 @@ export const GUIDES: Guide[] = [
     ],
   },
 ];
+
+export const GUIDES: Guide[] = [...SEO_GUIDES, ...BASE_GUIDES];
 
 export const SITE_URL = "https://www.ndlgh.com";
 

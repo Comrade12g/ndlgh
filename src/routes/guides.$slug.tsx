@@ -42,7 +42,8 @@ export const Route = createFileRoute("/guides/$slug")({
         { property: "og:type", content: "article" },
         { property: "og:url", content: url },
         { property: "og:image", content: image },
-        { property: "article:published_time", content: g.updated },
+        { property: "article:published_time", content: g.published ?? g.updated },
+        { property: "article:modified_time", content: g.updated },
         { name: "twitter:card", content: "summary_large_image" },
         { name: "twitter:title", content: g.seoTitle },
         { name: "twitter:description", content: g.description },
@@ -64,11 +65,11 @@ function GuidePost() {
   const jsonLd = [
     {
       "@context": "https://schema.org",
-      "@type": "BlogPosting",
+      "@type": "Article",
       headline: guide.title,
       description: guide.description,
       image: `${SITE_URL}${guide.image}`,
-      datePublished: guide.updated,
+      datePublished: guide.published ?? guide.updated,
       dateModified: guide.updated,
       mainEntityOfPage: { "@type": "WebPage", "@id": url },
       articleSection: cat.name,
@@ -137,7 +138,7 @@ function GuidePost() {
             <div className="mt-5 flex flex-wrap items-center gap-4 text-xs text-white/75">
               <span className="flex items-center gap-1.5">
                 <CalendarDays className="h-3.5 w-3.5 text-brand-orange" />
-                Updated {formatGuideDate(guide.updated)}
+                By NDL Cargo Ghana · Published {formatGuideDate(guide.published ?? guide.updated)} · Updated {formatGuideDate(guide.updated)}
               </span>
               <span className="flex items-center gap-1.5">
                 <Clock className="h-3.5 w-3.5 text-brand-orange" />
@@ -231,6 +232,18 @@ function GuidePost() {
                 )}
               </section>
             ))}
+
+            <aside className="mt-10 rounded-2xl border bg-secondary/40 p-5 text-sm">
+              <p className="font-semibold text-foreground">Ready to ship?</p>
+              <p className="mt-1 text-muted-foreground">
+                See our{" "}
+                <Link to="/lanes/$origin" params={{ origin: guide.lane ?? "china" }} className="font-semibold text-brand-sky underline">
+                  {(guide.lane ?? "china") === "china" ? "China to Ghana shipping" : "shipping lane"} rates and options
+                </Link>
+                , get an <Link to="/quote" className="font-semibold text-brand-sky underline">instant freight quote</Link>, or{" "}
+                <a href="https://wa.me/233500229352" target="_blank" rel="noopener noreferrer" className="font-semibold text-brand-sky underline">chat with NDL on WhatsApp</a>.
+              </p>
+            </aside>
 
             {guide.faqs.length > 0 && (
               <section className="mt-14">
