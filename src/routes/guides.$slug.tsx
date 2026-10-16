@@ -42,7 +42,8 @@ export const Route = createFileRoute("/guides/$slug")({
         { property: "og:type", content: "article" },
         { property: "og:url", content: url },
         { property: "og:image", content: image },
-        { property: "article:published_time", content: g.updated },
+        { property: "article:published_time", content: g.published ?? g.updated },
+        { property: "article:modified_time", content: g.updated },
         { name: "twitter:card", content: "summary_large_image" },
         { name: "twitter:title", content: g.seoTitle },
         { name: "twitter:description", content: g.description },
@@ -64,11 +65,11 @@ function GuidePost() {
   const jsonLd = [
     {
       "@context": "https://schema.org",
-      "@type": "BlogPosting",
+      "@type": "Article",
       headline: guide.title,
       description: guide.description,
       image: `${SITE_URL}${guide.image}`,
-      datePublished: guide.updated,
+      datePublished: guide.published ?? guide.updated,
       dateModified: guide.updated,
       mainEntityOfPage: { "@type": "WebPage", "@id": url },
       articleSection: cat.name,
