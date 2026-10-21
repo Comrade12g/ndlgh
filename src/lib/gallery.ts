@@ -45,21 +45,21 @@ export const GALLERY_LOCATIONS = [
 import { IMG } from "@/assets/gallery";
 
 export const FALLBACK_HERO_SLIDES = [
-  { src: IMG.seaTema,           alt: "Container ship arriving at port",       caption: "Sea freight into Tema Port",         location: "Tema" },
+  { src: IMG.seaTema,           alt: "Container ship at port — illustrative photograph", caption: "Sea freight", location: "" },
   { src: IMG.airAccra,          alt: "Citilink cargo aircraft on the airport apron — stock photograph", caption: "Air cargo aircraft · stock photograph", location: "" },
-  { src: IMG.warehousePallets,  alt: "Warehouse pallets ready for dispatch",  caption: "Groupage consolidation warehouse",   location: "Guangzhou" },
+  { src: IMG.warehousePallets,  alt: "Warehouse pallets ready for dispatch — illustrative photograph", caption: "Groupage consolidation", location: "" },
   { src: IMG.deliveryTruck,     alt: "Delivery van loaded with cartons — stock photograph", caption: "Cargo delivery · stock photograph", location: "" },
   { src: IMG.portCranes,        alt: "Hamburg port cranes at sunset — stock photograph", caption: "Port cranes · stock photograph", location: "Hamburg" },
 ];
 
 export const FALLBACK_GALLERY = [
-  { src: IMG.containerShipPort, alt: "Container ship at port",              category: "Port & Vessels", location: "Tema" },
+  { src: IMG.containerShipPort, alt: "Container ship at port · stock photograph", category: "Port & Vessels", location: "" },
   { src: IMG.warehouseInterior, alt: "Warehouse storage aisle · stock photograph", category: "Warehouse", location: "" },
   { src: IMG.airAccra,          alt: "Cargo aircraft on airport apron · stock photograph", category: "Air Cargo", location: "" },
   { src: IMG.deliveryTruck,     alt: "Delivery van loaded with cartons · stock photograph", category: "Delivery", location: "" },
   { src: IMG.stackedContainers, alt: "Stacked shipping containers · stock photograph", category: "Port & Vessels", location: "" },
   { src: IMG.portCranes,        alt: "Port cranes at sunset · stock photograph", category: "Port & Vessels", location: "Hamburg" },
-  { src: IMG.warehousePallets,  alt: "Pallets in a bonded warehouse",       category: "Warehouse",      location: "Guangzhou" },
+  { src: IMG.warehousePallets,  alt: "Warehouse pallets · stock photograph", category: "Warehouse", location: "" },
   { src: IMG.freighterNight,    alt: "Cargo ship and illuminated port at night · stock photograph", category: "Port & Vessels", location: "" },
 ];
 
