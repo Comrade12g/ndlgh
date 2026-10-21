@@ -1,5 +1,7 @@
 import { MapPin, Clock, Phone, Building2 } from "lucide-react";
 import { Card } from "@/components/ui/card";
+import { IMG } from "@/assets/gallery";
+import { SmartImage } from "@/components/marketing/SmartImage";
 
 type Hub = {
   code: string;
@@ -52,12 +54,12 @@ export const WAREHOUSE_HUBS: Hub[] = [
   },
 ];
 
-const OTHER_ORIGINS: { country: string }[] = [
-  { country: "Dubai (UAE)" },
-  { country: "Thailand" },
+const OTHER_ORIGINS: { country: string; photo?: string; alt?: string }[] = [
+  { country: "Dubai (UAE)", photo: IMG.dubaiHub, alt: "Dubai cityscape — illustrative location photograph" },
+  { country: "Thailand", photo: IMG.thailandHub, alt: "Thailand cityscape — illustrative location photograph" },
   { country: "United Kingdom" },
-  { country: "Canada" },
-  { country: "United States" },
+  { country: "Canada", photo: IMG.canadaHub, alt: "Canadian cityscape — illustrative location photograph" },
+  { country: "United States", photo: IMG.usHub, alt: "New York waterfront skyline — stock location photograph" },
 ];
 
 const GHANA_HUB: Hub = {
@@ -148,16 +150,22 @@ export function WarehouseLocations() {
 
         <div className="mt-4 grid gap-4 md:grid-cols-2">
           {OTHER_ORIGINS.map((o) => (
-            <Card key={o.country} className="border-dashed p-5">
+            <Card key={o.country} className="overflow-hidden border-dashed">
+              {o.photo && <figure>
+                <SmartImage src={o.photo} alt={o.alt ?? o.country} aspect="aspect-[16/9]" width={1600} height={900} sizes="(max-width: 768px) 100vw, 50vw" />
+                <figcaption className="px-5 pt-3 text-xs text-muted-foreground">Location photograph · not an NDL warehouse</figcaption>
+              </figure>}
+              <div className="p-5">
               <div className="flex items-center justify-between gap-3">
                 <div className="font-display text-base font-bold text-brand-navy">
-                  NDL {o.country} Warehouse
+                  {o.country}
                 </div>
                 <span className="shrink-0 rounded-md bg-muted px-2 py-0.5 text-xs font-semibold uppercase text-muted-foreground">
                   {o.country}
                 </span>
               </div>
-              <p className="mt-2 text-sm text-muted-foreground">Not available</p>
+              <p className="mt-2 text-sm text-muted-foreground">Warehouse receiving details are not yet available. Contact NDL before sending goods.</p>
+              </div>
             </Card>
           ))}
         </div>
