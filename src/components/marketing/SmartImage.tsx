@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { LQIP } from "@/assets/gallery/lqip";
+import { imageSrcSet } from "@/assets/gallery";
 
 type Props = {
   src: string;
@@ -18,8 +19,8 @@ type Props = {
 
 /** Local gallery photos ship in 1600w + 800w variants. */
 function responsive(src: string) {
-  if (!src.startsWith("/gallery/") || src.includes("-800.")) return undefined;
-  return `${src.replace(/\.(jpg|webp)$/, "-800.webp")} 800w, ${src} 1600w`;
+  if (src.includes("-800.")) return undefined;
+  return imageSrcSet(src);
 }
 
 /**

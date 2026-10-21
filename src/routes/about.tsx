@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { useReveal } from "@/hooks/use-reveal";
 import { SocialCards, SocialIconRow } from "@/components/marketing/SocialLinks";
 import { Users, FileCheck, Warehouse, ShieldCheck, Globe2, Handshake } from "lucide-react";
+import { IMG } from "@/assets/gallery";
+import { SmartImage } from "@/components/marketing/SmartImage";
 
 export const Route = createFileRoute("/about")({
   head: () => ({
@@ -48,6 +50,10 @@ function AboutPage() {
       </section>
 
       <section className="mx-auto max-w-7xl px-4 py-16">
+        <figure className="mb-12">
+          <SmartImage src={IMG.warehouseInterior} alt="A warehouse aisle with cartons on tall storage shelves — illustrative stock photograph" aspect="aspect-[16/9]" imgClassName="object-center" width={1600} height={900} sizes="(max-width: 768px) 100vw, 1200px" />
+          <figcaption className="mt-3 text-xs text-muted-foreground">Warehousing and consolidation · illustrative stock photograph, not an NDL facility</figcaption>
+        </figure>
         <div ref={ref} className="reveal">
           <div className="text-xs font-semibold uppercase tracking-widest text-brand-orange">Teams</div>
           <h2 className="mt-2 font-display text-3xl font-black text-brand-navy">How we're organised</h2>

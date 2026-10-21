@@ -163,9 +163,9 @@ function GallerySection() {
     return {
       "@context": "https://schema.org",
       "@type": "ImageGallery",
-      name: "NDL Cargo Ghana — On the ground",
+      name: "NDL Cargo Ghana — Shipping gallery",
       description:
-        "Photos from NDL Cargo warehouses, sea/air lanes and last-mile deliveries across China, Dubai and Ghana.",
+        "Shipping and logistics imagery, including illustrative stock photographs that do not depict NDL facilities.",
       about: Array.from(new Set(items.map((i) => i.category).filter(Boolean))),
       contentLocation: Array.from(
         new Set(items.map((i) => i.location).filter(Boolean)),
@@ -200,7 +200,7 @@ function GallerySection() {
         <div ref={ref} className="reveal">
           <SectionHeading eyebrow="On the ground" title="From origin port to your door — every step covered" />
           <p className="mt-3 max-w-2xl text-sm text-muted-foreground">
-            Real photos from our warehouses in Guangzhou and Yiwu, sea and air lanes into Ghana, and last-mile deliveries in Accra, Kumasi and Tema. Filter by service or city.
+            Sea freight, air cargo, warehousing and delivery. Stock photographs illustrate shipping services and do not depict NDL's own facilities or team.
           </p>
         </div>
 
@@ -250,6 +250,10 @@ const CATEGORY_SEO: Record<string, { verb: string; keyword: string }> = {
 };
 
 function buildGalleryCopy(item: { alt: string; category?: string; location?: string }) {
+  if (item.alt.includes("stock photograph")) {
+    const caption = item.location ? `${item.alt} · ${item.location}` : item.alt;
+    return { alt: caption, caption, sub: item.category ?? "" };
+  }
   const meta = (item.category && CATEGORY_SEO[item.category]) || CATEGORY_SEO["Other"];
   const city = item.location?.trim();
   const where = city ? `${meta.verb} ${city}` : "";
