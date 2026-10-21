@@ -22,6 +22,19 @@ export function initAnalytics() {
     script.async = true;
     script.src = `https://www.googletagmanager.com/gtag/js?id=${measurementId}`;
     document.head.appendChild(script);
+
+    // Microsoft Clarity (session recordings & heatmaps)
+    const w = window as unknown as { clarity?: ((...a: unknown[]) => void) & { q?: unknown[] } };
+    if (!w.clarity) {
+      const c = function (...args: unknown[]) {
+        (c.q = c.q || []).push(args);
+      } as ((...a: unknown[]) => void) & { q?: unknown[] };
+      w.clarity = c;
+      const cs = document.createElement("script");
+      cs.async = true;
+      cs.src = "https://www.clarity.ms/tag/z1a4x7t7wy";
+      document.head.appendChild(cs);
+    }
   };
   const ric = (window as unknown as { requestIdleCallback?: (cb: () => void, o?: { timeout: number }) => void }).requestIdleCallback;
   if (ric) ric(load, { timeout: 4000 });
