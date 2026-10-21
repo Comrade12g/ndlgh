@@ -1,4 +1,8 @@
 # Roadmap
+## Real photography
+- [ ] Replace eight mismatched gallery photos with licensed stock and optimized variants
+- [ ] Add honest location imagery and an About photograph
+- [ ] Verify photo loading and small-screen layout
 - [x] Automatic SMS to customers via BulkSMS Ghana (sender NDL)
 - [x] Admin message log dashboard (balance, failures, retry, WhatsApp backup)
 - [ ] Double-click guard on "Load package(s)"

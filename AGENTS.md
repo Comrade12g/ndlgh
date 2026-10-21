@@ -8,3 +8,5 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+- Marketing photo URLs and responsive variants are centralized in src/assets/gallery/index.ts; downloaded replacements use Lovable asset pointers so media stays outside the repository.
