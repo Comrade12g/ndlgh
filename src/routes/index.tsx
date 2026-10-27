@@ -725,7 +725,7 @@ function WhyNDL() {
         <div ref={ref} className="reveal">
           <SectionHeading eyebrow="Why NDL Cargo" title="Ghana's most trusted freight forwarder" />
           <p className="mt-4 max-w-lg text-muted-foreground">
-            Headquartered on Derby Avenue, Accra with operations at Tema Port, NDL Cargo Ghana has cleared thousands of containers and delivered to every region of Ghana. We built the network for Ghanaian importers who are tired of opaque agents and delayed clearances.
+            Headquartered on Derby Avenue, Accra with operations at Tema Port, NDL Cargo Ghana ships sea and air cargo to Ghana and delivers to customers across the country. We built the network for Ghanaian importers who are tired of opaque agents and delayed clearances.
           </p>
           <ul className="mt-6 space-y-3 text-sm text-foreground">
             {points.map((p) => (

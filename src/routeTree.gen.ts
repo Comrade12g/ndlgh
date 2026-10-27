@@ -21,10 +21,12 @@ import { Route as ContactRouteImport } from './routes/contact'
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as PendingActivationRouteImport } from './routes/pending-activation'
 import { Route as PortalRouteImport } from './routes/portal'
+import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as QuoteRouteImport } from './routes/quote'
 import { Route as ServicesRouteImport } from './routes/services'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as StaffSignupRouteImport } from './routes/staff-signup'
+import { Route as TermsRouteImport } from './routes/terms'
 import { Route as TrackingRouteImport } from './routes/tracking'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedDeliveriesRouteImport } from './routes/_authenticated/deliveries'
@@ -112,6 +114,11 @@ const PortalRoute = PortalRouteImport.update({
   path: '/portal',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const QuoteRoute = QuoteRouteImport.update({
   id: '/quote',
   path: '/quote',
@@ -130,6 +137,11 @@ const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
 const StaffSignupRoute = StaffSignupRouteImport.update({
   id: '/staff-signup',
   path: '/staff-signup',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TermsRoute = TermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TrackingRoute = TrackingRouteImport.update({
@@ -288,10 +300,12 @@ export interface FileRoutesByFullPath {
   '/forgot-password': typeof ForgotPasswordRoute
   '/pending-activation': typeof PendingActivationRoute
   '/portal': typeof PortalRoute
+  '/privacy': typeof PrivacyRoute
   '/quote': typeof QuoteRoute
   '/services': typeof ServicesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/staff-signup': typeof StaffSignupRoute
+  '/terms': typeof TermsRoute
   '/tracking': typeof TrackingRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/deliveries': typeof AuthenticatedDeliveriesRoute
@@ -332,10 +346,12 @@ export interface FileRoutesByTo {
   '/forgot-password': typeof ForgotPasswordRoute
   '/pending-activation': typeof PendingActivationRoute
   '/portal': typeof PortalRoute
+  '/privacy': typeof PrivacyRoute
   '/quote': typeof QuoteRoute
   '/services': typeof ServicesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/staff-signup': typeof StaffSignupRoute
+  '/terms': typeof TermsRoute
   '/tracking': typeof TrackingRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/deliveries': typeof AuthenticatedDeliveriesRoute
@@ -378,10 +394,12 @@ export interface FileRoutesById {
   '/forgot-password': typeof ForgotPasswordRoute
   '/pending-activation': typeof PendingActivationRoute
   '/portal': typeof PortalRoute
+  '/privacy': typeof PrivacyRoute
   '/quote': typeof QuoteRoute
   '/services': typeof ServicesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/staff-signup': typeof StaffSignupRoute
+  '/terms': typeof TermsRoute
   '/tracking': typeof TrackingRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/deliveries': typeof AuthenticatedDeliveriesRoute
@@ -424,10 +442,12 @@ export interface FileRouteTypes {
     | '/forgot-password'
     | '/pending-activation'
     | '/portal'
+    | '/privacy'
     | '/quote'
     | '/services'
     | '/sitemap.xml'
     | '/staff-signup'
+    | '/terms'
     | '/tracking'
     | '/dashboard'
     | '/deliveries'
@@ -468,10 +488,12 @@ export interface FileRouteTypes {
     | '/forgot-password'
     | '/pending-activation'
     | '/portal'
+    | '/privacy'
     | '/quote'
     | '/services'
     | '/sitemap.xml'
     | '/staff-signup'
+    | '/terms'
     | '/tracking'
     | '/dashboard'
     | '/deliveries'
@@ -513,10 +535,12 @@ export interface FileRouteTypes {
     | '/forgot-password'
     | '/pending-activation'
     | '/portal'
+    | '/privacy'
     | '/quote'
     | '/services'
     | '/sitemap.xml'
     | '/staff-signup'
+    | '/terms'
     | '/tracking'
     | '/_authenticated/dashboard'
     | '/_authenticated/deliveries'
@@ -559,10 +583,12 @@ export interface RootRouteChildren {
   ForgotPasswordRoute: typeof ForgotPasswordRoute
   PendingActivationRoute: typeof PendingActivationRoute
   PortalRoute: typeof PortalRoute
+  PrivacyRoute: typeof PrivacyRoute
   QuoteRoute: typeof QuoteRoute
   ServicesRoute: typeof ServicesRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   StaffSignupRoute: typeof StaffSignupRoute
+  TermsRoute: typeof TermsRoute
   TrackingRoute: typeof TrackingRoute
   GuidesSlugRoute: typeof GuidesSlugRoute
   LanesOriginRoute: typeof LanesOriginRoute
@@ -660,6 +686,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PortalRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/quote': {
       id: '/quote'
       path: '/quote'
@@ -686,6 +719,13 @@ declare module '@tanstack/react-router' {
       path: '/staff-signup'
       fullPath: '/staff-signup'
       preLoaderRoute: typeof StaffSignupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/terms': {
+      id: '/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof TermsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/tracking': {
@@ -939,10 +979,12 @@ const rootRouteChildren: RootRouteChildren = {
   ForgotPasswordRoute: ForgotPasswordRoute,
   PendingActivationRoute: PendingActivationRoute,
   PortalRoute: PortalRoute,
+  PrivacyRoute: PrivacyRoute,
   QuoteRoute: QuoteRoute,
   ServicesRoute: ServicesRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   StaffSignupRoute: StaffSignupRoute,
+  TermsRoute: TermsRoute,
   TrackingRoute: TrackingRoute,
   GuidesSlugRoute: GuidesSlugRoute,
   LanesOriginRoute: LanesOriginRoute,

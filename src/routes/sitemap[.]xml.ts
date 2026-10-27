@@ -28,6 +28,8 @@ export const Route = createFileRoute("/sitemap.xml")({
           { path: "/quote", changefreq: "monthly", priority: "0.8" },
           { path: "/tracking", changefreq: "weekly", priority: "0.8" },
           { path: "/contact", changefreq: "monthly", priority: "0.6" },
+          { path: "/privacy", changefreq: "yearly", priority: "0.3" },
+          { path: "/terms", changefreq: "yearly", priority: "0.3" },
           { path: "/guides", changefreq: "weekly", priority: "0.8" },
           ...GUIDE_CATEGORIES.map(
             (c): SitemapEntry => ({

@@ -129,6 +129,8 @@ export function MarketingLayout({ children }: { children: ReactNode }) {
               <li><Link to="/guides">Guides &amp; insights</Link></li>
               <li><Link to="/about">About</Link></li>
               <li><Link to="/contact">Contact</Link></li>
+              <li><Link to="/privacy">Privacy policy</Link></li>
+              <li><Link to="/terms">Terms of service</Link></li>
             </ul>
           </div>
           <div>
