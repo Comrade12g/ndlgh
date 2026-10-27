@@ -77,12 +77,8 @@ function AboutPage() {
         </div>
 
         <div className="mt-16 grid gap-4 rounded-2xl border bg-card p-6 text-sm md:grid-cols-2">
-          <div><span className="font-semibold text-brand-navy">Opening days: </span>Monday to Saturday. Closed Sunday.</div>
-          <div><span className="font-semibold text-brand-navy">Office: </span>Derby Avenue, Ferro Bel Plaza, Accra · 0500229352</div>
-          <div className="md:col-span-2">
-            <span className="font-semibold text-brand-navy">Which NDL? </span>
-            NDL Cargo Ghana (Next Day Logistics) is the freight forwarder at www.ndlgh.com, shipping sea and air cargo to Ghana. We are not connected to NDL Insurance Consult or NDL Micro-Credit Limited.
-          </div>
+          <div><span className="font-semibold text-brand-navy">Opening days: </span>Monday to Saturday. Hours: [CONFIRM]. Closed Sunday.</div>
+          <div><span className="font-semibold text-brand-navy">Licence/registration details: </span>[CONFIRM]</div>
         </div>
 
         <div className="mt-16 rounded-2xl bg-brand-navy p-10 text-white">
