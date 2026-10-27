@@ -164,7 +164,7 @@ export function WarehouseLocations() {
                   {o.country}
                 </span>
               </div>
-              <p className="mt-2 text-sm text-muted-foreground">Warehouse receiving details are not yet available. Contact NDL before sending goods.</p>
+              <p className="mt-2 text-sm text-muted-foreground">We ship from {o.country} to Ghana. Message us on WhatsApp (0500229352) for the receiving address before sending goods.</p>
               </div>
             </Card>
           ))}
