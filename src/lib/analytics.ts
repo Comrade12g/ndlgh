@@ -12,8 +12,25 @@ declare global {
 
 let initialized = false;
 
+export type Consent = "granted" | "denied";
+const CONSENT_KEY = "ndl_cookie_consent";
+
+export function getConsent(): Consent | null {
+  if (typeof window === "undefined") return null;
+  const v = window.localStorage.getItem(CONSENT_KEY);
+  return v === "granted" || v === "denied" ? v : null;
+}
+
+export function setConsent(v: Consent) {
+  const prev = getConsent();
+  window.localStorage.setItem(CONSENT_KEY, v);
+  if (v === "granted") initAnalytics();
+  else if (prev === "granted" && initialized) window.location.reload();
+}
+
 export function initAnalytics() {
   if (typeof window === "undefined" || initialized || !measurementId) return;
+  if (getConsent() !== "granted") return;
   initialized = true;
 
   // Load gtag.js only after the page has painted, so it doesn't delay LCP.
