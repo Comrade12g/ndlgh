@@ -20,7 +20,7 @@ export function CookieConsent() {
   };
 
   return (
-    <div role="dialog" aria-label="Cookie preferences" className="fixed inset-x-3 bottom-3 z-50 mx-auto max-w-2xl rounded-xl border bg-card p-4 shadow-lg md:p-5">
+    <div role="dialog" aria-label="Cookie preferences" className="fixed inset-x-3 bottom-3 z-[100] mx-auto max-w-2xl rounded-xl border bg-card p-4 shadow-lg md:p-5">
       <p className="text-sm text-muted-foreground">
         We use cookies for Google Analytics and Microsoft Clarity (visit recordings and heatmaps) to improve our site.
         Sign-in cookies are always on. See our <Link to="/privacy" className="font-semibold text-brand-navy underline">privacy policy</Link>.
