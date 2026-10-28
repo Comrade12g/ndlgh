@@ -131,6 +131,7 @@ export function MarketingLayout({ children }: { children: ReactNode }) {
               <li><Link to="/contact">Contact</Link></li>
               <li><Link to="/privacy">Privacy policy</Link></li>
               <li><Link to="/terms">Terms of service</Link></li>
+              <li><button type="button" onClick={() => window.dispatchEvent(new Event("ndl:cookie-settings"))}>Cookie settings</button></li>
             </ul>
           </div>
           <div>
