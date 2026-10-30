@@ -38,6 +38,8 @@ import { Route as AuthenticatedReportsRouteImport } from './routes/_authenticate
 import { Route as AuthenticatedServiceRequestsRouteImport } from './routes/_authenticated/service-requests'
 import { Route as AuthenticatedShipmentsRouteImport } from './routes/_authenticated/shipments'
 import { Route as AuthenticatedSupportRouteImport } from './routes/_authenticated/support'
+import { Route as BlogIndexRouteImport } from './routes/blog.index'
+import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as GuidesIndexRouteImport } from './routes/guides.index'
 import { Route as GuidesSlugRouteImport } from './routes/guides.$slug'
 import { Route as LanesIndexRouteImport } from './routes/lanes.index'
@@ -51,6 +53,7 @@ import { Route as AuthenticatedAdminUsersRouteImport } from './routes/_authentic
 import { Route as AuthenticatedCrmContactsRouteImport } from './routes/_authenticated/crm.contacts'
 import { Route as AuthenticatedSourcingPosRouteImport } from './routes/_authenticated/sourcing.pos'
 import { Route as AuthenticatedTreasuryAccountsRouteImport } from './routes/_authenticated/treasury.accounts'
+import { Route as ApiPublicReceiveArticleRouteImport } from './routes/api/public/receive-article'
 import { Route as GuidesCategoryCategoryRouteImport } from './routes/guides.category.$category'
 import { Route as ApiPublicHooksExcelSyncRouteImport } from './routes/api/public/hooks/excel-sync'
 import { Route as ApiPublicHooksPollShipmentEtaRouteImport } from './routes/api/public/hooks/poll-shipment-eta'
@@ -200,6 +203,16 @@ const AuthenticatedSupportRoute = AuthenticatedSupportRouteImport.update({
   path: '/support',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const BlogIndexRoute = BlogIndexRouteImport.update({
+  id: '/blog/',
+  path: '/blog/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlogSlugRoute = BlogSlugRouteImport.update({
+  id: '/blog/$slug',
+  path: '/blog/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const GuidesIndexRoute = GuidesIndexRouteImport.update({
   id: '/guides/',
   path: '/guides/',
@@ -271,6 +284,11 @@ const AuthenticatedTreasuryAccountsRoute =
     path: '/treasury/accounts',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
+const ApiPublicReceiveArticleRoute = ApiPublicReceiveArticleRouteImport.update({
+  id: '/api/public/receive-article',
+  path: '/api/public/receive-article',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const GuidesCategoryCategoryRoute = GuidesCategoryCategoryRouteImport.update({
   id: '/guides/category/$category',
   path: '/guides/category/$category',
@@ -317,9 +335,11 @@ export interface FileRoutesByFullPath {
   '/service-requests': typeof AuthenticatedServiceRequestsRoute
   '/shipments': typeof AuthenticatedShipmentsRoute
   '/support': typeof AuthenticatedSupportRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/guides/$slug': typeof GuidesSlugRoute
   '/lanes/$origin': typeof LanesOriginRoute
   '/track/$code': typeof TrackCodeRoute
+  '/blog/': typeof BlogIndexRoute
   '/guides/': typeof GuidesIndexRoute
   '/lanes/': typeof LanesIndexRoute
   '/admin/audit': typeof AuthenticatedAdminAuditRoute
@@ -330,6 +350,7 @@ export interface FileRoutesByFullPath {
   '/crm/contacts': typeof AuthenticatedCrmContactsRoute
   '/sourcing/pos': typeof AuthenticatedSourcingPosRoute
   '/treasury/accounts': typeof AuthenticatedTreasuryAccountsRoute
+  '/api/public/receive-article': typeof ApiPublicReceiveArticleRoute
   '/guides/category/$category': typeof GuidesCategoryCategoryRoute
   '/api/public/hooks/excel-sync': typeof ApiPublicHooksExcelSyncRoute
   '/api/public/hooks/poll-shipment-eta': typeof ApiPublicHooksPollShipmentEtaRoute
@@ -363,9 +384,11 @@ export interface FileRoutesByTo {
   '/service-requests': typeof AuthenticatedServiceRequestsRoute
   '/shipments': typeof AuthenticatedShipmentsRoute
   '/support': typeof AuthenticatedSupportRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/guides/$slug': typeof GuidesSlugRoute
   '/lanes/$origin': typeof LanesOriginRoute
   '/track/$code': typeof TrackCodeRoute
+  '/blog': typeof BlogIndexRoute
   '/guides': typeof GuidesIndexRoute
   '/lanes': typeof LanesIndexRoute
   '/admin/audit': typeof AuthenticatedAdminAuditRoute
@@ -376,6 +399,7 @@ export interface FileRoutesByTo {
   '/crm/contacts': typeof AuthenticatedCrmContactsRoute
   '/sourcing/pos': typeof AuthenticatedSourcingPosRoute
   '/treasury/accounts': typeof AuthenticatedTreasuryAccountsRoute
+  '/api/public/receive-article': typeof ApiPublicReceiveArticleRoute
   '/guides/category/$category': typeof GuidesCategoryCategoryRoute
   '/api/public/hooks/excel-sync': typeof ApiPublicHooksExcelSyncRoute
   '/api/public/hooks/poll-shipment-eta': typeof ApiPublicHooksPollShipmentEtaRoute
@@ -411,9 +435,11 @@ export interface FileRoutesById {
   '/_authenticated/service-requests': typeof AuthenticatedServiceRequestsRoute
   '/_authenticated/shipments': typeof AuthenticatedShipmentsRoute
   '/_authenticated/support': typeof AuthenticatedSupportRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/guides/$slug': typeof GuidesSlugRoute
   '/lanes/$origin': typeof LanesOriginRoute
   '/track/$code': typeof TrackCodeRoute
+  '/blog/': typeof BlogIndexRoute
   '/guides/': typeof GuidesIndexRoute
   '/lanes/': typeof LanesIndexRoute
   '/_authenticated/admin/audit': typeof AuthenticatedAdminAuditRoute
@@ -424,6 +450,7 @@ export interface FileRoutesById {
   '/_authenticated/crm/contacts': typeof AuthenticatedCrmContactsRoute
   '/_authenticated/sourcing/pos': typeof AuthenticatedSourcingPosRoute
   '/_authenticated/treasury/accounts': typeof AuthenticatedTreasuryAccountsRoute
+  '/api/public/receive-article': typeof ApiPublicReceiveArticleRoute
   '/guides/category/$category': typeof GuidesCategoryCategoryRoute
   '/api/public/hooks/excel-sync': typeof ApiPublicHooksExcelSyncRoute
   '/api/public/hooks/poll-shipment-eta': typeof ApiPublicHooksPollShipmentEtaRoute
@@ -459,9 +486,11 @@ export interface FileRouteTypes {
     | '/service-requests'
     | '/shipments'
     | '/support'
+    | '/blog/$slug'
     | '/guides/$slug'
     | '/lanes/$origin'
     | '/track/$code'
+    | '/blog/'
     | '/guides/'
     | '/lanes/'
     | '/admin/audit'
@@ -472,6 +501,7 @@ export interface FileRouteTypes {
     | '/crm/contacts'
     | '/sourcing/pos'
     | '/treasury/accounts'
+    | '/api/public/receive-article'
     | '/guides/category/$category'
     | '/api/public/hooks/excel-sync'
     | '/api/public/hooks/poll-shipment-eta'
@@ -505,9 +535,11 @@ export interface FileRouteTypes {
     | '/service-requests'
     | '/shipments'
     | '/support'
+    | '/blog/$slug'
     | '/guides/$slug'
     | '/lanes/$origin'
     | '/track/$code'
+    | '/blog'
     | '/guides'
     | '/lanes'
     | '/admin/audit'
@@ -518,6 +550,7 @@ export interface FileRouteTypes {
     | '/crm/contacts'
     | '/sourcing/pos'
     | '/treasury/accounts'
+    | '/api/public/receive-article'
     | '/guides/category/$category'
     | '/api/public/hooks/excel-sync'
     | '/api/public/hooks/poll-shipment-eta'
@@ -552,9 +585,11 @@ export interface FileRouteTypes {
     | '/_authenticated/service-requests'
     | '/_authenticated/shipments'
     | '/_authenticated/support'
+    | '/blog/$slug'
     | '/guides/$slug'
     | '/lanes/$origin'
     | '/track/$code'
+    | '/blog/'
     | '/guides/'
     | '/lanes/'
     | '/_authenticated/admin/audit'
@@ -565,6 +600,7 @@ export interface FileRouteTypes {
     | '/_authenticated/crm/contacts'
     | '/_authenticated/sourcing/pos'
     | '/_authenticated/treasury/accounts'
+    | '/api/public/receive-article'
     | '/guides/category/$category'
     | '/api/public/hooks/excel-sync'
     | '/api/public/hooks/poll-shipment-eta'
@@ -590,11 +626,14 @@ export interface RootRouteChildren {
   StaffSignupRoute: typeof StaffSignupRoute
   TermsRoute: typeof TermsRoute
   TrackingRoute: typeof TrackingRoute
+  BlogSlugRoute: typeof BlogSlugRoute
   GuidesSlugRoute: typeof GuidesSlugRoute
   LanesOriginRoute: typeof LanesOriginRoute
   TrackCodeRoute: typeof TrackCodeRoute
+  BlogIndexRoute: typeof BlogIndexRoute
   GuidesIndexRoute: typeof GuidesIndexRoute
   LanesIndexRoute: typeof LanesIndexRoute
+  ApiPublicReceiveArticleRoute: typeof ApiPublicReceiveArticleRoute
   GuidesCategoryCategoryRoute: typeof GuidesCategoryCategoryRoute
   ApiPublicHooksExcelSyncRoute: typeof ApiPublicHooksExcelSyncRoute
   ApiPublicHooksPollShipmentEtaRoute: typeof ApiPublicHooksPollShipmentEtaRoute
@@ -805,6 +844,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSupportRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/blog/': {
+      id: '/blog/'
+      path: '/blog'
+      fullPath: '/blog/'
+      preLoaderRoute: typeof BlogIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blog/$slug': {
+      id: '/blog/$slug'
+      path: '/blog/$slug'
+      fullPath: '/blog/$slug'
+      preLoaderRoute: typeof BlogSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/guides/': {
       id: '/guides/'
       path: '/guides'
@@ -896,6 +949,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedTreasuryAccountsRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/api/public/receive-article': {
+      id: '/api/public/receive-article'
+      path: '/api/public/receive-article'
+      fullPath: '/api/public/receive-article'
+      preLoaderRoute: typeof ApiPublicReceiveArticleRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/guides/category/$category': {
       id: '/guides/category/$category'
       path: '/guides/category/$category'
@@ -986,11 +1046,14 @@ const rootRouteChildren: RootRouteChildren = {
   StaffSignupRoute: StaffSignupRoute,
   TermsRoute: TermsRoute,
   TrackingRoute: TrackingRoute,
+  BlogSlugRoute: BlogSlugRoute,
   GuidesSlugRoute: GuidesSlugRoute,
   LanesOriginRoute: LanesOriginRoute,
   TrackCodeRoute: TrackCodeRoute,
+  BlogIndexRoute: BlogIndexRoute,
   GuidesIndexRoute: GuidesIndexRoute,
   LanesIndexRoute: LanesIndexRoute,
+  ApiPublicReceiveArticleRoute: ApiPublicReceiveArticleRoute,
   GuidesCategoryCategoryRoute: GuidesCategoryCategoryRoute,
   ApiPublicHooksExcelSyncRoute: ApiPublicHooksExcelSyncRoute,
   ApiPublicHooksPollShipmentEtaRoute: ApiPublicHooksPollShipmentEtaRoute,

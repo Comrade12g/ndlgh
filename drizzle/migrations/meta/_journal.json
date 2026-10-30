@@ -15,6 +15,13 @@
       "when": 1791815002581,
       "tag": "0001_tracking_by_external_code",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1793364223658,
+      "tag": "0002_create_visibly_blog_posts",
+      "breakpoints": true
     }
   ]
 }
