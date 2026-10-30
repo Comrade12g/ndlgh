@@ -38,6 +38,8 @@ import { Route as AuthenticatedReportsRouteImport } from './routes/_authenticate
 import { Route as AuthenticatedServiceRequestsRouteImport } from './routes/_authenticated/service-requests'
 import { Route as AuthenticatedShipmentsRouteImport } from './routes/_authenticated/shipments'
 import { Route as AuthenticatedSupportRouteImport } from './routes/_authenticated/support'
+import { Route as BlogIndexRouteImport } from './routes/blog.index'
+import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as GuidesIndexRouteImport } from './routes/guides.index'
 import { Route as GuidesSlugRouteImport } from './routes/guides.$slug'
 import { Route as LanesIndexRouteImport } from './routes/lanes.index'
@@ -201,6 +203,16 @@ const AuthenticatedSupportRoute = AuthenticatedSupportRouteImport.update({
   path: '/support',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const BlogIndexRoute = BlogIndexRouteImport.update({
+  id: '/blog/',
+  path: '/blog/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlogSlugRoute = BlogSlugRouteImport.update({
+  id: '/blog/$slug',
+  path: '/blog/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const GuidesIndexRoute = GuidesIndexRouteImport.update({
   id: '/guides/',
   path: '/guides/',
@@ -323,9 +335,11 @@ export interface FileRoutesByFullPath {
   '/service-requests': typeof AuthenticatedServiceRequestsRoute
   '/shipments': typeof AuthenticatedShipmentsRoute
   '/support': typeof AuthenticatedSupportRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/guides/$slug': typeof GuidesSlugRoute
   '/lanes/$origin': typeof LanesOriginRoute
   '/track/$code': typeof TrackCodeRoute
+  '/blog/': typeof BlogIndexRoute
   '/guides/': typeof GuidesIndexRoute
   '/lanes/': typeof LanesIndexRoute
   '/admin/audit': typeof AuthenticatedAdminAuditRoute
@@ -370,9 +384,11 @@ export interface FileRoutesByTo {
   '/service-requests': typeof AuthenticatedServiceRequestsRoute
   '/shipments': typeof AuthenticatedShipmentsRoute
   '/support': typeof AuthenticatedSupportRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/guides/$slug': typeof GuidesSlugRoute
   '/lanes/$origin': typeof LanesOriginRoute
   '/track/$code': typeof TrackCodeRoute
+  '/blog': typeof BlogIndexRoute
   '/guides': typeof GuidesIndexRoute
   '/lanes': typeof LanesIndexRoute
   '/admin/audit': typeof AuthenticatedAdminAuditRoute
@@ -419,9 +435,11 @@ export interface FileRoutesById {
   '/_authenticated/service-requests': typeof AuthenticatedServiceRequestsRoute
   '/_authenticated/shipments': typeof AuthenticatedShipmentsRoute
   '/_authenticated/support': typeof AuthenticatedSupportRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/guides/$slug': typeof GuidesSlugRoute
   '/lanes/$origin': typeof LanesOriginRoute
   '/track/$code': typeof TrackCodeRoute
+  '/blog/': typeof BlogIndexRoute
   '/guides/': typeof GuidesIndexRoute
   '/lanes/': typeof LanesIndexRoute
   '/_authenticated/admin/audit': typeof AuthenticatedAdminAuditRoute
@@ -468,9 +486,11 @@ export interface FileRouteTypes {
     | '/service-requests'
     | '/shipments'
     | '/support'
+    | '/blog/$slug'
     | '/guides/$slug'
     | '/lanes/$origin'
     | '/track/$code'
+    | '/blog/'
     | '/guides/'
     | '/lanes/'
     | '/admin/audit'
@@ -515,9 +535,11 @@ export interface FileRouteTypes {
     | '/service-requests'
     | '/shipments'
     | '/support'
+    | '/blog/$slug'
     | '/guides/$slug'
     | '/lanes/$origin'
     | '/track/$code'
+    | '/blog'
     | '/guides'
     | '/lanes'
     | '/admin/audit'
@@ -563,9 +585,11 @@ export interface FileRouteTypes {
     | '/_authenticated/service-requests'
     | '/_authenticated/shipments'
     | '/_authenticated/support'
+    | '/blog/$slug'
     | '/guides/$slug'
     | '/lanes/$origin'
     | '/track/$code'
+    | '/blog/'
     | '/guides/'
     | '/lanes/'
     | '/_authenticated/admin/audit'
@@ -602,9 +626,11 @@ export interface RootRouteChildren {
   StaffSignupRoute: typeof StaffSignupRoute
   TermsRoute: typeof TermsRoute
   TrackingRoute: typeof TrackingRoute
+  BlogSlugRoute: typeof BlogSlugRoute
   GuidesSlugRoute: typeof GuidesSlugRoute
   LanesOriginRoute: typeof LanesOriginRoute
   TrackCodeRoute: typeof TrackCodeRoute
+  BlogIndexRoute: typeof BlogIndexRoute
   GuidesIndexRoute: typeof GuidesIndexRoute
   LanesIndexRoute: typeof LanesIndexRoute
   ApiPublicReceiveArticleRoute: typeof ApiPublicReceiveArticleRoute
@@ -818,6 +844,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSupportRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/blog/': {
+      id: '/blog/'
+      path: '/blog'
+      fullPath: '/blog/'
+      preLoaderRoute: typeof BlogIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blog/$slug': {
+      id: '/blog/$slug'
+      path: '/blog/$slug'
+      fullPath: '/blog/$slug'
+      preLoaderRoute: typeof BlogSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/guides/': {
       id: '/guides/'
       path: '/guides'
@@ -1006,9 +1046,11 @@ const rootRouteChildren: RootRouteChildren = {
   StaffSignupRoute: StaffSignupRoute,
   TermsRoute: TermsRoute,
   TrackingRoute: TrackingRoute,
+  BlogSlugRoute: BlogSlugRoute,
   GuidesSlugRoute: GuidesSlugRoute,
   LanesOriginRoute: LanesOriginRoute,
   TrackCodeRoute: TrackCodeRoute,
+  BlogIndexRoute: BlogIndexRoute,
   GuidesIndexRoute: GuidesIndexRoute,
   LanesIndexRoute: LanesIndexRoute,
   ApiPublicReceiveArticleRoute: ApiPublicReceiveArticleRoute,
