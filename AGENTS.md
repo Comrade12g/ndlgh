@@ -10,3 +10,5 @@
 <!-- LOVABLE:END -->
 
 - Marketing photo URLs and responsive variants are centralized in src/assets/gallery/index.ts; downloaded replacements use Lovable asset pointers so media stays outside the repository.
+- Visibly uses the verified /api/public/receive-article server route and isolated blog_posts storage; public reads use a publishable client with RLS so existing business storage remains untouched.
+- Blog HTML is sanitized server-side before storage and rendering, preserving safe link target/rel attributes while removing executable content.

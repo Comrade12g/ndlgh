@@ -51,6 +51,7 @@ import { Route as AuthenticatedAdminUsersRouteImport } from './routes/_authentic
 import { Route as AuthenticatedCrmContactsRouteImport } from './routes/_authenticated/crm.contacts'
 import { Route as AuthenticatedSourcingPosRouteImport } from './routes/_authenticated/sourcing.pos'
 import { Route as AuthenticatedTreasuryAccountsRouteImport } from './routes/_authenticated/treasury.accounts'
+import { Route as ApiPublicReceiveArticleRouteImport } from './routes/api/public/receive-article'
 import { Route as GuidesCategoryCategoryRouteImport } from './routes/guides.category.$category'
 import { Route as ApiPublicHooksExcelSyncRouteImport } from './routes/api/public/hooks/excel-sync'
 import { Route as ApiPublicHooksPollShipmentEtaRouteImport } from './routes/api/public/hooks/poll-shipment-eta'
@@ -271,6 +272,11 @@ const AuthenticatedTreasuryAccountsRoute =
     path: '/treasury/accounts',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
+const ApiPublicReceiveArticleRoute = ApiPublicReceiveArticleRouteImport.update({
+  id: '/api/public/receive-article',
+  path: '/api/public/receive-article',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const GuidesCategoryCategoryRoute = GuidesCategoryCategoryRouteImport.update({
   id: '/guides/category/$category',
   path: '/guides/category/$category',
@@ -330,6 +336,7 @@ export interface FileRoutesByFullPath {
   '/crm/contacts': typeof AuthenticatedCrmContactsRoute
   '/sourcing/pos': typeof AuthenticatedSourcingPosRoute
   '/treasury/accounts': typeof AuthenticatedTreasuryAccountsRoute
+  '/api/public/receive-article': typeof ApiPublicReceiveArticleRoute
   '/guides/category/$category': typeof GuidesCategoryCategoryRoute
   '/api/public/hooks/excel-sync': typeof ApiPublicHooksExcelSyncRoute
   '/api/public/hooks/poll-shipment-eta': typeof ApiPublicHooksPollShipmentEtaRoute
@@ -376,6 +383,7 @@ export interface FileRoutesByTo {
   '/crm/contacts': typeof AuthenticatedCrmContactsRoute
   '/sourcing/pos': typeof AuthenticatedSourcingPosRoute
   '/treasury/accounts': typeof AuthenticatedTreasuryAccountsRoute
+  '/api/public/receive-article': typeof ApiPublicReceiveArticleRoute
   '/guides/category/$category': typeof GuidesCategoryCategoryRoute
   '/api/public/hooks/excel-sync': typeof ApiPublicHooksExcelSyncRoute
   '/api/public/hooks/poll-shipment-eta': typeof ApiPublicHooksPollShipmentEtaRoute
@@ -424,6 +432,7 @@ export interface FileRoutesById {
   '/_authenticated/crm/contacts': typeof AuthenticatedCrmContactsRoute
   '/_authenticated/sourcing/pos': typeof AuthenticatedSourcingPosRoute
   '/_authenticated/treasury/accounts': typeof AuthenticatedTreasuryAccountsRoute
+  '/api/public/receive-article': typeof ApiPublicReceiveArticleRoute
   '/guides/category/$category': typeof GuidesCategoryCategoryRoute
   '/api/public/hooks/excel-sync': typeof ApiPublicHooksExcelSyncRoute
   '/api/public/hooks/poll-shipment-eta': typeof ApiPublicHooksPollShipmentEtaRoute
@@ -472,6 +481,7 @@ export interface FileRouteTypes {
     | '/crm/contacts'
     | '/sourcing/pos'
     | '/treasury/accounts'
+    | '/api/public/receive-article'
     | '/guides/category/$category'
     | '/api/public/hooks/excel-sync'
     | '/api/public/hooks/poll-shipment-eta'
@@ -518,6 +528,7 @@ export interface FileRouteTypes {
     | '/crm/contacts'
     | '/sourcing/pos'
     | '/treasury/accounts'
+    | '/api/public/receive-article'
     | '/guides/category/$category'
     | '/api/public/hooks/excel-sync'
     | '/api/public/hooks/poll-shipment-eta'
@@ -565,6 +576,7 @@ export interface FileRouteTypes {
     | '/_authenticated/crm/contacts'
     | '/_authenticated/sourcing/pos'
     | '/_authenticated/treasury/accounts'
+    | '/api/public/receive-article'
     | '/guides/category/$category'
     | '/api/public/hooks/excel-sync'
     | '/api/public/hooks/poll-shipment-eta'
@@ -595,6 +607,7 @@ export interface RootRouteChildren {
   TrackCodeRoute: typeof TrackCodeRoute
   GuidesIndexRoute: typeof GuidesIndexRoute
   LanesIndexRoute: typeof LanesIndexRoute
+  ApiPublicReceiveArticleRoute: typeof ApiPublicReceiveArticleRoute
   GuidesCategoryCategoryRoute: typeof GuidesCategoryCategoryRoute
   ApiPublicHooksExcelSyncRoute: typeof ApiPublicHooksExcelSyncRoute
   ApiPublicHooksPollShipmentEtaRoute: typeof ApiPublicHooksPollShipmentEtaRoute
@@ -896,6 +909,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedTreasuryAccountsRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/api/public/receive-article': {
+      id: '/api/public/receive-article'
+      path: '/api/public/receive-article'
+      fullPath: '/api/public/receive-article'
+      preLoaderRoute: typeof ApiPublicReceiveArticleRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/guides/category/$category': {
       id: '/guides/category/$category'
       path: '/guides/category/$category'
@@ -991,6 +1011,7 @@ const rootRouteChildren: RootRouteChildren = {
   TrackCodeRoute: TrackCodeRoute,
   GuidesIndexRoute: GuidesIndexRoute,
   LanesIndexRoute: LanesIndexRoute,
+  ApiPublicReceiveArticleRoute: ApiPublicReceiveArticleRoute,
   GuidesCategoryCategoryRoute: GuidesCategoryCategoryRoute,
   ApiPublicHooksExcelSyncRoute: ApiPublicHooksExcelSyncRoute,
   ApiPublicHooksPollShipmentEtaRoute: ApiPublicHooksPollShipmentEtaRoute,

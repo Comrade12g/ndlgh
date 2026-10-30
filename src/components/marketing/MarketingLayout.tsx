@@ -16,6 +16,7 @@ const NAV = [
   { to: "/quote", label: "Quote" },
   { to: "/tracking", label: "Track" },
   { to: "/guides", label: "Guides" },
+  { to: "/blog", label: "Blog" },
   { to: "/about", label: "About" },
 
   { to: "/contact", label: "Contact" },
@@ -40,7 +41,7 @@ export function MarketingLayout({ children }: { children: ReactNode }) {
               <Link
                 key={n.to}
                 to={n.to}
-                className="rounded-md px-3 py-2 text-sm font-medium text-foreground/80 transition-colors hover:bg-secondary hover:text-foreground"
+                className="rounded-md px-2 py-2 text-sm font-medium text-foreground/80 transition-colors hover:bg-secondary hover:text-foreground"
                 activeProps={{ className: "bg-secondary text-brand-navy" }}
                 activeOptions={{ exact: n.to === "/" }}
               >
@@ -127,6 +128,7 @@ export function MarketingLayout({ children }: { children: ReactNode }) {
               <li><Link to="/lanes">Lanes</Link></li>
               <li><Link to="/buy-from-china">Buy from China</Link></li>
               <li><Link to="/guides">Guides &amp; insights</Link></li>
+              <li><Link to="/blog">Blog</Link></li>
               <li><Link to="/about">About</Link></li>
               <li><Link to="/contact">Contact</Link></li>
               <li><Link to="/privacy">Privacy policy</Link></li>

@@ -2,6 +2,8 @@ import { createFileRoute } from "@tanstack/react-router";
 import type {} from "@tanstack/react-start";
 import { GUIDE_CATEGORIES, mergeGuides, type Guide } from "@/content/guides";
 import { listPublishedGuides } from "@/lib/guides.functions";
+import { listBlogSitemap } from "@/lib/blog.functions";
+import { xmlEscape } from "@/lib/blog";
 
 const BASE_URL = "https://www.ndlgh.com";
 
@@ -9,13 +11,15 @@ interface SitemapEntry {
   path: string;
   changefreq?: "always" | "hourly" | "daily" | "weekly" | "monthly" | "yearly" | "never";
   priority?: string;
+  lastmod?: string;
 }
 
 export const Route = createFileRoute("/sitemap.xml")({
   server: {
     handlers: {
       GET: async () => {
-        const allGuides = mergeGuides((await listPublishedGuides()) as Guide[]);
+        const [guideRows, blogPosts] = await Promise.all([listPublishedGuides(), listBlogSitemap()]);
+        const allGuides = mergeGuides(guideRows as Guide[]);
         const entries: SitemapEntry[] = [
           { path: "/", changefreq: "weekly", priority: "1.0" },
           { path: "/about", changefreq: "monthly", priority: "0.7" },
@@ -31,6 +35,8 @@ export const Route = createFileRoute("/sitemap.xml")({
           { path: "/privacy", changefreq: "yearly", priority: "0.3" },
           { path: "/terms", changefreq: "yearly", priority: "0.3" },
           { path: "/guides", changefreq: "weekly", priority: "0.8" },
+          { path: "/blog", changefreq: "weekly", priority: "0.8" },
+          ...blogPosts.map((p): SitemapEntry => ({ path: `/blog/${p.slug}`, lastmod: p.updated_at || undefined, changefreq: "weekly", priority: "0.7" })),
           ...GUIDE_CATEGORIES.map(
             (c): SitemapEntry => ({
               path: `/guides/category/${c.slug}`,
@@ -50,7 +56,8 @@ export const Route = createFileRoute("/sitemap.xml")({
         const urls = entries.map((e) =>
           [
             `  <url>`,
-            `    <loc>${BASE_URL}${e.path}</loc>`,
+            `    <loc>${xmlEscape(BASE_URL + e.path)}</loc>`,
+            e.lastmod ? `    <lastmod>${xmlEscape(e.lastmod)}</lastmod>` : null,
             e.changefreq ? `    <changefreq>${e.changefreq}</changefreq>` : null,
             e.priority ? `    <priority>${e.priority}</priority>` : null,
             `  </url>`,
