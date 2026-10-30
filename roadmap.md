@@ -1,8 +1,9 @@
 # Roadmap
 ## Visibly blog
-- [ ] Create isolated blog storage and secure article receiver
-- [ ] Add blog listing, article pages, navigation and sitemap entries
-- [ ] Verify webhook, article rendering, pagination and mobile layout
+- [x] Create isolated blog storage and secure article receiver
+- [x] Add blog listing, article pages, navigation and sitemap entries
+- [x] Verify webhook, article rendering, pagination and mobile layout
+- [ ] Activate Visibly delivery (owner publishes website and enters https://www.ndlgh.com/api/public/receive-article in Visibly)
 ## Real photography
 - [x] Replace eight mismatched gallery photos with licensed stock and optimized variants
 - [x] Add honest location imagery and an About photograph
