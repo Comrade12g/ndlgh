@@ -1,4 +1,8 @@
 # Roadmap
+## Visibly blog
+- [ ] Create isolated blog storage and secure article receiver
+- [ ] Add blog listing, article pages, navigation and sitemap entries
+- [ ] Verify webhook, article rendering, pagination and mobile layout
 ## Real photography
 - [x] Replace eight mismatched gallery photos with licensed stock and optimized variants
 - [x] Add honest location imagery and an About photograph
