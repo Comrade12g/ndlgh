@@ -19,6 +19,7 @@ import { Route as BuyFromChinaRouteImport } from './routes/buy-from-china'
 import { Route as ChangePasswordRouteImport } from './routes/change-password'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
+import { Route as ImpactRouteImport } from './routes/impact'
 import { Route as PendingActivationRouteImport } from './routes/pending-activation'
 import { Route as PortalRouteImport } from './routes/portal'
 import { Route as PrivacyRouteImport } from './routes/privacy'
@@ -105,6 +106,11 @@ const ContactRoute = ContactRouteImport.update({
 const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
   id: '/forgot-password',
   path: '/forgot-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ImpactRoute = ImpactRouteImport.update({
+  id: '/impact',
+  path: '/impact',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PendingActivationRoute = PendingActivationRouteImport.update({
@@ -316,6 +322,7 @@ export interface FileRoutesByFullPath {
   '/change-password': typeof ChangePasswordRoute
   '/contact': typeof ContactRoute
   '/forgot-password': typeof ForgotPasswordRoute
+  '/impact': typeof ImpactRoute
   '/pending-activation': typeof PendingActivationRoute
   '/portal': typeof PortalRoute
   '/privacy': typeof PrivacyRoute
@@ -365,6 +372,7 @@ export interface FileRoutesByTo {
   '/change-password': typeof ChangePasswordRoute
   '/contact': typeof ContactRoute
   '/forgot-password': typeof ForgotPasswordRoute
+  '/impact': typeof ImpactRoute
   '/pending-activation': typeof PendingActivationRoute
   '/portal': typeof PortalRoute
   '/privacy': typeof PrivacyRoute
@@ -416,6 +424,7 @@ export interface FileRoutesById {
   '/change-password': typeof ChangePasswordRoute
   '/contact': typeof ContactRoute
   '/forgot-password': typeof ForgotPasswordRoute
+  '/impact': typeof ImpactRoute
   '/pending-activation': typeof PendingActivationRoute
   '/portal': typeof PortalRoute
   '/privacy': typeof PrivacyRoute
@@ -467,6 +476,7 @@ export interface FileRouteTypes {
     | '/change-password'
     | '/contact'
     | '/forgot-password'
+    | '/impact'
     | '/pending-activation'
     | '/portal'
     | '/privacy'
@@ -516,6 +526,7 @@ export interface FileRouteTypes {
     | '/change-password'
     | '/contact'
     | '/forgot-password'
+    | '/impact'
     | '/pending-activation'
     | '/portal'
     | '/privacy'
@@ -566,6 +577,7 @@ export interface FileRouteTypes {
     | '/change-password'
     | '/contact'
     | '/forgot-password'
+    | '/impact'
     | '/pending-activation'
     | '/portal'
     | '/privacy'
@@ -617,6 +629,7 @@ export interface RootRouteChildren {
   ChangePasswordRoute: typeof ChangePasswordRoute
   ContactRoute: typeof ContactRoute
   ForgotPasswordRoute: typeof ForgotPasswordRoute
+  ImpactRoute: typeof ImpactRoute
   PendingActivationRoute: typeof PendingActivationRoute
   PortalRoute: typeof PortalRoute
   PrivacyRoute: typeof PrivacyRoute
@@ -709,6 +722,13 @@ declare module '@tanstack/react-router' {
       path: '/forgot-password'
       fullPath: '/forgot-password'
       preLoaderRoute: typeof ForgotPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/impact': {
+      id: '/impact'
+      path: '/impact'
+      fullPath: '/impact'
+      preLoaderRoute: typeof ImpactRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/pending-activation': {
@@ -1037,6 +1057,7 @@ const rootRouteChildren: RootRouteChildren = {
   ChangePasswordRoute: ChangePasswordRoute,
   ContactRoute: ContactRoute,
   ForgotPasswordRoute: ForgotPasswordRoute,
+  ImpactRoute: ImpactRoute,
   PendingActivationRoute: PendingActivationRoute,
   PortalRoute: PortalRoute,
   PrivacyRoute: PrivacyRoute,
