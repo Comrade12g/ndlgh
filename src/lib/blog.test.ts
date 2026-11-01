@@ -1,4 +1,3 @@
-/// <reference types="bun" />
 import { describe, expect, test } from "bun:test";
 import { articlePayload, BLOG_PAGE_SIZE, readingTime } from "./blog";
 import { sanitizeArticle } from "./blog-content.server";
