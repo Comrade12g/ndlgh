@@ -20,7 +20,7 @@ export const BUSINESS = {
   airSpecialUsdPerKg: 25,
   // Confirmed by owner: sea 35–45 days, air 10–14 days.
   seaLclDays: "35-45",
-  seaFclDays: "[CONFIRM]",
+  seaFclDays: "35-45",
   airDays: "10-14",
   expressAirDays: "[CONFIRM]",
   clearanceDays: "3-5 working days", // [CONFIRM]
