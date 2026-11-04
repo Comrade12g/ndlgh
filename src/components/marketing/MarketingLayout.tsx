@@ -103,6 +103,7 @@ export function MarketingLayout({ children }: { children: ReactNode }) {
         <Link to="/lanes/$origin" params={{ origin: "dubai" }} className="hover:text-brand-orange">Dubai to Ghana shipping</Link>{" | "}
         <Link to="/services" className="hover:text-brand-orange">Air freight to Ghana</Link>{" | "}
         <Link to="/services" className="hover:text-brand-orange">Customs clearing at Tema</Link>{" | "}
+        <Link to="/fcl" className="hover:text-brand-orange">FCL container shipping</Link>{" | "}
         <Link to="/buy-from-china" className="hover:text-brand-orange">Buy from China</Link>
       </nav>
       <footer className="mt-6 border-t bg-brand-navy text-white">
@@ -125,6 +126,7 @@ export function MarketingLayout({ children }: { children: ReactNode }) {
             </div>
             <ul className="space-y-2 text-sm text-white/80">
               <li><Link to="/services">Services</Link></li>
+              <li><Link to="/fcl">FCL containers</Link></li>
               <li><Link to="/lanes">Lanes</Link></li>
               <li><Link to="/buy-from-china">Buy from China</Link></li>
               <li><Link to="/guides">Guides &amp; insights</Link></li>

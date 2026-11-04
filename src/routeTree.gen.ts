@@ -18,6 +18,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as BuyFromChinaRouteImport } from './routes/buy-from-china'
 import { Route as ChangePasswordRouteImport } from './routes/change-password'
 import { Route as ContactRouteImport } from './routes/contact'
+import { Route as FclRouteImport } from './routes/fcl'
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as ImpactRouteImport } from './routes/impact'
 import { Route as PendingActivationRouteImport } from './routes/pending-activation'
@@ -101,6 +102,11 @@ const ChangePasswordRoute = ChangePasswordRouteImport.update({
 const ContactRoute = ContactRouteImport.update({
   id: '/contact',
   path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FclRoute = FclRouteImport.update({
+  id: '/fcl',
+  path: '/fcl',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
@@ -321,6 +327,7 @@ export interface FileRoutesByFullPath {
   '/buy-from-china': typeof BuyFromChinaRoute
   '/change-password': typeof ChangePasswordRoute
   '/contact': typeof ContactRoute
+  '/fcl': typeof FclRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/impact': typeof ImpactRoute
   '/pending-activation': typeof PendingActivationRoute
@@ -371,6 +378,7 @@ export interface FileRoutesByTo {
   '/buy-from-china': typeof BuyFromChinaRoute
   '/change-password': typeof ChangePasswordRoute
   '/contact': typeof ContactRoute
+  '/fcl': typeof FclRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/impact': typeof ImpactRoute
   '/pending-activation': typeof PendingActivationRoute
@@ -423,6 +431,7 @@ export interface FileRoutesById {
   '/buy-from-china': typeof BuyFromChinaRoute
   '/change-password': typeof ChangePasswordRoute
   '/contact': typeof ContactRoute
+  '/fcl': typeof FclRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/impact': typeof ImpactRoute
   '/pending-activation': typeof PendingActivationRoute
@@ -475,6 +484,7 @@ export interface FileRouteTypes {
     | '/buy-from-china'
     | '/change-password'
     | '/contact'
+    | '/fcl'
     | '/forgot-password'
     | '/impact'
     | '/pending-activation'
@@ -525,6 +535,7 @@ export interface FileRouteTypes {
     | '/buy-from-china'
     | '/change-password'
     | '/contact'
+    | '/fcl'
     | '/forgot-password'
     | '/impact'
     | '/pending-activation'
@@ -576,6 +587,7 @@ export interface FileRouteTypes {
     | '/buy-from-china'
     | '/change-password'
     | '/contact'
+    | '/fcl'
     | '/forgot-password'
     | '/impact'
     | '/pending-activation'
@@ -628,6 +640,7 @@ export interface RootRouteChildren {
   BuyFromChinaRoute: typeof BuyFromChinaRoute
   ChangePasswordRoute: typeof ChangePasswordRoute
   ContactRoute: typeof ContactRoute
+  FclRoute: typeof FclRoute
   ForgotPasswordRoute: typeof ForgotPasswordRoute
   ImpactRoute: typeof ImpactRoute
   PendingActivationRoute: typeof PendingActivationRoute
@@ -715,6 +728,13 @@ declare module '@tanstack/react-router' {
       path: '/contact'
       fullPath: '/contact'
       preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/fcl': {
+      id: '/fcl'
+      path: '/fcl'
+      fullPath: '/fcl'
+      preLoaderRoute: typeof FclRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/forgot-password': {
@@ -1056,6 +1076,7 @@ const rootRouteChildren: RootRouteChildren = {
   BuyFromChinaRoute: BuyFromChinaRoute,
   ChangePasswordRoute: ChangePasswordRoute,
   ContactRoute: ContactRoute,
+  FclRoute: FclRoute,
   ForgotPasswordRoute: ForgotPasswordRoute,
   ImpactRoute: ImpactRoute,
   PendingActivationRoute: PendingActivationRoute,
