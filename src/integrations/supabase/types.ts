@@ -199,6 +199,78 @@ export type Database = {
           },
         ]
       }
+      container_bookings: {
+        Row: {
+          cargo_ready_date: string | null
+          code: string
+          commodity: string
+          container_no: string | null
+          container_size: string
+          created_at: string
+          customer_id: string
+          delivery_city: string | null
+          id: string
+          notes: string | null
+          origin_city: string
+          quantity: number
+          shipment_id: string | null
+          staff_notes: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          cargo_ready_date?: string | null
+          code?: string
+          commodity: string
+          container_no?: string | null
+          container_size: string
+          created_at?: string
+          customer_id?: string
+          delivery_city?: string | null
+          id?: string
+          notes?: string | null
+          origin_city: string
+          quantity?: number
+          shipment_id?: string | null
+          staff_notes?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          cargo_ready_date?: string | null
+          code?: string
+          commodity?: string
+          container_no?: string | null
+          container_size?: string
+          created_at?: string
+          customer_id?: string
+          delivery_city?: string | null
+          id?: string
+          notes?: string | null
+          origin_city?: string
+          quantity?: number
+          shipment_id?: string | null
+          staff_notes?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "container_bookings_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "container_bookings_shipment_id_fkey"
+            columns: ["shipment_id"]
+            isOneToOne: false
+            referencedRelation: "shipments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       customer_notifications: {
         Row: {
           channel: string
@@ -1680,6 +1752,30 @@ export type Database = {
       }
       generate_ndl_cn_ref: { Args: never; Returns: string }
       generate_shipping_mark: { Args: never; Returns: string }
+      get_my_container_booking: {
+        Args: { _code: string }
+        Returns: {
+          actual_arrival: string
+          actual_departure: string
+          bol_no: string
+          cargo_ready_date: string
+          carrier: string
+          code: string
+          commodity: string
+          container_no: string
+          container_size: string
+          created_at: string
+          current_milestone: Database["public"]["Enums"]["shipment_milestone"]
+          delivery_city: string
+          eta: string
+          etd: string
+          notes: string
+          origin_city: string
+          quantity: number
+          status: string
+          vessel_or_flight: string
+        }[]
+      }
       get_my_ocean_shipments: {
         Args: never
         Returns: {

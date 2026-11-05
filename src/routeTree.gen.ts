@@ -30,6 +30,7 @@ import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as StaffSignupRouteImport } from './routes/staff-signup'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as TrackingRouteImport } from './routes/tracking'
+import { Route as AuthenticatedContainersRouteImport } from './routes/_authenticated/containers'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedDeliveriesRouteImport } from './routes/_authenticated/deliveries'
 import { Route as AuthenticatedEtaBoardRouteImport } from './routes/_authenticated/eta-board'
@@ -57,6 +58,7 @@ import { Route as AuthenticatedSourcingPosRouteImport } from './routes/_authenti
 import { Route as AuthenticatedTreasuryAccountsRouteImport } from './routes/_authenticated/treasury.accounts'
 import { Route as ApiPublicReceiveArticleRouteImport } from './routes/api/public/receive-article'
 import { Route as GuidesCategoryCategoryRouteImport } from './routes/guides.category.$category'
+import { Route as PortalContainersCodeRouteImport } from './routes/portal_.containers.$code'
 import { Route as ApiPublicHooksExcelSyncRouteImport } from './routes/api/public/hooks/excel-sync'
 import { Route as ApiPublicHooksPollShipmentEtaRouteImport } from './routes/api/public/hooks/poll-shipment-eta'
 
@@ -163,6 +165,11 @@ const TrackingRoute = TrackingRouteImport.update({
   id: '/tracking',
   path: '/tracking',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedContainersRoute = AuthenticatedContainersRouteImport.update({
+  id: '/containers',
+  path: '/containers',
+  getParentRoute: () => AuthenticatedRoute,
 } as any)
 const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   id: '/dashboard',
@@ -306,6 +313,11 @@ const GuidesCategoryCategoryRoute = GuidesCategoryCategoryRouteImport.update({
   path: '/guides/category/$category',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PortalContainersCodeRoute = PortalContainersCodeRouteImport.update({
+  id: '/portal_/containers/$code',
+  path: '/portal/containers/$code',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicHooksExcelSyncRoute = ApiPublicHooksExcelSyncRouteImport.update({
   id: '/api/public/hooks/excel-sync',
   path: '/api/public/hooks/excel-sync',
@@ -339,6 +351,7 @@ export interface FileRoutesByFullPath {
   '/staff-signup': typeof StaffSignupRoute
   '/terms': typeof TermsRoute
   '/tracking': typeof TrackingRoute
+  '/containers': typeof AuthenticatedContainersRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/deliveries': typeof AuthenticatedDeliveriesRoute
   '/eta-board': typeof AuthenticatedEtaBoardRoute
@@ -366,6 +379,7 @@ export interface FileRoutesByFullPath {
   '/treasury/accounts': typeof AuthenticatedTreasuryAccountsRoute
   '/api/public/receive-article': typeof ApiPublicReceiveArticleRoute
   '/guides/category/$category': typeof GuidesCategoryCategoryRoute
+  '/portal/containers/$code': typeof PortalContainersCodeRoute
   '/api/public/hooks/excel-sync': typeof ApiPublicHooksExcelSyncRoute
   '/api/public/hooks/poll-shipment-eta': typeof ApiPublicHooksPollShipmentEtaRoute
 }
@@ -390,6 +404,7 @@ export interface FileRoutesByTo {
   '/staff-signup': typeof StaffSignupRoute
   '/terms': typeof TermsRoute
   '/tracking': typeof TrackingRoute
+  '/containers': typeof AuthenticatedContainersRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/deliveries': typeof AuthenticatedDeliveriesRoute
   '/eta-board': typeof AuthenticatedEtaBoardRoute
@@ -417,6 +432,7 @@ export interface FileRoutesByTo {
   '/treasury/accounts': typeof AuthenticatedTreasuryAccountsRoute
   '/api/public/receive-article': typeof ApiPublicReceiveArticleRoute
   '/guides/category/$category': typeof GuidesCategoryCategoryRoute
+  '/portal/containers/$code': typeof PortalContainersCodeRoute
   '/api/public/hooks/excel-sync': typeof ApiPublicHooksExcelSyncRoute
   '/api/public/hooks/poll-shipment-eta': typeof ApiPublicHooksPollShipmentEtaRoute
 }
@@ -443,6 +459,7 @@ export interface FileRoutesById {
   '/staff-signup': typeof StaffSignupRoute
   '/terms': typeof TermsRoute
   '/tracking': typeof TrackingRoute
+  '/_authenticated/containers': typeof AuthenticatedContainersRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/deliveries': typeof AuthenticatedDeliveriesRoute
   '/_authenticated/eta-board': typeof AuthenticatedEtaBoardRoute
@@ -470,6 +487,7 @@ export interface FileRoutesById {
   '/_authenticated/treasury/accounts': typeof AuthenticatedTreasuryAccountsRoute
   '/api/public/receive-article': typeof ApiPublicReceiveArticleRoute
   '/guides/category/$category': typeof GuidesCategoryCategoryRoute
+  '/portal_/containers/$code': typeof PortalContainersCodeRoute
   '/api/public/hooks/excel-sync': typeof ApiPublicHooksExcelSyncRoute
   '/api/public/hooks/poll-shipment-eta': typeof ApiPublicHooksPollShipmentEtaRoute
 }
@@ -496,6 +514,7 @@ export interface FileRouteTypes {
     | '/staff-signup'
     | '/terms'
     | '/tracking'
+    | '/containers'
     | '/dashboard'
     | '/deliveries'
     | '/eta-board'
@@ -523,6 +542,7 @@ export interface FileRouteTypes {
     | '/treasury/accounts'
     | '/api/public/receive-article'
     | '/guides/category/$category'
+    | '/portal/containers/$code'
     | '/api/public/hooks/excel-sync'
     | '/api/public/hooks/poll-shipment-eta'
   fileRoutesByTo: FileRoutesByTo
@@ -547,6 +567,7 @@ export interface FileRouteTypes {
     | '/staff-signup'
     | '/terms'
     | '/tracking'
+    | '/containers'
     | '/dashboard'
     | '/deliveries'
     | '/eta-board'
@@ -574,6 +595,7 @@ export interface FileRouteTypes {
     | '/treasury/accounts'
     | '/api/public/receive-article'
     | '/guides/category/$category'
+    | '/portal/containers/$code'
     | '/api/public/hooks/excel-sync'
     | '/api/public/hooks/poll-shipment-eta'
   id:
@@ -599,6 +621,7 @@ export interface FileRouteTypes {
     | '/staff-signup'
     | '/terms'
     | '/tracking'
+    | '/_authenticated/containers'
     | '/_authenticated/dashboard'
     | '/_authenticated/deliveries'
     | '/_authenticated/eta-board'
@@ -626,6 +649,7 @@ export interface FileRouteTypes {
     | '/_authenticated/treasury/accounts'
     | '/api/public/receive-article'
     | '/guides/category/$category'
+    | '/portal_/containers/$code'
     | '/api/public/hooks/excel-sync'
     | '/api/public/hooks/poll-shipment-eta'
   fileRoutesById: FileRoutesById
@@ -661,6 +685,7 @@ export interface RootRouteChildren {
   LanesIndexRoute: typeof LanesIndexRoute
   ApiPublicReceiveArticleRoute: typeof ApiPublicReceiveArticleRoute
   GuidesCategoryCategoryRoute: typeof GuidesCategoryCategoryRoute
+  PortalContainersCodeRoute: typeof PortalContainersCodeRoute
   ApiPublicHooksExcelSyncRoute: typeof ApiPublicHooksExcelSyncRoute
   ApiPublicHooksPollShipmentEtaRoute: typeof ApiPublicHooksPollShipmentEtaRoute
 }
@@ -813,6 +838,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/tracking'
       preLoaderRoute: typeof TrackingRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/containers': {
+      id: '/_authenticated/containers'
+      path: '/containers'
+      fullPath: '/containers'
+      preLoaderRoute: typeof AuthenticatedContainersRouteImport
+      parentRoute: typeof AuthenticatedRoute
     }
     '/_authenticated/dashboard': {
       id: '/_authenticated/dashboard'
@@ -1003,6 +1035,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GuidesCategoryCategoryRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/portal_/containers/$code': {
+      id: '/portal_/containers/$code'
+      path: '/portal/containers/$code'
+      fullPath: '/portal/containers/$code'
+      preLoaderRoute: typeof PortalContainersCodeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/hooks/excel-sync': {
       id: '/api/public/hooks/excel-sync'
       path: '/api/public/hooks/excel-sync'
@@ -1021,6 +1060,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedRouteChildren {
+  AuthenticatedContainersRoute: typeof AuthenticatedContainersRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedDeliveriesRoute: typeof AuthenticatedDeliveriesRoute
   AuthenticatedEtaBoardRoute: typeof AuthenticatedEtaBoardRoute
@@ -1042,6 +1082,7 @@ interface AuthenticatedRouteChildren {
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
+  AuthenticatedContainersRoute: AuthenticatedContainersRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedDeliveriesRoute: AuthenticatedDeliveriesRoute,
   AuthenticatedEtaBoardRoute: AuthenticatedEtaBoardRoute,
@@ -1097,6 +1138,7 @@ const rootRouteChildren: RootRouteChildren = {
   LanesIndexRoute: LanesIndexRoute,
   ApiPublicReceiveArticleRoute: ApiPublicReceiveArticleRoute,
   GuidesCategoryCategoryRoute: GuidesCategoryCategoryRoute,
+  PortalContainersCodeRoute: PortalContainersCodeRoute,
   ApiPublicHooksExcelSyncRoute: ApiPublicHooksExcelSyncRoute,
   ApiPublicHooksPollShipmentEtaRoute: ApiPublicHooksPollShipmentEtaRoute,
 }
