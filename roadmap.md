@@ -34,3 +34,10 @@
 - [ ] Google review button (needs review link)
 - [x] Social handles site-wide (footer, contact, about, schema sameAs, llms.txt)
 - [ ] Confirm: Accra warehouse address, FCL/express transit, clearance days
+
+## Cargo workflow rebuild (Nov 2026)
+- [x] Phase 1: Front counter (search mark → ready parcels, balance, payment, release + gate pass)
+- [ ] Phase 2: Keyboard-only China intake scanner (L×W×H → CBM, label print)
+- [ ] Phase 3: Container loading with live CBM gauge + manifest export
+- [ ] Phase 4: One-click arrival → bulk billing + SMS
+- [ ] Simplify staff menu into 4 workspaces

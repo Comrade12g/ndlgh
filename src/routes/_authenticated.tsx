@@ -51,6 +51,7 @@ const STAFF_ROLES = [
 const ROUTE_ROLES: Array<{ prefix: string; roles: readonly string[] }> = [
   { prefix: "/admin", roles: ["admin"] },
   { prefix: "/crm", roles: ["admin", "sales", "sales_accountant", "customer_service", "sourcing_agent"] },
+  { prefix: "/counter", roles: ["admin", "customer_service", "accountant", "sales_accountant", "ops_warehouse"] },
   { prefix: "/support", roles: ["admin", "customer_service"] },
   { prefix: "/sourcing", roles: ["admin", "sourcing_agent"] },
   { prefix: "/treasury", roles: ["admin", "accountant", "sales_accountant"] },
@@ -105,6 +106,12 @@ const ALL: readonly string[] = STAFF_ROLES;
 
 const NAV: NavItem[] = [
   { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard, roles: ALL },
+  {
+    to: "/counter",
+    label: "Front counter",
+    icon: Wallet,
+    roles: ["admin", "customer_service", "accountant", "sales_accountant", "ops_warehouse"],
+  },
   { to: "/containers", label: "Container bookings", icon: Ship, roles: ALL },
   {
     to: "/crm/contacts",
