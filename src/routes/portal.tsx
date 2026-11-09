@@ -11,12 +11,18 @@ import { LogOut, Package, PackageSearch, MapPin, Copy, Receipt, Radar, Settings 
 import { toast } from "sonner";
 import { CustomerTrackingCard, type CustomerShipment } from "@/components/tracking/CustomerTrackingCard";
 import { customerMark } from "@/lib/warehouse-mark";
+import { ContainerBookings } from "@/components/portal/ContainerBookings";
 
 
 export const Route = createFileRoute("/portal")({
   head: () => ({
     meta: [
       { title: "Customer portal — NDL Cargo Ghana" },
+      { name: "description", content: "Manage your NDL cargo, book an FCL container and track your shipments." },
+      { property: "og:title", content: "Customer portal — NDL Cargo Ghana" },
+      { property: "og:description", content: "Manage your NDL cargo, book an FCL container and track your shipments." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
       { name: "robots", content: "noindex, nofollow" },
     ],
   }),
@@ -219,6 +225,8 @@ function PortalPage() {
             )}
           </div>
         </Card>
+
+        <ContainerBookings />
 
         {/* Warehouses */}
         <section className="mt-10">

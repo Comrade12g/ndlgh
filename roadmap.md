@@ -1,4 +1,7 @@
 # Roadmap
+## Monitoring fixes (Nov 2026)
+- [ ] Restore customer container booking and staff menu access; verify booking tracking
+- [ ] Verify existing Cookie settings reopens the banner and allows analytics rejection
 ## Visibly blog
 - [x] Create isolated blog storage and secure article receiver
 - [x] Add blog listing, article pages, navigation and sitemap entries
