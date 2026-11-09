@@ -1,7 +1,11 @@
 # Roadmap
+## Guest and staff container bookings
+- [x] Add secure guest booking requests without changing existing customer bookings
+- [x] Add public booking page and staff booking form
+- [x] Verify guest submission, staff booking and signed-in public booking tracking; schema tests pass
 ## Monitoring fixes (Nov 2026)
 - [x] Restore customer container booking and staff menu access (build verified)
-- [ ] Verify booking submission and tracking while signed in (blocked: requesting user has no matching app account; preview sign-in needed)
+- [x] Verify booking submission and tracking while signed in
 - [x] Verify existing Cookie settings reopens the banner and allows analytics rejection
 ## Visibly blog
 - [x] Create isolated blog storage and secure article receiver

@@ -567,6 +567,74 @@ export type Database = {
         }
         Relationships: []
       }
+      guest_container_bookings: {
+        Row: {
+          cargo_ready_date: string | null
+          code: string
+          commodity: string
+          container_no: string | null
+          container_size: string
+          created_at: string
+          delivery_city: string | null
+          email: string | null
+          full_name: string
+          id: string
+          notes: string | null
+          origin_city: string
+          phone: string
+          quantity: number
+          shipment_id: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          cargo_ready_date?: string | null
+          code?: string
+          commodity: string
+          container_no?: string | null
+          container_size: string
+          created_at?: string
+          delivery_city?: string | null
+          email?: string | null
+          full_name: string
+          id?: string
+          notes?: string | null
+          origin_city: string
+          phone: string
+          quantity?: number
+          shipment_id?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          cargo_ready_date?: string | null
+          code?: string
+          commodity?: string
+          container_no?: string | null
+          container_size?: string
+          created_at?: string
+          delivery_city?: string | null
+          email?: string | null
+          full_name?: string
+          id?: string
+          notes?: string | null
+          origin_city?: string
+          phone?: string
+          quantity?: number
+          shipment_id?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "guest_container_bookings_shipment_id_fkey"
+            columns: ["shipment_id"]
+            isOneToOne: false
+            referencedRelation: "shipments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       guides: {
         Row: {
           category: string

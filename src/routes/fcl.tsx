@@ -129,7 +129,7 @@ function FclPage() {
             China to your door.
           </p>
           <div className="mt-6 flex flex-wrap gap-3">
-            <Button asChild className="bg-brand-orange hover:bg-brand-orange/90"><Link to="/quote">Get an FCL quote</Link></Button>
+            <Button asChild className="bg-brand-orange hover:bg-brand-orange/90"><Link to="/book-container">Book a container</Link></Button>
             <Button asChild variant="secondary">
               <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer"><MessageCircle className="mr-1 h-4 w-4" /> WhatsApp {BUSINESS.phone}</a>
             </Button>
@@ -265,7 +265,7 @@ function FclPage() {
         <h2 className="font-display text-2xl font-bold text-brand-navy">Ready to book a container?</h2>
         <p className="mt-3 text-muted-foreground">Send your goods list and we'll reply with a current container price.</p>
         <div className="mt-6 flex flex-wrap justify-center gap-3">
-          <Button asChild className="bg-brand-orange hover:bg-brand-orange/90"><Link to="/quote">Get an FCL quote</Link></Button>
+          <Button asChild className="bg-brand-orange hover:bg-brand-orange/90"><Link to="/book-container">Book a container</Link></Button>
           <Button asChild variant="outline"><Link to="/contact">Contact us</Link></Button>
         </div>
       </section>
