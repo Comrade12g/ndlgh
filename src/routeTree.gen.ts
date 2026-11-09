@@ -15,6 +15,7 @@ import { Route as AboutRouteImport } from './routes/about'
 import { Route as AcceptInviteRouteImport } from './routes/accept-invite'
 import { Route as AccountRouteImport } from './routes/account'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as BookContainerRouteImport } from './routes/book-container'
 import { Route as BuyFromChinaRouteImport } from './routes/buy-from-china'
 import { Route as ChangePasswordRouteImport } from './routes/change-password'
 import { Route as ContactRouteImport } from './routes/contact'
@@ -89,6 +90,11 @@ const AccountRoute = AccountRouteImport.update({
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BookContainerRoute = BookContainerRouteImport.update({
+  id: '/book-container',
+  path: '/book-container',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BuyFromChinaRoute = BuyFromChinaRouteImport.update({
@@ -336,6 +342,7 @@ export interface FileRoutesByFullPath {
   '/accept-invite': typeof AcceptInviteRoute
   '/account': typeof AccountRoute
   '/auth': typeof AuthRoute
+  '/book-container': typeof BookContainerRoute
   '/buy-from-china': typeof BuyFromChinaRoute
   '/change-password': typeof ChangePasswordRoute
   '/contact': typeof ContactRoute
@@ -389,6 +396,7 @@ export interface FileRoutesByTo {
   '/accept-invite': typeof AcceptInviteRoute
   '/account': typeof AccountRoute
   '/auth': typeof AuthRoute
+  '/book-container': typeof BookContainerRoute
   '/buy-from-china': typeof BuyFromChinaRoute
   '/change-password': typeof ChangePasswordRoute
   '/contact': typeof ContactRoute
@@ -444,6 +452,7 @@ export interface FileRoutesById {
   '/accept-invite': typeof AcceptInviteRoute
   '/account': typeof AccountRoute
   '/auth': typeof AuthRoute
+  '/book-container': typeof BookContainerRoute
   '/buy-from-china': typeof BuyFromChinaRoute
   '/change-password': typeof ChangePasswordRoute
   '/contact': typeof ContactRoute
@@ -499,6 +508,7 @@ export interface FileRouteTypes {
     | '/accept-invite'
     | '/account'
     | '/auth'
+    | '/book-container'
     | '/buy-from-china'
     | '/change-password'
     | '/contact'
@@ -552,6 +562,7 @@ export interface FileRouteTypes {
     | '/accept-invite'
     | '/account'
     | '/auth'
+    | '/book-container'
     | '/buy-from-china'
     | '/change-password'
     | '/contact'
@@ -606,6 +617,7 @@ export interface FileRouteTypes {
     | '/accept-invite'
     | '/account'
     | '/auth'
+    | '/book-container'
     | '/buy-from-china'
     | '/change-password'
     | '/contact'
@@ -661,6 +673,7 @@ export interface RootRouteChildren {
   AcceptInviteRoute: typeof AcceptInviteRoute
   AccountRoute: typeof AccountRoute
   AuthRoute: typeof AuthRoute
+  BookContainerRoute: typeof BookContainerRoute
   BuyFromChinaRoute: typeof BuyFromChinaRoute
   ChangePasswordRoute: typeof ChangePasswordRoute
   ContactRoute: typeof ContactRoute
@@ -732,6 +745,13 @@ declare module '@tanstack/react-router' {
       path: '/auth'
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/book-container': {
+      id: '/book-container'
+      path: '/book-container'
+      fullPath: '/book-container'
+      preLoaderRoute: typeof BookContainerRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/buy-from-china': {
@@ -1114,6 +1134,7 @@ const rootRouteChildren: RootRouteChildren = {
   AcceptInviteRoute: AcceptInviteRoute,
   AccountRoute: AccountRoute,
   AuthRoute: AuthRoute,
+  BookContainerRoute: BookContainerRoute,
   BuyFromChinaRoute: BuyFromChinaRoute,
   ChangePasswordRoute: ChangePasswordRoute,
   ContactRoute: ContactRoute,
