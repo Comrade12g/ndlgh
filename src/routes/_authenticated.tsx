@@ -105,6 +105,7 @@ const ALL: readonly string[] = STAFF_ROLES;
 
 const NAV: NavItem[] = [
   { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard, roles: ALL },
+  { to: "/containers", label: "Container bookings", icon: Ship, roles: ALL },
   {
     to: "/crm/contacts",
     label: "CRM",

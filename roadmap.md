@@ -1,4 +1,8 @@
 # Roadmap
+## Monitoring fixes (Nov 2026)
+- [x] Restore customer container booking and staff menu access (build verified)
+- [ ] Verify booking submission and tracking while signed in (blocked: requesting user has no matching app account; preview sign-in needed)
+- [x] Verify existing Cookie settings reopens the banner and allows analytics rejection
 ## Visibly blog
 - [x] Create isolated blog storage and secure article receiver
 - [x] Add blog listing, article pages, navigation and sitemap entries
