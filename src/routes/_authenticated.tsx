@@ -55,6 +55,7 @@ const ROUTE_ROLES: Array<{ prefix: string; roles: readonly string[] }> = [
   { prefix: "/support", roles: ["admin", "customer_service"] },
   { prefix: "/sourcing", roles: ["admin", "sourcing_agent"] },
   { prefix: "/treasury", roles: ["admin", "accountant", "sales_accountant"] },
+  { prefix: "/arrivals", roles: ["admin", "ops_warehouse", "customer_service"] },
   { prefix: "/packages", roles: ["admin", "ops_warehouse", "customer_service"] },
   { prefix: "/shipments", roles: ["admin", "ops_warehouse", "sales", "sales_accountant", "customer_service"] },
   { prefix: "/eta-board", roles: ["admin", "ops_warehouse", "customer_service", "sourcing_agent"] },
@@ -113,6 +114,7 @@ const NAV: NavItem[] = [
     roles: ["admin", "customer_service", "accountant", "sales_accountant", "ops_warehouse"],
   },
   { to: "/containers", label: "Container bookings", icon: Ship, roles: ALL },
+  { to: "/arrivals", label: "Arrival list", icon: FileText, roles: ["admin", "ops_warehouse", "customer_service"] },
   {
     to: "/crm/contacts",
     label: "CRM",
