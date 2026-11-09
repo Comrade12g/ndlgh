@@ -31,6 +31,7 @@ import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as StaffSignupRouteImport } from './routes/staff-signup'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as TrackingRouteImport } from './routes/tracking'
+import { Route as AuthenticatedArrivalsRouteImport } from './routes/_authenticated/arrivals'
 import { Route as AuthenticatedContainersRouteImport } from './routes/_authenticated/containers'
 import { Route as AuthenticatedCounterRouteImport } from './routes/_authenticated/counter'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
@@ -172,6 +173,11 @@ const TrackingRoute = TrackingRouteImport.update({
   id: '/tracking',
   path: '/tracking',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedArrivalsRoute = AuthenticatedArrivalsRouteImport.update({
+  id: '/arrivals',
+  path: '/arrivals',
+  getParentRoute: () => AuthenticatedRoute,
 } as any)
 const AuthenticatedContainersRoute = AuthenticatedContainersRouteImport.update({
   id: '/containers',
@@ -364,6 +370,7 @@ export interface FileRoutesByFullPath {
   '/staff-signup': typeof StaffSignupRoute
   '/terms': typeof TermsRoute
   '/tracking': typeof TrackingRoute
+  '/arrivals': typeof AuthenticatedArrivalsRoute
   '/containers': typeof AuthenticatedContainersRoute
   '/counter': typeof AuthenticatedCounterRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
@@ -419,6 +426,7 @@ export interface FileRoutesByTo {
   '/staff-signup': typeof StaffSignupRoute
   '/terms': typeof TermsRoute
   '/tracking': typeof TrackingRoute
+  '/arrivals': typeof AuthenticatedArrivalsRoute
   '/containers': typeof AuthenticatedContainersRoute
   '/counter': typeof AuthenticatedCounterRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
@@ -476,6 +484,7 @@ export interface FileRoutesById {
   '/staff-signup': typeof StaffSignupRoute
   '/terms': typeof TermsRoute
   '/tracking': typeof TrackingRoute
+  '/_authenticated/arrivals': typeof AuthenticatedArrivalsRoute
   '/_authenticated/containers': typeof AuthenticatedContainersRoute
   '/_authenticated/counter': typeof AuthenticatedCounterRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
@@ -533,6 +542,7 @@ export interface FileRouteTypes {
     | '/staff-signup'
     | '/terms'
     | '/tracking'
+    | '/arrivals'
     | '/containers'
     | '/counter'
     | '/dashboard'
@@ -588,6 +598,7 @@ export interface FileRouteTypes {
     | '/staff-signup'
     | '/terms'
     | '/tracking'
+    | '/arrivals'
     | '/containers'
     | '/counter'
     | '/dashboard'
@@ -644,6 +655,7 @@ export interface FileRouteTypes {
     | '/staff-signup'
     | '/terms'
     | '/tracking'
+    | '/_authenticated/arrivals'
     | '/_authenticated/containers'
     | '/_authenticated/counter'
     | '/_authenticated/dashboard'
@@ -870,6 +882,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/tracking'
       preLoaderRoute: typeof TrackingRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/arrivals': {
+      id: '/_authenticated/arrivals'
+      path: '/arrivals'
+      fullPath: '/arrivals'
+      preLoaderRoute: typeof AuthenticatedArrivalsRouteImport
+      parentRoute: typeof AuthenticatedRoute
     }
     '/_authenticated/containers': {
       id: '/_authenticated/containers'
@@ -1099,6 +1118,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedRouteChildren {
+  AuthenticatedArrivalsRoute: typeof AuthenticatedArrivalsRoute
   AuthenticatedContainersRoute: typeof AuthenticatedContainersRoute
   AuthenticatedCounterRoute: typeof AuthenticatedCounterRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
@@ -1122,6 +1142,7 @@ interface AuthenticatedRouteChildren {
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
+  AuthenticatedArrivalsRoute: AuthenticatedArrivalsRoute,
   AuthenticatedContainersRoute: AuthenticatedContainersRoute,
   AuthenticatedCounterRoute: AuthenticatedCounterRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
