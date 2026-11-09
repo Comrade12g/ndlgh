@@ -19,8 +19,9 @@ export const Route = createFileRoute("/_authenticated/arrivals")({
   component: ArrivalsPage,
 });
 
-type Status = "in_transit" | "arrived_gh" | "ready_delivery";
+type Status = "received" | "in_transit" | "arrived_gh" | "ready_delivery";
 const STATUS_LABEL: Record<Status, string> = {
+  received: "Arrived at China warehouse",
   in_transit: "In transit (left China)",
   arrived_gh: "Arrived in Ghana",
   ready_delivery: "Ready for pickup",
@@ -60,7 +61,7 @@ function ArrivalsPage() {
           await notifyCustomer({
             customerId: c.customer_id,
             phone: c.phone,
-            event: status === "in_transit" ? "shipment_departed" : "shipment_arrived",
+            event: status === "in_transit" ? "shipment_departed" : status === "received" ? "package_received" : "shipment_arrived",
             packageId: c.package_id,
             message: `Hi ${c.full_name ?? "there"}, ${list.length} of your parcel(s) (${list.map((l) => l.tracking_code).join(", ")}) are now: ${STATUS_LABEL[status]}. Check your customer portal: https://www.ndlgh.com/portal\nNDL Cargo`,
           });
