@@ -43,6 +43,13 @@
       "when": 1794227610338,
       "tag": "0005_guest_container_booking_requests",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1794258316428,
+      "tag": "0006_arrival_manifest_import",
+      "breakpoints": true
     }
   ]
 }

@@ -1889,6 +1889,22 @@ export type Database = {
         }
         Returns: boolean
       }
+      import_arrival_manifest: {
+        Args: {
+          _rows: Json
+          _status: Database["public"]["Enums"]["package_status"]
+        }
+        Returns: {
+          customer_id: string
+          full_name: string
+          package_id: string
+          phone: string
+          result: string
+          row_no: number
+          shipping_mark: string
+          tracking_code: string
+        }[]
+      }
       is_staff: { Args: { _user_id: string }; Returns: boolean }
       price_package_line: {
         Args: { _pkg: Database["public"]["Tables"]["packages"]["Row"] }
