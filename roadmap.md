@@ -40,7 +40,7 @@
 - [ ] Phase 2: Keyboard-only China intake scanner (L×W×H → CBM, label print)
 - [ ] Phase 3: Container loading with live CBM gauge + manifest export
 - [ ] Phase 4: One-click arrival → bulk billing + SMS
-- [ ] Simplify staff menu into 4 workspaces
+- [x] Simplify staff menu into 4 workspaces (Cargo, Customers, Money, Admin)
 
 ## Arrival list (Nov 2026)
 - [x] Accra arrival list upload/paste updates customer portal, optional SMS, no auto invoices

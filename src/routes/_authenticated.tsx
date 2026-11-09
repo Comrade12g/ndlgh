@@ -47,7 +47,7 @@ const STAFF_ROLES = [
 // Per-route role gate. Any route path whose prefix matches an entry here
 // requires at least one of the listed roles. Direct URL access by users
 // without a matching role is redirected to /dashboard (always allowed for
-// any staff role). Keep in sync with NAV below.
+// any staff role). Keep in sync with NAV_GROUPS below.
 const ROUTE_ROLES: Array<{ prefix: string; roles: readonly string[] }> = [
   { prefix: "/admin", roles: ["admin"] },
   { prefix: "/crm", roles: ["admin", "sales", "sales_accountant", "customer_service", "sourcing_agent"] },
@@ -104,84 +104,52 @@ type NavItem = {
 };
 
 const ALL: readonly string[] = STAFF_ROLES;
+const OPS = ["admin", "ops_warehouse", "customer_service"];
+const MONEY = ["admin", "accountant", "sales", "sales_accountant"];
 
-const NAV: NavItem[] = [
-  { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard, roles: ALL },
+// Four workspaces, ordered the way cargo and money flow through NDL.
+const NAV_GROUPS: Array<{ title: string; items: NavItem[] }> = [
+  { title: "", items: [{ to: "/dashboard", label: "Dashboard", icon: LayoutDashboard, roles: ALL }] },
   {
-    to: "/counter",
-    label: "Front counter",
-    icon: Wallet,
-    roles: ["admin", "customer_service", "accountant", "sales_accountant", "ops_warehouse"],
-  },
-  { to: "/containers", label: "Container bookings", icon: Ship, roles: ALL },
-  { to: "/arrivals", label: "Arrival list", icon: FileText, roles: ["admin", "ops_warehouse", "customer_service"] },
-  {
-    to: "/crm/contacts",
-    label: "CRM",
-    icon: Users,
-    roles: ["admin", "sales", "sales_accountant", "customer_service", "sourcing_agent"],
-  },
-  {
-    to: "/support",
-    label: "Customer Service",
-    icon: Headphones,
-    roles: ["admin", "customer_service"],
-  },
-  { to: "/sourcing/pos", label: "Sourcing", icon: ShoppingBag, roles: ["admin", "sourcing_agent"] },
-  { to: "/service-requests", label: "China requests", icon: ShoppingBag, roles: ["admin", "sourcing_agent", "sales", "customer_service", "sales_accountant"] },
-  {
-    to: "/treasury/accounts",
-    label: "Treasury",
-    icon: Wallet,
-    roles: ["admin", "accountant", "sales_accountant"],
+    title: "Cargo",
+    items: [
+      { to: "/arrivals", label: "Arrival list", icon: FileText, roles: OPS },
+      { to: "/packages", label: "Packages", icon: Package, roles: OPS },
+      { to: "/containers", label: "Container bookings", icon: Ship, roles: ALL },
+      { to: "/shipments", label: "Shipments", icon: Ship, roles: ["admin", "ops_warehouse", "sales", "sales_accountant", "customer_service"] },
+      { to: "/eta-board", label: "ETA Tracking", icon: Radar, roles: ["admin", "ops_warehouse", "customer_service", "sourcing_agent"] },
+      { to: "/counter", label: "Front counter", icon: Wallet, roles: ["admin", "customer_service", "accountant", "sales_accountant", "ops_warehouse"] },
+      { to: "/deliveries", label: "Deliveries", icon: Truck, roles: ["admin", "ops_warehouse", "driver", "customer_service"] },
+    ],
   },
   {
-    to: "/packages",
-    label: "Packages",
-    icon: Package,
-    roles: ["admin", "ops_warehouse", "customer_service"],
+    title: "Customers",
+    items: [
+      { to: "/crm/contacts", label: "CRM", icon: Users, roles: ["admin", "sales", "sales_accountant", "customer_service", "sourcing_agent"] },
+      { to: "/support", label: "Customer Service", icon: Headphones, roles: ["admin", "customer_service"] },
+      { to: "/service-requests", label: "China requests", icon: ShoppingBag, roles: ["admin", "sourcing_agent", "sales", "customer_service", "sales_accountant"] },
+      { to: "/sourcing/pos", label: "Sourcing", icon: ShoppingBag, roles: ["admin", "sourcing_agent"] },
+    ],
   },
   {
-    to: "/shipments",
-    label: "Shipments",
-    icon: Ship,
-    roles: ["admin", "ops_warehouse", "sales", "sales_accountant", "customer_service"],
+    title: "Money",
+    items: [
+      { to: "/invoices", label: "Invoices", icon: Receipt, roles: MONEY },
+      { to: "/rates", label: "Rates", icon: Tags, roles: MONEY },
+      { to: "/treasury/accounts", label: "Treasury", icon: Wallet, roles: ["admin", "accountant", "sales_accountant"] },
+      { to: "/reports", label: "Reports", icon: BarChart3, roles: ["admin", "accountant", "sales_accountant"] },
+    ],
   },
   {
-    to: "/eta-board",
-    label: "ETA Tracking",
-    icon: Radar,
-    roles: ["admin", "ops_warehouse", "customer_service", "sourcing_agent"],
+    title: "Admin",
+    items: [
+      { to: "/admin/users", label: "Users", icon: Settings, roles: ["admin"] },
+      { to: "/admin/messages", label: "Message log", icon: Settings, roles: ["admin"] },
+      { to: "/admin/gallery", label: "Gallery", icon: Settings, roles: ["admin"] },
+      { to: "/admin/guides", label: "Guides CMS", icon: FileText, roles: ["admin"] },
+      { to: "/admin/audit", label: "Invite log", icon: Settings, roles: ["admin"] },
+    ],
   },
-  {
-    to: "/deliveries",
-    label: "Deliveries",
-    icon: Truck,
-    roles: ["admin", "ops_warehouse", "driver", "customer_service"],
-  },
-  {
-    to: "/invoices",
-    label: "Invoices",
-    icon: Receipt,
-    roles: ["admin", "accountant", "sales", "sales_accountant"],
-  },
-  {
-    to: "/rates",
-    label: "Rates",
-    icon: Tags,
-    roles: ["admin", "accountant", "sales", "sales_accountant"],
-  },
-  {
-    to: "/reports",
-    label: "Reports",
-    icon: BarChart3,
-    roles: ["admin", "accountant", "sales_accountant"],
-  },
-  { to: "/admin/users", label: "Admin", icon: Settings, roles: ["admin"] },
-  { to: "/admin/gallery", label: "Gallery", icon: Settings, roles: ["admin"] },
-  { to: "/admin/guides", label: "Guides CMS", icon: FileText, roles: ["admin"] },
-  { to: "/admin/audit", label: "Invite log", icon: Settings, roles: ["admin"] },
-  { to: "/admin/messages", label: "Message log", icon: Settings, roles: ["admin"] },
 ];
 
 function StaffLayout() {
@@ -204,7 +172,10 @@ function StaffLayout() {
     },
   });
 
-  const visible = NAV.filter((n) => n.roles.some((r) => (roles as readonly string[]).includes(r)));
+  const groups = NAV_GROUPS.map((g) => ({
+    ...g,
+    items: g.items.filter((n) => n.roles.some((r) => (roles as readonly string[]).includes(r))),
+  })).filter((g) => g.items.length);
   const primaryRole = roles.includes("admin")
     ? "Admin"
     : roles.includes("accountant")
@@ -247,24 +218,33 @@ function StaffLayout() {
         <GlobalSearch />
       </div>
       <nav className="flex-1 space-y-1 overflow-y-auto p-3">
-        {visible.map((item) => {
-          const active = pathname.startsWith(item.to.split("/").slice(0, 2).join("/"));
-          return (
-            <Link
-              key={item.to}
-              to={item.to}
-              onClick={onNavigate}
-              className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
-                active
-                  ? "bg-sidebar-primary text-sidebar-primary-foreground"
-                  : "text-sidebar-foreground/80 hover:bg-sidebar-accent hover:text-sidebar-foreground"
-              }`}
-            >
-              <item.icon className="h-4 w-4" />
-              {item.label}
-            </Link>
-          );
-        })}
+        {groups.map((g) => (
+          <div key={g.title || "home"} className={g.title ? "pt-3" : ""}>
+            {g.title && (
+              <div className="px-3 pb-1 text-[10px] font-semibold uppercase tracking-wider text-sidebar-foreground/50">
+                {g.title}
+              </div>
+            )}
+            {g.items.map((item) => {
+              const active = pathname === item.to || pathname.startsWith(item.to + "/");
+              return (
+                <Link
+                  key={item.to}
+                  to={item.to}
+                  onClick={onNavigate}
+                  className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
+                    active
+                      ? "bg-sidebar-primary text-sidebar-primary-foreground"
+                      : "text-sidebar-foreground/80 hover:bg-sidebar-accent hover:text-sidebar-foreground"
+                  }`}
+                >
+                  <item.icon className="h-4 w-4" />
+                  {item.label}
+                </Link>
+              );
+            })}
+          </div>
+        ))}
       </nav>
       <div className="border-t border-sidebar-border p-4">
         {roles.includes("admin") && <BackupButton />}
