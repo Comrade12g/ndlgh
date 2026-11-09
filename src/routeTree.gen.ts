@@ -32,6 +32,7 @@ import { Route as StaffSignupRouteImport } from './routes/staff-signup'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as TrackingRouteImport } from './routes/tracking'
 import { Route as AuthenticatedContainersRouteImport } from './routes/_authenticated/containers'
+import { Route as AuthenticatedCounterRouteImport } from './routes/_authenticated/counter'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedDeliveriesRouteImport } from './routes/_authenticated/deliveries'
 import { Route as AuthenticatedEtaBoardRouteImport } from './routes/_authenticated/eta-board'
@@ -175,6 +176,11 @@ const TrackingRoute = TrackingRouteImport.update({
 const AuthenticatedContainersRoute = AuthenticatedContainersRouteImport.update({
   id: '/containers',
   path: '/containers',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedCounterRoute = AuthenticatedCounterRouteImport.update({
+  id: '/counter',
+  path: '/counter',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
 const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
@@ -359,6 +365,7 @@ export interface FileRoutesByFullPath {
   '/terms': typeof TermsRoute
   '/tracking': typeof TrackingRoute
   '/containers': typeof AuthenticatedContainersRoute
+  '/counter': typeof AuthenticatedCounterRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/deliveries': typeof AuthenticatedDeliveriesRoute
   '/eta-board': typeof AuthenticatedEtaBoardRoute
@@ -413,6 +420,7 @@ export interface FileRoutesByTo {
   '/terms': typeof TermsRoute
   '/tracking': typeof TrackingRoute
   '/containers': typeof AuthenticatedContainersRoute
+  '/counter': typeof AuthenticatedCounterRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/deliveries': typeof AuthenticatedDeliveriesRoute
   '/eta-board': typeof AuthenticatedEtaBoardRoute
@@ -469,6 +477,7 @@ export interface FileRoutesById {
   '/terms': typeof TermsRoute
   '/tracking': typeof TrackingRoute
   '/_authenticated/containers': typeof AuthenticatedContainersRoute
+  '/_authenticated/counter': typeof AuthenticatedCounterRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/deliveries': typeof AuthenticatedDeliveriesRoute
   '/_authenticated/eta-board': typeof AuthenticatedEtaBoardRoute
@@ -525,6 +534,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/tracking'
     | '/containers'
+    | '/counter'
     | '/dashboard'
     | '/deliveries'
     | '/eta-board'
@@ -579,6 +589,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/tracking'
     | '/containers'
+    | '/counter'
     | '/dashboard'
     | '/deliveries'
     | '/eta-board'
@@ -634,6 +645,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/tracking'
     | '/_authenticated/containers'
+    | '/_authenticated/counter'
     | '/_authenticated/dashboard'
     | '/_authenticated/deliveries'
     | '/_authenticated/eta-board'
@@ -866,6 +878,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedContainersRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/counter': {
+      id: '/_authenticated/counter'
+      path: '/counter'
+      fullPath: '/counter'
+      preLoaderRoute: typeof AuthenticatedCounterRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/dashboard': {
       id: '/_authenticated/dashboard'
       path: '/dashboard'
@@ -1081,6 +1100,7 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedRouteChildren {
   AuthenticatedContainersRoute: typeof AuthenticatedContainersRoute
+  AuthenticatedCounterRoute: typeof AuthenticatedCounterRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedDeliveriesRoute: typeof AuthenticatedDeliveriesRoute
   AuthenticatedEtaBoardRoute: typeof AuthenticatedEtaBoardRoute
@@ -1103,6 +1123,7 @@ interface AuthenticatedRouteChildren {
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedContainersRoute: AuthenticatedContainersRoute,
+  AuthenticatedCounterRoute: AuthenticatedCounterRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedDeliveriesRoute: AuthenticatedDeliveriesRoute,
   AuthenticatedEtaBoardRoute: AuthenticatedEtaBoardRoute,
