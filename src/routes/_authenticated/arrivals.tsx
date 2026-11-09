@@ -37,13 +37,22 @@ function ArrivalsPage() {
   const [busy, setBusy] = useState(false);
   const [results, setResults] = useState<Result[] | null>(null);
 
-  async function onFile(f: File) {
-    const wb = XLSX.read(await f.arrayBuffer());
-    const grid = XLSX.utils.sheet_to_json<unknown[]>(wb.Sheets[wb.SheetNames[0]], { header: 1, defval: "" });
+  const [wb, setWb] = useState<XLSX.WorkBook | null>(null);
+  const [sheet, setSheet] = useState("");
+
+  function readSheet(book: XLSX.WorkBook, name: string) {
+    const grid = XLSX.utils.sheet_to_json<unknown[]>(book.Sheets[name], { header: 1, defval: "" });
     const r = rowsFromGrid(grid);
+    setSheet(name);
     setRows(r);
     setResults(null);
-    toast.success(`${r.length} lines read from ${f.name}`);
+    toast.success(`${r.length} parcels read from sheet "${name}"`);
+  }
+
+  async function onFile(f: File) {
+    const book = XLSX.read(await f.arrayBuffer());
+    setWb(book);
+    readSheet(book, book.SheetNames[0]);
   }
 
   async function apply() {
@@ -86,6 +95,16 @@ function ArrivalsPage() {
         <div>
           <Label htmlFor="file">Excel / CSV file</Label>
           <input id="file" type="file" accept=".xlsx,.xls,.csv" className="mt-1 block text-sm" onChange={(e) => e.target.files?.[0] && onFile(e.target.files[0])} />
+          {wb && wb.SheetNames.length > 1 && (
+            <div className="mt-2 flex flex-wrap items-center gap-2 text-sm">
+              <span className="text-muted-foreground">Sheet:</span>
+              {wb.SheetNames.map((n) => (
+                <Button key={n} size="sm" variant={n === sheet ? "default" : "outline"} onClick={() => readSheet(wb, n)}>
+                  {n}
+                </Button>
+              ))}
+            </div>
+          )}
         </div>
         <div>
           <Label htmlFor="paste">…or paste the list (columns: Mark, Tracking, Goods, Ctns, KG, CBM)</Label>
