@@ -50,6 +50,13 @@
       "when": 1794258316428,
       "tag": "0006_arrival_manifest_import",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1794259222219,
+      "tag": "0007_arrival_manifest_allow_china_received",
+      "breakpoints": true
     }
   ]
 }
