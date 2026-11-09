@@ -1,4 +1,8 @@
 # Roadmap
+## Guest and staff container bookings
+- [ ] Add secure guest booking requests without changing existing customer bookings
+- [ ] Add public booking page and staff booking form
+- [ ] Verify guest submission and staff access checks
 ## Monitoring fixes (Nov 2026)
 - [x] Restore customer container booking and staff menu access (build verified)
 - [ ] Verify booking submission and tracking while signed in (blocked: requesting user has no matching app account; preview sign-in needed)
