@@ -1,14 +1,26 @@
 import { supabase } from "@/integrations/supabase/client";
-import { outstanding } from "@/lib/cargo-math";
+import { outstanding, AT_CHINA, IN_TRANSIT, AT_GHANA } from "@/lib/cargo-math";
+
+export type StatementScope = "all" | "china" | "shipped" | "accra" | "released";
+export const SCOPE_LABEL: Record<StatementScope, string> = {
+  all: "All goods",
+  china: "Still in China (not shipped)",
+  shipped: "Shipped / on the way",
+  accra: "Arrived in Accra",
+  released: "Already collected",
+};
+const SCOPE_STATUS: Record<Exclude<StatementScope, "all">, readonly string[]> = {
+  china: AT_CHINA, shipped: IN_TRANSIT, accra: AT_GHANA, released: ["delivered"],
+};
 
 const esc = (s: unknown) => String(s ?? "").replace(/[&<>"]/g, (c) => `&#${c.charCodeAt(0)};`);
 const STATUS: Record<string, string> = {
-  received: "Received in China", in_warehouse: "In China warehouse", in_transit: "In transit",
+  expected: "Expected in China", received: "Received in China", weighed: "Weighed in China", loaded: "Loaded in container", in_warehouse: "In China warehouse", in_transit: "In transit",
   arrived_gh: "Arrived Accra", ready_delivery: "Ready in Accra", delivered: "Released",
 };
 
 /** Opens a printable A4 statement of all a customer's goods and open balances. Staff only (RLS). */
-export async function printCustomerStatement(customerId: string) {
+export async function printCustomerStatement(customerId: string, scope: StatementScope = "all") {
   const w = window.open("", "_blank", "width=900,height=900");
   if (!w) return;
   w.document.write("<p style='font-family:sans-serif'>Preparing statement…</p>");
@@ -20,7 +32,8 @@ export async function printCustomerStatement(customerId: string) {
     supabase.from("invoices").select("number, currency, total, amount_paid, status, issue_date")
       .eq("customer_id", customerId).not("status", "in", "(void,draft)").order("issue_date"),
   ]);
-  const pf = p.data; const rows = pk.data ?? []; const invs = inv.data ?? [];
+  const pf = p.data; const all = pk.data ?? [];
+  const rows = scope === "all" ? all : all.filter((r) => SCOPE_STATUS[scope].includes(r.status)); const invs = inv.data ?? [];
   const sum = (k: "pieces" | "weight_kg" | "cbm") => rows.reduce((s, r) => s + Number(r[k] ?? 0), 0);
   const bal: Record<string, { billed: number; paid: number }> = {};
   for (const i of invs) {
@@ -36,12 +49,12 @@ export async function printCustomerStatement(customerId: string) {
   td{border-bottom:1px solid #ddd;padding:4px;font-size:11px}.tot{display:flex;gap:24px;margin:12px 0;font-size:13px}
   .tot b{display:block;font-size:18px;color:#F58220}h2{font-size:14px;margin:18px 0 0}
   .sig{margin-top:40px;display:flex;justify-content:space-between}</style></head><body>
-  <div class="bar"><div><h1>NDL Cargo — Customer Statement</h1>Next Day Logistics · ndlgh.com · WhatsApp 0500229352</div>
+  <div class="bar"><div><h1>NDL Cargo — Customer Statement</h1><b style="color:#F58220">${esc(SCOPE_LABEL[scope])}</b><br>Next Day Logistics · ndlgh.com · WhatsApp 0500229352</div>
   <div style="text-align:right">${esc(new Date().toLocaleString())}</div></div>
   <p style="font-size:15px"><b>${esc(pf?.shipping_mark)}</b> · ${esc(pf?.full_name)} · ${esc(pf?.phone)}</p>
   <div class="tot"><div>Parcels<b>${rows.length}</b></div><div>Pieces<b>${sum("pieces")}</b></div>
   <div>CBM<b>${sum("cbm").toFixed(3)}</b></div><div>Weight (kg)<b>${sum("weight_kg").toFixed(2)}</b></div></div>
-  <h2>All goods received</h2><table><tr><th>Date</th><th>NDL ref</th><th>Supplier tracking</th><th>Goods</th><th>Pcs</th><th>CBM</th><th>Kg</th><th>WH</th><th>Status</th></tr>
+  <h2>${esc(SCOPE_LABEL[scope])}</h2><table><tr><th>Date</th><th>NDL ref</th><th>Supplier tracking</th><th>Goods</th><th>Pcs</th><th>CBM</th><th>Kg</th><th>WH</th><th>Status</th></tr>
   ${rows.map((r) => `<tr><td>${r.received_at ? esc(new Date(r.received_at).toLocaleDateString()) : ""}</td><td>${esc(r.tracking_code)}</td><td>${esc(r.external_tracking)}</td><td>${esc(r.description)}</td><td>${esc(r.pieces)}</td><td>${Number(r.cbm ?? 0).toFixed(3)}</td><td>${esc(r.weight_kg)}</td><td>${esc(r.warehouse_code)}</td><td>${esc(STATUS[r.status] ?? r.status)}</td></tr>`).join("") || "<tr><td colspan=9>No goods recorded</td></tr>"}
   </table>
   <h2>Account balance</h2><table><tr><th>Currency</th><th>Billed</th><th>Paid</th><th>Balance</th></tr>
