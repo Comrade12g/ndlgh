@@ -10,7 +10,8 @@ import { buildSupplierText, customerMark, airMark } from "@/lib/warehouse-mark";
 import { notifyCustomer } from "@/lib/notifications";
 import { copyToClipboard } from "@/lib/whatsapp";
 import { toast } from "sonner";
-import { ArrowLeft, Copy, MessageCircle, Phone, Package, Receipt, Ship, Truck, MapPin, History } from "lucide-react";
+import { ArrowLeft, Copy, MessageCircle, Phone, Package, Receipt, Ship, Truck, MapPin, History, Printer } from "lucide-react";
+import { printCustomerStatement } from "@/lib/print-statement";
 
 export type CsCustomer = { id: string; full_name: string | null; phone: string | null; shipping_mark: string };
 
@@ -140,6 +141,9 @@ export function CustomerServiceCard({ c, onBack }: { c: CsCustomer; onBack: () =
     <div className="space-y-6">
       <Button variant="ghost" size="sm" onClick={onBack}>
         <ArrowLeft className="mr-1 h-4 w-4" /> Back to search
+      </Button>
+      <Button variant="outline" size="sm" className="ml-2" onClick={() => printCustomerStatement(c.id)}>
+        <Printer className="mr-1 h-4 w-4" /> Print statement
       </Button>
 
       <Card className="border-0 bg-gradient-to-br from-brand-navy to-brand-sky p-5 text-primary-foreground">

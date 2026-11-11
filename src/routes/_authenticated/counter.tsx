@@ -14,6 +14,7 @@ import { getErrorMessage } from "@/lib/errors";
 import { sanitizePostgrestTerm } from "@/lib/utils";
 import { AT_GHANA, IN_TRANSIT, AT_CHINA, outstanding } from "@/lib/cargo-math";
 import { openWhatsApp } from "@/lib/whatsapp";
+import { printCustomerStatement } from "@/lib/print-statement";
 
 export const Route = createFileRoute("/_authenticated/counter")({
   head: () => ({ meta: [{ title: "Front counter | NDL Ops" }, { name: "robots", content: "noindex" }] }),
@@ -231,6 +232,9 @@ function CounterPage() {
               <Stat icon={Ship} label="On the way" value={`${transit.length}`} />
               <Stat icon={Wallet} label="Balance" value={owes ? Object.entries(balances).filter(([, v]) => v > 0).map(([c, v]) => `${c} ${v.toFixed(2)}`).join(" / ") : "Paid"} tone={owes ? "warn" : "ok"} />
             </div>
+            <Button variant="outline" onClick={() => printCustomerStatement(customerId!)}>
+              <Printer className="mr-2 h-4 w-4" /> Print statement
+            </Button>
             {pf.phone && (
               <Button variant="outline" onClick={() => openWhatsApp(pf.phone, `Hello ${pf.full_name ?? ""}, this is NDL front desk.`)}>
                 <MessageCircle className="mr-2 h-4 w-4" /> WhatsApp
