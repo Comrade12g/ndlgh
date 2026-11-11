@@ -108,7 +108,7 @@ export function WarehouseLocations() {
                   </div>
                   <div className="font-mono text-sm font-extrabold leading-snug text-brand-navy">
                     {h.code === "WP"
-                      ? "【WP-ND****】CLIENT NAME 13428888064 广东省广州市越秀区广园西路94号迦南地国际采购中心1楼1037铺 【WP-ND****】CLIENT NAME"
+                      ? "【WPL-ND****】CLIENT NAME 13428888064 广东省广州市越秀区广园西路94号迦南地国际采购中心1楼1037铺 【WPL-ND****】CLIENT NAME"
                       : "ND****"}
                   </div>
                 </div>

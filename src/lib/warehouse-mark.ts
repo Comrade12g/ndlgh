@@ -33,10 +33,10 @@ export type WarehouseForSupplier = {
   phones?: string | null;
 };
 
-/** Air cargo mark in the exact template the client gave: 【WP-ND0016】 */
+/** Air cargo mark in the exact template the client gave: 【WPL-ND0016】 */
 export function airMark(shippingMark: string | null | undefined): string {
   const mark = customerMark("WP", shippingMark);
-  return mark ? `【WP-${mark}】` : "【WP-ND####】";
+  return mark ? `【WPL-${mark}】` : "【WPL-ND####】";
 }
 
 /** Multi-line text a customer can paste to their supplier. */
@@ -48,7 +48,7 @@ export function buildSupplierText(
   const isAir = w.code === "WP" || w.mark_prefix === "WP";
   if (isAir) {
     // Exact one-line format, unchanged:
-    // 【WP-ND0016】CLIENT NAME 13428888064 广东省广州市越秀区广园西路94号迦南地国际采购中心1楼1037铺
+    // 【WPL-ND0016】CLIENT NAME 13428888064 广东省广州市越秀区广园西路94号迦南地国际采购中心1楼1037铺
     const mark = airMark(shippingMark);
     const name = clientName?.trim() || "CLIENT NAME";
     const rest = [w.phones, w.address_local ?? w.address].filter(Boolean).join(" ");
