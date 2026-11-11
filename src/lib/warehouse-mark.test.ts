@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect } from "bun:test";
 import { buildSupplierText } from "./warehouse-mark";
 describe("supplier address", () => {
   it("air repeats mark and name after address", () => {
