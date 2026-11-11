@@ -10,7 +10,7 @@ import { StatusBadge, statusTone } from "@/components/ops/PageHeader";
 import { LogOut, Package, PackageSearch, MapPin, Copy, Receipt, Radar, Settings } from "lucide-react";
 import { toast } from "sonner";
 import { CustomerTrackingCard, type CustomerShipment } from "@/components/tracking/CustomerTrackingCard";
-import { customerMark } from "@/lib/warehouse-mark";
+import { customerMark, buildSupplierText } from "@/lib/warehouse-mark";
 import { ContainerBookings } from "@/components/portal/ContainerBookings";
 
 
@@ -275,22 +275,7 @@ function PortalPage() {
                     </Card>
                   );
                 }
-                const supplierText = isAir
-                  ? [
-                      `${mark ?? "【WP-ND####】"}${profile?.full_name ?? "CLIENT NAME"}`,
-                      w.phones,
-                      w.address_local,
-                    ]
-                      .filter(Boolean)
-                      .join(" ")
-                  : [
-                  `${w.name.replace(/^NDL\s+/i, "")}${w.name_local ? ` (${w.name_local})` : ""}`,
-                  `Mark: ${mark ?? "ND####"} ${profile?.full_name ?? "CLIENT NAME"}`,
-                  w.address_local ?? w.address,
-                  w.phones ? `Tel: ${w.phones}` : null,
-                ]
-                  .filter(Boolean)
-                  .join("\n\n");
+                const supplierText = buildSupplierText(w, profile?.shipping_mark ?? null, profile?.full_name);
                 return (
                   <Card key={w.code} className="p-5">
                     <div className="mb-2 flex items-start justify-between gap-3">
