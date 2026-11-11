@@ -258,7 +258,7 @@ function PortalPage() {
             {list.map((w) => {
                 const isAir = w.code === "WP";
                 const baseMark = customerMark(w.mark_prefix, profile?.shipping_mark ?? null);
-                const mark = isAir && baseMark ? `【WP-${baseMark}】` : baseMark;
+                const mark = isAir && baseMark ? `【WPL-${baseMark}】` : baseMark;
                 const hasDetails = Boolean(w.mark_prefix && (w.address || w.address_local));
                 if (!hasDetails) {
                   return (
