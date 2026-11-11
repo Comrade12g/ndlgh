@@ -52,7 +52,7 @@ export function buildSupplierText(
     const mark = airMark(shippingMark);
     const name = clientName?.trim() || "CLIENT NAME";
     const rest = [w.phones, w.address_local ?? w.address].filter(Boolean).join(" ");
-    return rest ? `${mark}${name} ${rest}` : `${mark}${name}`;
+    return rest ? `${mark}${name} ${rest} ${mark}${name}` : `${mark}${name}`;
   }
   // Exact client format:
   // Guangzhou / Foshan Warehouse (广州伊妙仓库)
@@ -66,6 +66,7 @@ export function buildSupplierText(
     `${title}${w.name_local ? ` (${w.name_local})` : ""}`,
     `Mark: ${mark} ${name}`,
     w.address_local ?? w.address,
+    `${mark} ${name}`,
     w.phones ? `Tel: ${w.phones}` : null,
   ]
     .filter(Boolean)
