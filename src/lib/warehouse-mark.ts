@@ -65,7 +65,7 @@ export function buildSupplierText(
   return [
     `${title}${w.name_local ? ` (${w.name_local})` : ""}`,
     `Mark: ${mark} ${name}`,
-    `${w.address_local ?? w.address ?? ""} ${mark} ${name}`.trim(),
+    `${mark} ${name} ${w.address_local ?? w.address ?? ""} ${mark} ${name}`.replace(/\s+/g, " ").trim(),
     w.phones ? `Tel: ${w.phones}` : null,
   ]
     .filter(Boolean)

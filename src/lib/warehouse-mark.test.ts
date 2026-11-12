@@ -7,6 +7,6 @@ describe("supplier address", () => {
   });
   it("sea repeats mark and name after address", () => {
     const t = buildSupplierText({ code: "CN", name: "NDL Guangzhou", mark_prefix: "GHO0007", address_local: "ADDR", phones: "123" }, "ND0101", "Owusu Michael");
-    expect(t.split("\n\n")).toEqual(["Guangzhou", "Mark: ND0101 Owusu Michael", "ADDR ND0101 Owusu Michael", "Tel: 123"]);
+    expect(t.split("\n\n")).toEqual(["Guangzhou", "Mark: ND0101 Owusu Michael", "ND0101 Owusu Michael ADDR ND0101 Owusu Michael", "Tel: 123"]);
   });
 });
