@@ -14,8 +14,18 @@ import {
 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { cargoVolumeTotals } from "@/lib/cargo-math";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
+  head: () => ({ meta: [
+    { title: "Cargo Operations Dashboard | NDL Cargo" },
+    { name: "description", content: "NDL staff cargo volumes, shipments and operations overview." },
+    { property: "og:title", content: "Cargo Operations Dashboard | NDL Cargo" },
+    { property: "og:description", content: "NDL staff cargo volumes, shipments and operations overview." },
+    { property: "og:type", content: "website" },
+    { name: "twitter:card", content: "summary" },
+    { name: "robots", content: "noindex, nofollow" },
+  ] }),
   component: Dashboard,
 });
 
@@ -111,6 +121,32 @@ function Dashboard() {
     allowed.some((r) => (roles as readonly string[]).includes(r));
 
   const { data } = useCounts();
+  const canViewCargo = has(["admin", "ops_warehouse", "customer_service"]);
+  const volumes = useQuery({
+    queryKey: ["dashboard-cargo-volume", roles],
+    enabled: canViewCargo,
+    refetchInterval: 30_000,
+    queryFn: async () => {
+      const rows: { cbm: number | null; status: string }[] = [];
+      const pageSize = 1000;
+      for (let offset = 0; ; offset += pageSize) {
+        const { data: page, error } = await supabase.from("packages")
+          .select("cbm, status").order("id")
+          .range(offset, offset + pageSize - 1);
+        if (error) throw error;
+        rows.push(...(page ?? []));
+        if ((page?.length ?? 0) < pageSize) break;
+      }
+      return cargoVolumeTotals(rows);
+    },
+  });
+  const volumeStats = [
+    { key: "all", label: "Total recorded" },
+    { key: "china", label: "Still in China" },
+    { key: "shipped", label: "Shipped / on the way" },
+    { key: "accra", label: "Arrived in Accra" },
+    { key: "collected", label: "Already collected" },
+  ] as const;
 
   const STATS = [
     {
@@ -164,6 +200,27 @@ function Dashboard() {
           Live status across the areas you have access to.
         </p>
       </div>
+
+      {canViewCargo && (
+        <section className="mb-8" aria-labelledby="cargo-volume-heading">
+          <h2 id="cargo-volume-heading" className="mb-4 font-display text-xl font-extrabold text-brand-navy">Cargo volume (CBM)</h2>
+          {volumes.isError ? (
+            <p role="alert" className="text-sm text-destructive">Cargo volumes could not be loaded. Please refresh the page.</p>
+          ) : (
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+              {volumeStats.map((stat) => (
+                <Card key={stat.key} className="min-w-0 p-5">
+                  <div className="text-xs text-muted-foreground">{stat.label}</div>
+                  <div className="mt-2 break-words font-display text-2xl font-extrabold tabular-nums text-brand-navy">
+                    {volumes.data ? volumes.data[stat.key].toLocaleString("en-GB", { minimumFractionDigits: 3, maximumFractionDigits: 3 }) : "—"}
+                  </div>
+                  <div className="mt-1 text-xs text-muted-foreground">CBM</div>
+                </Card>
+              ))}
+            </div>
+          )}
+        </section>
+      )}
 
       {STATS.length > 0 && (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
