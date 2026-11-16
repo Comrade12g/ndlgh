@@ -28,7 +28,7 @@ export function cargoVolumeTotals(rows: readonly { cbm: number | string | null; 
     if ((AT_CHINA as readonly string[]).includes(row.status)) totals.china += volume;
     else if ((IN_TRANSIT as readonly string[]).includes(row.status)) totals.shipped += volume;
     else if ((AT_GHANA as readonly string[]).includes(row.status)) totals.accra += volume;
-    else if (row.status === "released") totals.collected += volume;
+    else if (row.status === "delivered") totals.collected += volume;
   }
   return totals;
 }

@@ -17,7 +17,7 @@ describe("cargo math", () => {
       { status: "in_transit", cbm: 3 },
       { status: "arrived_gh", cbm: 4 },
       { status: "ready_delivery", cbm: 1 },
-      { status: "released", cbm: 6 },
+      { status: "delivered", cbm: 6 },
     ])).toEqual({ all: 18, china: 2, shipped: 5, accra: 5, collected: 6 });
   });
   test("missing or invalid CBM does not inflate totals", () => {
