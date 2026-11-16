@@ -14,3 +14,4 @@
 - Blog HTML is sanitized server-side before storage and rendering, preserving safe link target/rel attributes while removing executable content.
 - The customer portal renders the shared ContainerBookings form and list; the staff menu links to the existing containers route for all staff, matching its existing access policy.
 - Public container booking validates any supplied session and derives signed-in ownership server-side; guest requests use separate staff-only storage, while staff booking uses authenticated RLS and an explicit staff check.
+- Dashboard CBM totals use paginated RLS-protected package reads and shared cargo-stage calculations, so imported volumes are included without changing billing.
