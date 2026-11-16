@@ -151,6 +151,18 @@ function Dashboard() {
   const STATS = [
     {
       icon: Package,
+      label: "Total CBM",
+      value: volumes.data ? volumes.data.all.toLocaleString("en-GB", { maximumFractionDigits: 2 }) + " CBM" : "—",
+      roles: ["admin", "ops_warehouse", "customer_service"],
+    },
+    {
+      icon: Truck,
+      label: "Arrived in Accra (CBM)",
+      value: volumes.data ? volumes.data.accra.toLocaleString("en-GB", { maximumFractionDigits: 2 }) + " CBM" : "—",
+      roles: ["admin", "ops_warehouse", "customer_service"],
+    },
+    {
+      icon: Package,
       label: "Packages in warehouses",
       value: data?.packages ?? 0,
       roles: ["admin", "ops_warehouse", "customer_service"],
